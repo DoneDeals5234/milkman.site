@@ -1,22 +1,37 @@
+import fs from 'fs';
 import pkg from 'whatsapp-web.js';
 const { Client, LocalAuth } = pkg;
 import qrcode from 'qrcode-terminal';
+
+// Auto-detect system Google Chrome / Chromium on Linux VM to save disk space
+const systemChromePath = [
+    '/usr/bin/google-chrome-stable',
+    '/usr/bin/google-chrome',
+    '/usr/bin/chromium-browser',
+    '/usr/bin/chromium'
+].find(p => fs.existsSync(p));
+
+const puppeteerConfig = {
+    headless: true,
+    args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-accelerated-2d-canvas',
+        '--no-first-run',
+        '--disable-gpu'
+    ]
+};
+if (systemChromePath) {
+    console.log('Using system Chrome at:', systemChromePath);
+    puppeteerConfig.executablePath = systemChromePath;
+}
 
 // Initialize the WhatsApp Client
 // We use LocalAuth so it remembers your session across restarts
 const client = new Client({
     authStrategy: new LocalAuth(),
-    puppeteer: {
-        headless: true,
-        args: [
-            '--no-sandbox',
-            '--disable-setuid-sandbox',
-            '--disable-dev-shm-usage',
-            '--disable-accelerated-2d-canvas',
-            '--no-first-run',
-            '--disable-gpu'
-        ]
-    }
+    puppeteer: puppeteerConfig
 });
 
 let isClientReady = false;
