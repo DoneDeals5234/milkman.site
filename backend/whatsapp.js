@@ -45,9 +45,32 @@ client.on('qr', (qr) => {
 });
 
 // When successfully authenticated
-client.on('ready', () => {
+client.on('ready', async () => {
     console.log('✅ WhatsApp Web Client is Ready!');
     isClientReady = true;
+
+    // Apply WhatsApp Web LID migration bypass
+    try {
+        await client.pupPage.evaluate(() => {
+            try {
+                if (window.injectToFunction) {
+                    window.injectToFunction(
+                        { module: 'WAWebLid1X1MigrationGating', function: 'Lid1X1MigrationUtils.isLidMigrated' },
+                        () => false
+                    );
+                }
+            } catch (_) {}
+            try {
+                const gating = window.require('WAWebLid1X1MigrationGating');
+                if (gating?.Lid1X1MigrationUtils) {
+                    gating.Lid1X1MigrationUtils.isLidMigrated = () => false;
+                }
+            } catch (_) {}
+        });
+        console.log('✅ WhatsApp LID migration bypass applied');
+    } catch (e) {
+        console.warn('LID bypass warning (non-fatal):', e.message);
+    }
 });
 
 // Handle authentication failures
@@ -82,13 +105,66 @@ export const sendWhatsAppOTP = async (phoneNumber, otpCode) => {
         if (cleanNumber.length === 10) {
             cleanNumber = '91' + cleanNumber;
         }
-        
-        const chatId = `${cleanNumber}@c.us`;
+
+        // Apply WhatsApp Web LID migration bypass before sending
+        await client.pupPage.evaluate(() => {
+            try {
+                if (window.injectToFunction) {
+                    window.injectToFunction(
+                        { module: 'WAWebLid1X1MigrationGating', function: 'Lid1X1MigrationUtils.isLidMigrated' },
+                        () => false
+                    );
+                }
+            } catch (_) {}
+            try {
+                const gating = window.require('WAWebLid1X1MigrationGating');
+                if (gating?.Lid1X1MigrationUtils) {
+                    gating.Lid1X1MigrationUtils.isLidMigrated = () => false;
+                }
+            } catch (_) {}
+        }).catch(() => {});
+
+        let targetId = `${cleanNumber}@c.us`;
+        try {
+            const numberId = await client.getNumberId(cleanNumber);
+            if (numberId && numberId._serialized) {
+                targetId = numberId._serialized;
+            }
+        } catch (e) {
+            console.warn('getNumberId warning:', e.message);
+        }
 
         const message = `🥛 *Milkman Dairy*\n\nYour Login OTP is: *${otpCode}*\nDo not share this code with anyone.`;
         
-        await client.sendMessage(chatId, message);
-        console.log(`✅ WhatsApp OTP sent to ${phoneNumber}`);
+        try {
+            await client.sendMessage(targetId, message);
+        } catch (err) {
+            if (err.message && err.message.includes('No LID')) {
+                console.warn('Handling No LID error via direct WWebJS evaluation...');
+                await client.pupPage.evaluate(async (chatId, text) => {
+                    const wid = window.require('WAWebWidFactory').createWid(chatId);
+                    let chat = window.require('WAWebCollections').Chat.get(wid);
+                    if (!chat) {
+                        try {
+                            const findAction = window.require('WAWebFindChatAction');
+                            const res = await findAction.findOrCreateLatestChat(wid);
+                            chat = res?.chat;
+                        } catch (_) {
+                            chat = await window.require('WAWebCollections').Chat.find(wid);
+                        }
+                    }
+                    if (chat) {
+                        await window.WWebJS.sendMessage(chat, text);
+                    } else {
+                        throw new Error('Could not initialize chat for ' + chatId);
+                    }
+                }, targetId, message);
+            } else {
+                throw err;
+            }
+        }
+        
+        console.log(`✅ WhatsApp OTP sent to ${phoneNumber} (${targetId})`);
     } catch (error) {
         console.error('❌ Failed to send WhatsApp OTP:', error);
         throw error;
