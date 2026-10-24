@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /backend/
+Disallow: /staff.html
+
+Sitemap: https://milkman.site/sitemap.xml

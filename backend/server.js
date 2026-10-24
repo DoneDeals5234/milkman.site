@@ -21,6 +21,7 @@ app.use(cors({
 // Serve website frontend directly (supports running from backend/ or milkman.site root)
 const candidateStaticPaths = [
     path.join(__dirname, "../website"),
+    path.join(__dirname, "../public"),
     path.join(__dirname, "./website"),
     path.join(__dirname, "./public")
 ];
