@@ -3,4 +3,4 @@ Allow: /
 Disallow: /backend/
 Disallow: /staff.html
 
-Sitemap: https://milkman.site/sitemap.xml
+Sitemap: https://milkmandairy.site/sitemap.xml
