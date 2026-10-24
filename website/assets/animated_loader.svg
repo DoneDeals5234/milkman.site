@@ -1,0 +1,417 @@
+<svg viewBox="0 0 540 540" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<!-- Background Radial Glow -->
+<radialGradient cx="50%" cy="45%" id="hubGlow" r="55%">
+<stop offset="0%" stop-color="#10b981" stop-opacity="0.14"></stop>
+<stop offset="50%" stop-color="#1c1815" stop-opacity="0.9"></stop>
+<stop offset="100%" stop-color="#110e0c" stop-opacity="1"></stop>
+</radialGradient>
+<!-- Milk Stream Gradient -->
+<linearGradient id="milkStreamGrad" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#ffffff" stop-opacity="0.95"></stop>
+<stop offset="50%" stop-color="#f8fafc" stop-opacity="0.9"></stop>
+<stop offset="100%" stop-color="#34d399" stop-opacity="0.8"></stop>
+</linearGradient>
+<!-- Cow Body Gradient -->
+<linearGradient id="cowBodyGrad" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#f8fafc"></stop>
+<stop offset="100%" stop-color="#cbd5e1"></stop>
+</linearGradient>
+<!-- Cow Spot Gradient -->
+<linearGradient id="cowSpotGrad" x1="0%" x2="100%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#334155"></stop>
+<stop offset="100%" stop-color="#1e293b"></stop>
+</linearGradient>
+<!-- Pink Udder Gradient -->
+<linearGradient id="pinkGrad" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#f472b6"></stop>
+<stop offset="100%" stop-color="#db2777"></stop>
+</linearGradient>
+<!-- Milk Pail Metallic Gradient -->
+<linearGradient id="bucketGrad" x1="0%" x2="100%" y1="0%" y2="0%">
+<stop offset="0%" stop-color="#64748b"></stop>
+<stop offset="25%" stop-color="#94a3b8"></stop>
+<stop offset="50%" stop-color="#e2e8f0"></stop>
+<stop offset="75%" stop-color="#94a3b8"></stop>
+<stop offset="100%" stop-color="#475569"></stop>
+</linearGradient>
+<!-- Milk Fill Gradient Inside Bucket -->
+<linearGradient id="milkFillGrad" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#ffffff"></stop>
+<stop offset="35%" stop-color="#f0fdf4"></stop>
+<stop offset="100%" stop-color="#a7f3d0"></stop>
+</linearGradient>
+<!-- Milkman Kurta Gradient -->
+<linearGradient id="kurtaGrad" x1="0%" x2="100%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#10b981"></stop>
+<stop offset="100%" stop-color="#047857"></stop>
+</linearGradient>
+<!-- Milkman Turban Gradient -->
+<linearGradient id="turbanGrad" x1="0%" x2="100%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#f59e0b"></stop>
+<stop offset="100%" stop-color="#d97706"></stop>
+</linearGradient>
+<!-- Farmer Skin Gradient -->
+<linearGradient id="skinGrad" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#fcd34d"></stop>
+<stop offset="100%" stop-color="#d97706"></stop>
+</linearGradient>
+<!-- Filters -->
+<filter height="160%" id="emeraldGlow" width="160%" x="-30%" y="-30%">
+<feDropShadow dx="0" dy="0" flood-color="#10b981" flood-opacity="0.4" stdDeviation="8"></feDropShadow>
+</filter>
+<filter height="140%" id="milkGlow" width="140%" x="-20%" y="-20%">
+<feDropShadow dx="0" dy="2" flood-color="#34d399" flood-opacity="0.6" stdDeviation="5"></feDropShadow>
+</filter>
+<filter height="120%" id="softShadow" width="120%" x="-10%" y="-10%">
+<feDropShadow dx="0" dy="4" flood-color="#000000" flood-opacity="0.6" stdDeviation="6"></feDropShadow>
+</filter>
+<!-- Bucket Fill Clip Path (Tapered Bucket) -->
+<clipPath id="bucketInteriorClip">
+<polygon points="243,285 297,285 291,348 249,348"></polygon>
+</clipPath>
+</defs>
+<style>
+    /* Continuous 6.5-second milking & fill loading loop */
+    @keyframes milkFillRise {
+      0% {
+        transform: translateY(60px);
+      }
+      80% {
+        transform: translateY(0px);
+      }
+      92% {
+        transform: translateY(0px);
+      }
+      98%, 100% {
+        transform: translateY(60px);
+      }
+    }
+
+    /* Periodic Milk squirts / streams */
+    @keyframes jetLeft {
+      0%, 100% {
+        opacity: 0.15;
+        stroke-dashoffset: 40;
+        stroke-width: 1.5;
+      }
+      15%, 35%, 55%, 75% {
+        opacity: 0.95;
+        stroke-dashoffset: 0;
+        stroke-width: 3.5;
+      }
+      25%, 45%, 65%, 85% {
+        opacity: 0.2;
+        stroke-dashoffset: -20;
+        stroke-width: 1.5;
+      }
+    }
+
+    @keyframes jetRight {
+      0%, 100% {
+        opacity: 0.2;
+        stroke-dashoffset: -20;
+        stroke-width: 1.5;
+      }
+      20%, 40%, 60%, 80% {
+        opacity: 0.95;
+        stroke-dashoffset: 0;
+        stroke-width: 3.5;
+      }
+      30%, 50%, 70%, 90% {
+        opacity: 0.15;
+        stroke-dashoffset: 40;
+        stroke-width: 1.5;
+      }
+    }
+
+    /* Hands rhythmic squeezing motion */
+    @keyframes farmerHandSqueeze {
+      0%, 100% {
+        transform: rotate(0deg) translateY(0px);
+      }
+      20% {
+        transform: rotate(-4deg) translateY(-2px);
+      }
+      30% {
+        transform: rotate(3deg) translateY(3px);
+      }
+      60% {
+        transform: rotate(-3deg) translateY(-1px);
+      }
+      70% {
+        transform: rotate(4deg) translateY(3px);
+      }
+    }
+
+    /* Teat squeeze elasticity */
+    @keyframes teatLeftPump {
+      0%, 100% { transform: scale(1, 1); }
+      20% { transform: scale(0.85, 1.25); }
+      35% { transform: scale(1.05, 0.9); }
+    }
+    @keyframes teatRightPump {
+      0%, 100% { transform: scale(1, 1); }
+      60% { transform: scale(0.85, 1.25); }
+      75% { transform: scale(1.05, 0.9); }
+    }
+
+    /* Milk Splash & Froth bubbling */
+    @keyframes foamBoil {
+      0%, 100% { transform: scaleY(1) translateY(0px); }
+      50% { transform: scaleY(1.15) translateY(-1.5px); }
+    }
+    @keyframes dropletBurst {
+      0% { opacity: 0; transform: translateY(0px) scale(0.5); }
+      50% { opacity: 0.9; transform: translateY(-12px) scale(1.2); }
+      100% { opacity: 0; transform: translateY(-18px) scale(0.2); }
+    }
+
+    /* Tail Wagging peacefully */
+    @keyframes tailWag {
+      0%, 100% { transform: rotate(0deg); }
+      50% { transform: rotate(18deg); }
+    }
+
+    /* Cow head chewing & calm breathing */
+    @keyframes cowBreathe {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(3px) rotate(1.5deg); }
+    }
+
+    /* Outer Progress Circular Track */
+    @keyframes circularLoaderProgress {
+      0% {
+        stroke-dashoffset: 754;
+      }
+      80% {
+        stroke-dashoffset: 0;
+      }
+      92% {
+        stroke-dashoffset: 0;
+      }
+      100% {
+        stroke-dashoffset: 754;
+      }
+    }
+
+    .loader-ring {
+      stroke-dasharray: 754;
+      transform-origin: 270px 270px;
+      animation: circularLoaderProgress 6.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    }
+
+    .milk-rising {
+      animation: milkFillRise 6.5s cubic-bezier(0.3, 0.0, 0.2, 1) infinite;
+    }
+
+    .jet-left {
+      stroke-dasharray: 20 8;
+      animation: jetLeft 1.2s ease-in-out infinite;
+    }
+
+    .jet-right {
+      stroke-dasharray: 20 8;
+      animation: jetRight 1.2s ease-in-out infinite;
+    }
+
+    .hand-movement {
+      transform-origin: 290px 260px;
+      animation: farmerHandSqueeze 1.2s ease-in-out infinite;
+    }
+
+    .teat-l {
+      transform-origin: 260px 248px;
+      animation: teatLeftPump 1.2s ease-in-out infinite;
+    }
+
+    .teat-r {
+      transform-origin: 278px 250px;
+      animation: teatRightPump 1.2s ease-in-out infinite;
+    }
+
+    .foam-layer {
+      animation: foamBoil 0.8s ease-in-out infinite;
+    }
+
+    .splash-drop-1 {
+      animation: dropletBurst 1.2s ease-out infinite 0.2s;
+    }
+    .splash-drop-2 {
+      animation: dropletBurst 1.2s ease-out infinite 0.6s;
+    }
+    .splash-drop-3 {
+      animation: dropletBurst 1.2s ease-out infinite 0.9s;
+    }
+
+    .tail-wag {
+      transform-origin: 360px 200px;
+      animation: tailWag 1.8s ease-in-out infinite;
+    }
+
+    .cow-head {
+      transform-origin: 160px 190px;
+      animation: cowBreathe 2.4s ease-in-out infinite;
+    }
+
+    @keyframes pulseSoft {
+      0%, 100% { opacity: 0.7; }
+      50% { opacity: 1; }
+    }
+    .pulse-glow {
+      animation: pulseSoft 2.5s ease-in-out infinite;
+    }
+  </style>
+<!-- Ambient Dark Card Backdrop -->
+<rect fill="url(#hubGlow)" height="540" rx="36" width="540"></rect>
+<!-- Outer Circular Loading Ring -->
+<circle cx="270" cy="270" fill="none" r="240" stroke="#262220" stroke-opacity="0.7" stroke-width="4"></circle>
+<circle class="loader-ring pulse-glow" cx="270" cy="270" fill="none" filter="url(#emeraldGlow)" r="240" stroke="#10b981" stroke-linecap="round" stroke-width="6" transform="rotate(-90 270 270)"></circle>
+<!-- Ground Shadows -->
+<ellipse cx="270" cy="385" fill="#080605" opacity="0.85" rx="190" ry="18"></ellipse>
+<ellipse cx="270" cy="352" fill="#000000" opacity="0.5" rx="36" ry="7"></ellipse>
+<ellipse cx="340" cy="375" fill="#000000" opacity="0.45" rx="30" ry="8"></ellipse>
+<!-- COW SECTION -->
+<g filter="url(#softShadow)" id="cow-figure">
+<!-- TAIL -->
+<g class="tail-wag">
+<path d="M 358 205 C 382 220 388 250 376 280 C 372 284 380 286 384 280 C 398 245 388 210 362 195 Z" fill="#94a3b8"></path>
+<path d="M 374 275 C 368 290 380 304 385 308 C 390 300 398 288 386 276 Z" fill="#334155"></path>
+</g>
+<!-- BACK LEGS -->
+<rect fill="#64748b" height="85" rx="7" width="16" x="330" y="270"></rect>
+<path d="M 330 350 L 346 350 L 348 358 L 329 358 Z" fill="#1e293b"></path>
+<!-- FRONT LEGS -->
+<rect fill="#64748b" height="90" rx="7" width="16" x="182" y="265"></rect>
+<path d="M 182 350 L 198 350 L 200 358 L 181 358 Z" fill="#1e293b"></path>
+<!-- COW BODY -->
+<path d="M 170 185 C 210 180 310 180 355 195 C 370 202 372 225 370 252 C 368 280 345 282 320 282 C 265 282 215 284 175 278 C 155 272 148 230 152 205 C 155 190 162 186 170 185 Z" fill="url(#cowBodyGrad)"></path>
+<!-- COW SPOTS -->
+<path d="M 215 182 C 240 184 256 198 250 220 C 245 238 260 258 250 272 C 228 274 212 264 208 248 C 204 230 210 212 204 198 C 200 188 206 182 215 182 Z" fill="url(#cowSpotGrad)"></path>
+<path d="M 315 188 C 342 192 356 208 352 230 C 346 242 332 236 325 222 C 318 208 310 198 315 188 Z" fill="url(#cowSpotGrad)"></path>
+<ellipse cx="185" cy="248" fill="url(#cowSpotGrad)" rx="14" ry="10"></ellipse>
+<!-- FOREGROUND LEGS -->
+<rect fill="url(#cowBodyGrad)" height="94" rx="8" width="18" x="348" y="262"></rect>
+<path d="M 348 352 L 366 352 L 368 360 L 347 360 Z" fill="#1e293b"></path>
+<rect fill="url(#cowBodyGrad)" height="98" rx="8" width="18" x="160" y="258"></rect>
+<path d="M 160 352 L 178 352 L 180 360 L 159 360 Z" fill="#1e293b"></path>
+<!-- COW UDDER -->
+<path d="M 248 245 C 242 268 254 282 270 282 C 286 282 296 268 292 245 Z" fill="url(#pinkGrad)"></path>
+<!-- Teats -->
+<g class="teat-l">
+<path d="M 256 278 C 255 288 257 296 261 298 C 265 296 265 288 264 278 Z" fill="#db2777"></path>
+</g>
+<g class="teat-r">
+<path d="M 276 278 C 275 288 277 296 281 298 C 285 296 285 288 284 278 Z" fill="#db2777"></path>
+</g>
+<!-- COW HEAD -->
+<g class="cow-head">
+<path d="M 175 195 L 135 222 C 125 210 140 190 168 184 Z" fill="url(#cowBodyGrad)"></path>
+<path d="M 120 200 C 112 182 152 172 162 192 C 166 205 154 228 138 236 C 124 238 120 218 120 200 Z" fill="url(#cowBodyGrad)"></path>
+<path d="M 152 176 C 156 164 168 164 166 174 Z" fill="#e2e8f0"></path>
+<path d="M 136 178 C 132 168 122 170 128 180 Z" fill="#cbd5e1"></path>
+<path d="M 154 192 C 168 194 178 206 174 212 C 170 216 160 210 152 200 Z" fill="#94a3b8"></path>
+<path d="M 144 180 C 156 182 162 194 154 208 C 148 216 142 210 140 200 Z" fill="url(#cowSpotGrad)"></path>
+<ellipse cx="138" cy="198" fill="#0f172a" rx="3.5" ry="4"></ellipse>
+<circle cx="139" cy="197" fill="#ffffff" r="1.2"></circle>
+<path d="M 104 225 C 98 216 122 208 134 216 C 140 220 138 240 126 244 C 112 248 106 235 104 225 Z" fill="url(#pinkGrad)"></path>
+<circle cx="112" cy="228" fill="#9d174d" r="2.5"></circle>
+<path d="M 108 238 C 115 241 124 240 128 235" fill="none" stroke="#be185d" stroke-linecap="round" stroke-width="2"></path>
+<path d="M 112 238 C 96 242 88 252 82 265" fill="none" stroke="#10b981" stroke-linecap="round" stroke-width="2.5"></path>
+</g>
+</g>
+<!-- MILKMAN & STOOL -->
+<g filter="url(#softShadow)" id="milkman-figure">
+<ellipse cx="340" cy="326" fill="#b45309" rx="22" ry="5"></ellipse>
+<line stroke="#78350f" stroke-linecap="round" stroke-width="4.5" x1="326" x2="320" y1="328" y2="370"></line>
+<line stroke="#78350f" stroke-linecap="round" stroke-width="4.5" x1="354" x2="360" y1="328" y2="370"></line>
+<line stroke="#92400e" stroke-linecap="round" stroke-width="5" x1="340" x2="340" y1="329" y2="373"></line>
+<!-- Legs -->
+<path d="M 334 322 C 310 326 295 340 295 356 C 295 365 305 368 312 368" fill="none" stroke="#1e293b" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"></path>
+<ellipse cx="314" cy="368" fill="#0f172a" rx="8" ry="4"></ellipse>
+<path d="M 346 322 C 330 332 315 348 318 368 C 318 372 328 372 334 372" fill="none" stroke="#334155" stroke-linecap="round" stroke-linejoin="round" stroke-width="15"></path>
+<ellipse cx="335" cy="372" fill="#0f172a" rx="9" ry="4.5"></ellipse>
+<!-- Torso -->
+<path d="M 348 318 C 352 285 338 250 315 244 C 298 240 286 255 292 285 C 296 305 315 322 348 318 Z" fill="url(#kurtaGrad)"></path>
+<path d="M 314 246 L 310 270" stroke="#065f46" stroke-linecap="round" stroke-width="2.5"></path>
+<line stroke="#f59e0b" stroke-width="2" x1="322" x2="322" y1="262" y2="272"></line>
+<!-- Head -->
+<path d="M 322 245 L 328 230 L 338 232 L 334 248 Z" fill="url(#skinGrad)"></path>
+<ellipse cx="330" cy="224" fill="url(#skinGrad)" rx="14" ry="16"></ellipse>
+<path d="M 321 224 C 318 226 318 230 322 231" fill="none" stroke="#92400e" stroke-linecap="round" stroke-width="2"></path>
+<path d="M 320 234 C 324 237 329 236 331 233" fill="none" stroke="#92400e" stroke-linecap="round" stroke-width="2"></path>
+<path d="M 322 216 C 325 214 329 215 331 217" fill="none" stroke="#78350f" stroke-linecap="round" stroke-width="2"></path>
+<circle cx="325" cy="220" fill="#1e293b" r="2.2"></circle>
+<path d="M 316 230 C 322 227 327 232 331 230" fill="none" stroke="#1e293b" stroke-linecap="round" stroke-width="3.5"></path>
+<!-- Turban -->
+<path d="M 318 214 C 314 195 334 190 348 198 C 358 205 352 224 338 224 Z" fill="url(#turbanGrad)"></path>
+<path d="M 324 204 C 336 200 354 208 348 216" fill="none" stroke="#b45309" stroke-width="3"></path>
+<path d="M 346 206 C 356 210 360 220 358 226" fill="none" stroke="#b45309" stroke-width="2.5"></path>
+<!-- Hands -->
+<g class="hand-movement">
+<path d="M 310 262 C 298 266 288 270 280 276" fill="none" stroke="#047857" stroke-linecap="round" stroke-width="9"></path>
+<circle cx="280" cy="276" fill="url(#skinGrad)" r="6"></circle>
+<path d="M 318 268 C 295 272 278 276 262 276" fill="none" stroke="url(#kurtaGrad)" stroke-linecap="round" stroke-width="10"></path>
+<circle cx="261" cy="277" fill="url(#skinGrad)" r="6.5"></circle>
+<path d="M 258 274 C 256 280 263 283 266 278" fill="none" stroke="#b45309" stroke-width="1.8"></path>
+</g>
+</g>
+<!-- MILK STREAMS -->
+<g filter="url(#milkGlow)" id="milk-streams">
+<path class="jet-left" d="M 261 285 Q 263 305 267 332" fill="none" stroke="url(#milkStreamGrad)" stroke-linecap="round"></path>
+<path class="jet-right" d="M 280 284 Q 276 306 272 332" fill="none" stroke="url(#milkStreamGrad)" stroke-linecap="round"></path>
+<circle class="splash-drop-1" cx="265" cy="326" fill="#ffffff" r="2.5"></circle>
+<circle class="splash-drop-2" cx="274" cy="324" fill="#ffffff" r="2.8"></circle>
+<circle class="splash-drop-3" cx="269" cy="322" fill="#a7f3d0" r="2"></circle>
+</g>
+<!-- MILK BUCKET -->
+<g filter="url(#softShadow)" id="milk-bucket">
+<path d="M 242 284 L 298 284 L 292 350 C 291 354 286 357 270 357 C 254 357 249 354 248 350 Z" fill="url(#bucketGrad)" stroke="#334155" stroke-width="2"></path>
+<path d="M 244 306 C 254 308 286 308 296 306" fill="none" opacity="0.6" stroke="#475569" stroke-width="1.5"></path>
+<path d="M 246 328 C 255 330 285 330 294 328" fill="none" opacity="0.6" stroke="#475569" stroke-width="1.5"></path>
+<path d="M 242 288 C 230 294 232 322 245 338" fill="none" stroke="#94a3b8" stroke-linecap="round" stroke-width="2.5"></path>
+<circle cx="242" cy="288" fill="#334155" r="3"></circle>
+<circle cx="298" cy="288" fill="#334155" r="3"></circle>
+<!-- Interior Milk Fill -->
+<g clip-path="url(#bucketInteriorClip)">
+<rect fill="#1e293b" height="70" width="60" x="240" y="284"></rect>
+<g class="milk-rising">
+<rect fill="url(#milkFillGrad)" height="66" width="64" x="238" y="292"></rect>
+<g class="foam-layer" transform="translate(0, 289)">
+<ellipse cx="270" cy="4" fill="#ffffff" filter="url(#emeraldGlow)" rx="27" ry="5"></ellipse>
+<circle cx="252" cy="3" fill="#ffffff" r="3.5"></circle>
+<circle cx="260" cy="1.5" fill="#f8fafc" r="4.5"></circle>
+<circle cx="270" cy="2" fill="#ffffff" r="5"></circle>
+<circle cx="280" cy="2" fill="#f8fafc" r="4.2"></circle>
+<circle cx="288" cy="4" fill="#ffffff" r="3.2"></circle>
+<ellipse cx="270" cy="3.5" fill="#d1fae5" opacity="0.8" rx="20" ry="2"></ellipse>
+</g>
+</g>
+</g>
+<ellipse cx="270" cy="284" fill="none" rx="28" ry="4.5" stroke="#f1f5f9" stroke-width="2.5"></ellipse>
+<line stroke="#1e293b" stroke-linecap="round" stroke-width="1.8" x1="294" x2="288" y1="296" y2="296"></line>
+<line stroke="#1e293b" stroke-linecap="round" stroke-width="2" x1="293" x2="286" y1="310" y2="310"></line>
+<line stroke="#1e293b" stroke-linecap="round" stroke-width="1.8" x1="292" x2="287" y1="324" y2="324"></line>
+<line stroke="#1e293b" stroke-linecap="round" stroke-width="2" x1="291" x2="285" y1="338" y2="338"></line>
+<g transform="translate(270, 368)">
+<rect fill="#1e1b19" height="15" rx="7.5" stroke="#10b981" stroke-width="1" width="60" x="-30" y="-8"></rect>
+<text fill="#10b981" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="8.5" font-weight="700" letter-spacing="0.5" text-anchor="middle" x="0" y="3">MILK PAIL</text>
+</g>
+</g>
+<!-- PROGRESS HUD -->
+<g text-anchor="middle" transform="translate(270, 440)">
+<text fill="#f8fafc" font-family="'Plus Jakarta Sans', system-ui, -apple-system, sans-serif" font-size="16" font-weight="800" letter-spacing="3.5" y="-8">
+  MILKING IN PROGRESS
+</text>
+<text fill="#10b981" font-family="'Plus Jakarta Sans', system-ui, -apple-system, sans-serif" font-size="12" font-weight="600" letter-spacing="2" y="16">
+  FILLING BUCKET FRESH FROM COW
+</text>
+<g transform="translate(0, 38)">
+<rect fill="#1e1b19" height="26" rx="13" stroke="#332c27" stroke-width="1.2" width="230" x="-115" y="-14"></rect>
+<circle class="pulse-glow" cx="-92" cy="-1" fill="#10b981" filter="url(#emeraldGlow)" r="4.5"></circle>
+<text fill="#e2e8f0" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="10.5" font-weight="500" letter-spacing="0.8" x="10" y="3">
+  Full Pail = Complete Load
+</text>
+</g>
+</g>
+</svg>

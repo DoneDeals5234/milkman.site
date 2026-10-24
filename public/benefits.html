@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Milkman Comics: The 30-Day Dairy Superhero Transformation</title>
+    <meta name="description" content="Discover the superhero health benefits of pure milk, bilona ghee, desi dahi and white makhan through comic characters, 30-day transformation timelines, and medical mind maps.">
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Outfit:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css?v=2.4">
+    <link rel="stylesheet" href="css/benefits.css">
+</head>
+<body class="benefits-page">
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo" style="display: flex; align-items: center; gap: 10px; cursor: pointer;" onclick="window.location.href='index.html'">
+            <img src="assets/logo.png" alt="Milkman" style="height: 52px; width: 52px; object-fit: contain;">
+            <span style="font-weight: 800; font-size: 1.45rem; color: var(--primary-color); letter-spacing: -0.5px;">Milkman</span>
+        </div>
+        <div class="nav-links">
+            <a href="index.html#home">Home</a>
+            <a href="index.html#plans">Subscription Plans</a>
+            <a href="index.html#products">Products</a>
+            <a href="benefits.html" style="color: var(--comic-yellow); text-shadow: 0 0 10px rgba(255, 210, 0, 0.5); font-weight: 800;">⚡ Super Benefits</a>
+            <a href="trace.html" style="color: #00E676; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;">🔍 Trace Batch</a>
+            <a href="subscription.html" id="navSubscription" style="display: none; color: #00E676; font-weight: 700;">🥛 My Subscription</a>
+            <a href="index.html#cart" id="navCart" style="display: none;">Cart <span id="cartCount" style="background: var(--primary-color); color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.8rem;">0</span></a>
+            <div class="auth-buttons">
+                <button class="btn-signup" onclick="window.location.href='index.html'">Order Farm Fresh</button>
+            </div>
+            <!-- Mobile Hamburger Button beside login -->
+            <button id="mobileMenuBtn" class="mobile-hamburger-btn" aria-label="Toggle Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Navigation Drawer & Backdrop -->
+    <div id="mobileNavBackdrop" class="mobile-nav-backdrop"></div>
+    <aside id="mobileNavDrawer" class="mobile-nav-drawer" aria-label="Mobile Navigation Menu">
+        <div class="mobile-drawer-header">
+            <div class="logo" style="display: flex; align-items: center; gap: 8px;">
+                <img src="assets/logo.png" alt="Milkman" style="height: 38px; width: 38px; object-fit: contain;">
+                <span style="font-weight: 800; font-size: 1.25rem; color: var(--primary-color);">Milkman Menu</span>
+            </div>
+            <button id="closeMobileNavBtn" class="close-mobile-nav" aria-label="Close Menu">&times;</button>
+        </div>
+        <div class="mobile-nav-links">
+            <a href="index.html#home" class="mobile-nav-link">
+                <span class="m-icon">🏠</span>
+                <span class="m-title">Home</span>
+            </a>
+            <a href="index.html#plans" class="mobile-nav-link">
+                <span class="m-icon">📋</span>
+                <span class="m-title">Monthly Plans</span>
+            </a>
+            <a href="index.html#products" class="mobile-nav-link">
+                <span class="m-icon">🥛</span>
+                <span class="m-title">Dairy Products</span>
+            </a>
+            <a href="benefits.html" class="mobile-nav-link active">
+                <span class="m-icon">⚡</span>
+                <span class="m-title">Super Benefits</span>
+                <span class="m-badge-gold">NEW</span>
+            </a>
+            <a href="trace.html" class="mobile-nav-link">
+                <span class="m-icon">🔍</span>
+                <span class="m-title">Trace Batch Video</span>
+                <span class="m-badge-green">VIDEO</span>
+            </a>
+            <a href="subscription.html" class="mobile-nav-link">
+                <span class="m-icon">🥛</span>
+                <span class="m-title">My Subscription</span>
+            </a>
+            <a href="index.html#cart" class="mobile-nav-link">
+                <span class="m-icon">🛒</span>
+                <span class="m-title">Shopping Cart</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Comic Hero Header -->
+    <header class="comic-hero-section">
+        <div class="comic-issue-pill">
+            <span>🔥 MILKMAN NUTRITION COMICS</span> • <span>ISSUE #1</span> • <span>100% PURE & RAW</span>
+        </div>
+        <h1 class="comic-main-title">
+            THE 30-DAY <span class="pop-gold">SUPERHERO</span><br>TRANSFORMATION!
+        </h1>
+        <p class="comic-hero-sub">
+            Ever wondered what happens inside your body when you drink pure farm milk and eat Vedic dairy for 30 days straight? Meet the 4 legendary dairy guardians and witness real scientific superpowers!
+        </p>
+
+        <!-- Comic Sound Bursts -->
+        <div class="comic-bursts-bar">
+            <div class="sound-burst burst-red">
+                <span>💥</span> 1,290g PROTEIN / MONTH!
+            </div>
+            <div class="sound-burst burst-yellow">
+                <span>⚡</span> 60,000mg BONE CALCIUM!
+            </div>
+            <div class="sound-burst burst-cyan">
+                <span>🛡️</span> ZERO PRESERVATIVES!
+            </div>
+            <div class="sound-burst burst-purple">
+                <span>💤</span> DEEP REM SLEEP REPAIR!
+            </div>
+        </div>
+    </header>
+
+    <!-- ==========================================
+         SECTION 1: THE 4 LEGENDARY DAIRY HEROES
+         ========================================== -->
+    <section class="heroes-section" id="heroes">
+        <div class="comic-section-heading">
+            <span class="comic-chip-label">MEET THE SQUAD</span>
+            <h2 class="comic-h2">THE LEAGUE OF PURE NUTRITION</h2>
+            <p class="comic-subtitle">Four mythical guardians armed with authentic bio-nutrients to defend your health against modern disease!</p>
+        </div>
+
+        <div class="heroes-grid">
+            <!-- Hero 1: Captain Milk -->
+            <div class="hero-comic-card">
+                <div class="hero-card-header">
+                    <img src="assets/comic_captain_milk.jpg" alt="Captain Milk" class="hero-comic-img">
+                    <span class="hero-power-tag tag-milk">HERO #01 • THE TITAN</span>
+                </div>
+                <div class="comic-speech-bubble">
+                    "1 Liter Buffalo Milk gives you <strong>43g Protein & 2,000mg Calcium daily</strong>! I build unbreakable bones and titan muscle mass!"
+                </div>
+                <div class="hero-card-body">
+                    <h3 class="hero-title">CAPTAIN MILK</h3>
+                    <span class="hero-alias">Desi Gir & Murrah Dairy Power</span>
+                    <ul class="hero-powers-list">
+                        <li><span class="power-bullet">🥛</span> <strong>Dual Protein Strike:</strong> 20% Fast Whey + 80% Slow Casein</li>
+                        <li><span class="power-bullet">💪</span> <strong>mTOR Activator:</strong> 3.5g Leucine triggers muscle growth</li>
+                        <li><span class="power-bullet">🦴</span> <strong>Bone Fortress:</strong> 2000mg bioavailable elemental calcium</li>
+                        <li><span class="power-bullet">🌿</span> <strong>A2 Light Digestion:</strong> Zero bloating or gas discomfort</li>
+                    </ul>
+                    <div class="hero-stat-bars">
+                        <div class="stat-row">
+                            <div class="stat-header"><span>BONE MINERALIZATION</span><span>100%</span></div>
+                            <div class="stat-track"><div class="stat-fill fill-cyan" style="width: 100%;"></div></div>
+                        </div>
+                        <div class="stat-row">
+                            <div class="stat-header"><span>MUSCLE HYPERTROPHY</span><span>96%</span></div>
+                            <div class="stat-track"><div class="stat-fill fill-cyan" style="width: 96%;"></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hero 2: Guru Bilona Ghee -->
+            <div class="hero-comic-card">
+                <div class="hero-card-header">
+                    <img src="assets/comic_guru_ghee.jpg" alt="Guru Ghee" class="hero-comic-img">
+                    <span class="hero-power-tag tag-ghee">HERO #02 • THE SUN SAGE</span>
+                </div>
+                <div class="comic-speech-bubble">
+                    "Hand-churned with Vedic wooden Bilona! My <strong>Butyric Acid heals leaky gut</strong> and Vitamin K2 cleans your heart arteries!"
+                </div>
+                <div class="hero-card-body">
+                    <h3 class="hero-title">GURU BILONA GHEE</h3>
+                    <span class="hero-alias">The Vedic Solar Healer</span>
+                    <ul class="hero-powers-list">
+                        <li><span class="power-bullet">✨</span> <strong>3.8% Butyric Acid:</strong> Repairs intestinal colonocyte cells</li>
+                        <li><span class="power-bullet">❤️</span> <strong>Vitamin K2 Shield:</strong> Pulls calcium from arteries into bones</li>
+                        <li><span class="power-bullet">🔥</span> <strong>250°C Smoke Point:</strong> Zero cancer-causing free radicals</li>
+                        <li><span class="power-bullet">🧠</span> <strong>Ayurvedic Medhya:</strong> Nourishes brain cells & sharpens memory</li>
+                    </ul>
+                    <div class="hero-stat-bars">
+                        <div class="stat-row">
+                            <div class="stat-header"><span>GUT LINING HEALING</span><span>100%</span></div>
+                            <div class="stat-track"><div class="stat-fill fill-gold" style="width: 100%;"></div></div>
+                        </div>
+                        <div class="stat-row">
+                            <div class="stat-header"><span>JOINT LUBRICATION</span><span>94%</span></div>
+                            <div class="stat-track"><div class="stat-fill fill-gold" style="width: 94%;"></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hero 3: Doctor Dahi -->
+            <div class="hero-comic-card">
+                <div class="hero-card-header">
+                    <img src="assets/comic_doctor_dahi.jpg" alt="Doctor Dahi" class="hero-comic-img">
+                    <span class="hero-power-tag tag-dahi">HERO #03 • PROBIOTIC GUARDIAN</span>
+                </div>
+                <div class="comic-speech-bubble">
+                    "Deploying billions of <strong>Lactobacillus friendly bacteria</strong> to vaporize acidity, bloating and indigestion in seconds!"
+                </div>
+                <div class="hero-card-body">
+                    <h3 class="hero-title">DOCTOR DAHI</h3>
+                    <span class="hero-alias">Living Probiotic Defender</span>
+                    <ul class="hero-powers-list">
+                        <li><span class="power-bullet">🦠</span> <strong>Live Bacterial Shield:</strong> Billions of gut-healing flora</li>
+                        <li><span class="power-bullet">⚡</span> <strong>Natural Vitamin B12:</strong> Pure vegetarian nerve energizer</li>
+                        <li><span class="power-bullet">🛡️</span> <strong>Acidity Extinguisher:</strong> Cools stomach pitta immediately</li>
+                        <li><span class="power-bullet">🥣</span> <strong>Pre-Digested Lactic:</strong> 100% gentle on lactose sensitives</li>
+                    </ul>
+                    <div class="hero-stat-bars">
+                        <div class="stat-row">
+                            <div class="stat-header"><span>GUT MICROBIOME REPOPULATION</span><span>100%</span></div>
+                            <div class="stat-track"><div class="stat-fill fill-green" style="width: 100%;"></div></div>
+                        </div>
+                        <div class="stat-row">
+                            <div class="stat-header"><span>ACIDITY & BLOAT RELIEF</span><span>98%</span></div>
+                            <div class="stat-track"><div class="stat-fill fill-green" style="width: 98%;"></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hero 4: Mighty Makhan -->
+            <div class="hero-comic-card">
+                <div class="hero-card-header">
+                    <img src="assets/comic_mighty_makhan.jpg" alt="Mighty Makhan" class="hero-comic-img">
+                    <span class="hero-power-tag tag-makhan">HERO #04 • JOINT TITAN</span>
+                </div>
+                <div class="comic-speech-bubble">
+                    "Smashing the chains of arthritis! My <strong>Wulzen Anti-Stiffness Factor</strong> lubricates knees and cartilage with ZERO salt!"
+                </div>
+                <div class="hero-card-body">
+                    <h3 class="hero-title">MIGHTY MAKHAN</h3>
+                    <span class="hero-alias">Fresh White Butter Crusher</span>
+                    <ul class="hero-powers-list">
+                        <li><span class="power-bullet">🦴</span> <strong>Wulzen Factor:</strong> Melts joint friction & knee stiffness</li>
+                        <li><span class="power-bullet">🍳</span> <strong>Lecithin Boost:</strong> Breaks down bad cholesterol naturally</li>
+                        <li><span class="power-bullet">🧂</span> <strong>Zero Added Sodium:</strong> Completely safe for high BP patients</li>
+                        <li><span class="power-bullet">👶</span> <strong>Brain Myelin Sheath:</strong> Essential fat acids for kids growth</li>
+                    </ul>
+                    <div class="hero-stat-bars">
+                        <div class="stat-row">
+                            <div class="stat-header"><span>JOINT FLEXIBILITY</span><span>100%</span></div>
+                            <div class="stat-track"><div class="stat-fill fill-makhan" style="width: 100%;"></div></div>
+                        </div>
+                        <div class="stat-row">
+                            <div class="stat-header"><span>ARTHRITIS RELIEF</span><span>95%</span></div>
+                            <div class="stat-track"><div class="stat-fill fill-makhan" style="width: 95%;"></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================
+         SECTION 2: 30-DAY SUPERHERO TRANSFORMATION (MIND MAP TIMELINE)
+         ========================================== -->
+    <section class="timeline-section" id="timeline">
+        <div class="comic-section-heading">
+            <span class="comic-chip-label">THE 30-DAY CHRONICLES</span>
+            <h2 class="comic-h2">WHAT HAPPENS INSIDE YOUR BODY?</h2>
+            <p class="comic-subtitle">Click the story chapters below to see the weekly biochemical transformation from Day 1 to Day 30!</p>
+        </div>
+
+        <div class="mindmap-timeline-box">
+            <!-- Timeline Navigation Tabs -->
+            <div class="timeline-nav-tabs">
+                <button class="timeline-tab-btn active" onclick="switchTimelineStage(1)">CHAPTER 1: DAYS 1 - 7</button>
+                <button class="timeline-tab-btn" onclick="switchTimelineStage(2)">CHAPTER 2: DAYS 8 - 15</button>
+                <button class="timeline-tab-btn" onclick="switchTimelineStage(3)">CHAPTER 3: DAYS 16 - 22</button>
+                <button class="timeline-tab-btn" onclick="switchTimelineStage(4)">CHAPTER 4: DAYS 23 - 30</button>
+            </div>
+
+            <!-- Stage 1 -->
+            <div class="timeline-stage-panel active" id="stage-1">
+                <div class="stage-comic-visual">
+                    <div class="stage-badge-big">🛡️ CHAPTER 1</div>
+                    <div class="stage-hero-metric">pH BUFFERED</div>
+                    <span class="stage-metric-label">Stomach Acid Neutralized & Electrolytes Charged</span>
+                </div>
+                <div class="stage-comic-details">
+                    <h3>THE ACID ATTACK NEUTRALIZED</h3>
+                    <p class="stage-desc">
+                        Pehele hafte me doodh ke natural buffering proteins excess gastric acid ko shant kar dete hain. St. Andrews University hydration index ke mutabiq doodh me maujood potassium, sodium aur calcium paani se bhi zyada der tak cells ko hydrate rakhte hain.
+                    </p>
+                    <div class="stage-facts-grid">
+                        <div class="stage-fact-card">
+                            <strong>🔥 Acidity & Heartburn Relief:</strong>
+                            <span>Doodh stomach lining par protective layer banakar pet ki jalan ko shant karta hai.</span>
+                        </div>
+                        <div class="stage-fact-card">
+                            <strong>💧 Cellular Isotonic Hydration:</strong>
+                            <span>Lactose aur electrolytes fluid retention ko improve karte hain, dehydration khatam.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stage 2 -->
+            <div class="timeline-stage-panel" id="stage-2">
+                <div class="stage-comic-visual">
+                    <div class="stage-badge-big">⚡ CHAPTER 2</div>
+                    <div class="stage-hero-metric">3.5g LEUCINE</div>
+                    <span class="stage-metric-label">mTOR Muscle Synthesis & Deep REM Sleep Awakening</span>
+                </div>
+                <div class="stage-comic-details">
+                    <h3>THE MUSCLE REPAIR & SLEEP SURGE</h3>
+                    <p class="stage-desc">
+                        Doosre hafte me daily 3.5g Leucine muscle breakdown ko block karta hai aur nayi muscle fibers repair karta hai. Raat ko L-Tryptophan brain me pahunchkar Serotonin aur Melatonin produce karta hai, jisse gahri neend aati hai.
+                    </p>
+                    <div class="stage-facts-grid">
+                        <div class="stage-fact-card">
+                            <strong>💪 Post-Workout Soreness Halved:</strong>
+                            <span>Whey protein tezi se micro-tears ko heal karta hai, agle din pain nahi hota.</span>
+                        </div>
+                        <div class="stage-fact-card">
+                            <strong>💤 REM Sleep Stability:</strong>
+                            <span>Cortisol stress hormone kam hota hai aur subah uthte waqt fresh energy feel hoti hai.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stage 3 -->
+            <div class="timeline-stage-panel" id="stage-3">
+                <div class="stage-comic-visual">
+                    <div class="stage-badge-big">🦴 CHAPTER 3</div>
+                    <div class="stage-hero-metric">40,000mg+</div>
+                    <span class="stage-metric-label">Elemental Bioavailable Calcium Deposited</span>
+                </div>
+                <div class="stage-comic-details">
+                    <h3>THE BONE FORTRESS FORMATION</h3>
+                    <p class="stage-desc">
+                        Teesre hafte tak body ke skeletal reserves replenish ho jate hain. Doodh me Calcium aur Phosphorus ka perfect 1:1 ratio hota hai jo calcium ko seedha haddiyo aur daanto ke enamel me lock karta hai, joint stiffness gayab hone lagti hai.
+                    </p>
+                    <div class="stage-facts-grid">
+                        <div class="stage-fact-card">
+                            <strong>🦷 Enamel & Dental Strength:</strong>
+                            <span>Daanto ki sensitivity aur weakness me direct visible improvement.</span>
+                        </div>
+                        <div class="stage-fact-card">
+                            <strong>🛡️ Osteopenia Defense:</strong>
+                            <span>Bone mineral density badhne lagti hai, 35+ umar walo me fracture risk ghat jata hai.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stage 4 -->
+            <div class="timeline-stage-panel" id="stage-4">
+                <div class="stage-comic-visual">
+                    <div class="stage-badge-big">💥 CHAPTER 4</div>
+                    <div class="stage-hero-metric">1.5kg LEAN</div>
+                    <span class="stage-metric-label">Total 1,290g Pure Protein Consumed in 30 Days</span>
+                </div>
+                <div class="stage-comic-details">
+                    <h3>THE 30-DAY SUPERHERO AWAKENING</h3>
+                    <p class="stage-desc">
+                        Pura 1 mahina complete hone par aapke sharir ko 1,000g se 1,290g pure complete protein mil chuka hota hai! Regular activity ke sath yeh 0.8kg se 1.5kg clean lean muscle support karta hai, skin glow karti hai aur immunity peak par hoti hai.
+                    </p>
+                    <div class="stage-facts-grid">
+                        <div class="stage-fact-card">
+                            <strong>🧬 Immunoglobulin Armor:</strong>
+                            <span>Mausami sardi, khansi aur viral infections se ladne ki taaqat double.</span>
+                        </div>
+                        <div class="stage-fact-card">
+                            <strong>⚡ All-Day Sustained Stamina:</strong>
+                            <span>Energy crashes band ho jate hain aur din bhar active aur focused rehte hain.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================
+         SECTION 3: ROG-NIVARAN BATTLE GRID
+         ========================================== -->
+    <section class="battles-section" id="battles">
+        <div class="comic-section-heading">
+            <span class="comic-chip-label">CLASH OF THE TITANS</span>
+            <h2 class="comic-h2">ROGS (DISEASES) SMASHED BY DAIRY</h2>
+            <p class="comic-subtitle">See how our superheroes dismantle 6 chronic modern ailments backed by biochemical science!</p>
+        </div>
+
+        <div class="battles-grid">
+            <!-- Battle 1 -->
+            <div class="battle-card">
+                <div class="battle-header">
+                    <span class="villain-name">👾 VILLAIN: OSTEOPOROSIS</span>
+                    <span class="hero-counter-tag">HERO: MILK + MAKHAN</span>
+                </div>
+                <div class="battle-body">
+                    <h4>Haddiyo aur Jodo Ka Dard (Joint Friction)</h4>
+                    <p>Aging ke sath ghutno ka synovial fluid sookhne lagta hai aur haddiya khokhli ho jaati hain.</p>
+                    <div class="battle-mechanism">
+                        <strong>Scientific Counter:</strong> Milk ka 2,000mg/L bioavailable calcium + Makhan ka <em>Wulzen Factor (stigmasterol)</em> cartilage ko cushion karta hai aur joint flexibility wapas laata hai.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Battle 2 -->
+            <div class="battle-card">
+                <div class="battle-header">
+                    <span class="villain-name">🔥 VILLAIN: ACID REFLUX & GERD</span>
+                    <span class="hero-counter-tag">HERO: COLD MILK + GHEE</span>
+                </div>
+                <div class="battle-body">
+                    <h4>Pet Me Jalan aur Chaale (Peptic Ulcers)</h4>
+                    <p>Stress aur unhealthy khane se stomach acid pet ki inner mucosa ko burn karne lagti hai.</p>
+                    <div class="battle-mechanism">
+                        <strong>Scientific Counter:</strong> Milk ke phosphoproteins acid buffer banakar instantly neutralize karte hain, aur Ghee ka <em>Butyric Acid</em> ulcer ki chhalo ko heal karta hai.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Battle 3 -->
+            <div class="battle-card">
+                <div class="battle-header">
+                    <span class="villain-name">💤 VILLAIN: CHRONIC INSOMNIA</span>
+                    <span class="hero-counter-tag">HERO: WARM MILK BEAM</span>
+                </div>
+                <div class="battle-body">
+                    <h4>Neend Na Aana aur Raat Ka Tanav (Stress)</h4>
+                    <p>Raat ko high cortisol aur screen light brain me melatonin banna band kar deti hain.</p>
+                    <div class="battle-mechanism">
+                        <strong>Scientific Counter:</strong> Raat ko warm milk me maujood <em>L-Tryptophan & Magnesium</em> brain me serotonin banata hai jo 15 minute me deep natural sleep trigger karta hai.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Battle 4 -->
+            <div class="battle-card">
+                <div class="battle-header">
+                    <span class="villain-name">🦠 VILLAIN: GUT DYSBIOSIS</span>
+                    <span class="hero-counter-tag">HERO: DOCTOR DAHI</span>
+                </div>
+                <div class="battle-body">
+                    <h4>Kabz, Gas aur Kharab Pachan (IBS)</h4>
+                    <p>Processed food khane se aanto (intestines) me bad bacteria colonization ho jati hai.</p>
+                    <div class="battle-mechanism">
+                        <strong>Scientific Counter:</strong> Desi Dahi ke billions of <em>Lactobacillus acidophilus</em> bad bacteria ko eliminate karte hain aur healthy gut microbiome ko restore karte hain.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Battle 5 -->
+            <div class="battle-card">
+                <div class="battle-header">
+                    <span class="villain-name">💀 VILLAIN: SARCOPENIA</span>
+                    <span class="hero-counter-tag">HERO: CAPTAIN MILK 1L</span>
+                </div>
+                <div class="battle-body">
+                    <h4>Manspeshiyo Ka Ghatna aur Kamzori</h4>
+                    <p>Low protein diet aur aging se har saal 1-2% muscle mass naturally loss hone lagta hai.</p>
+                    <div class="battle-mechanism">
+                        <strong>Scientific Counter:</strong> Buffalo Milk ka daily 43g HBV protein (PDCAAS = 1.0) complete essential amino acids provide karke muscle wasting ko 100% block karta hai.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Battle 6 -->
+            <div class="battle-card">
+                <div class="battle-header">
+                    <span class="villain-name">💓 VILLAIN: HYPERTENSION</span>
+                    <span class="hero-counter-tag">HERO: CASEIN BIO-PEPTIDES</span>
+                </div>
+                <div class="battle-body">
+                    <h4>High Blood Pressure & Blood Vessel Stress</h4>
+                    <p>Constricted blood vessels heart par pressure dalti hain jisse BP badhta hai.</p>
+                    <div class="battle-mechanism">
+                        <strong>Scientific Counter:</strong> Milk digestion ke dauran <em>ACE-Inhibitory Peptides (IPP aur VPP)</em> release hote hain jo blood vessels ko naturally dilate aur relax karte hain.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================
+         SECTION 4: INTERACTIVE MIND MAP TREE
+         ========================================== -->
+    <section class="mindmap-tree-section" id="mindmap">
+        <div class="comic-section-heading">
+            <span class="comic-chip-label">THE ECOSYSTEM</span>
+            <h2 class="comic-h2">PURE VEDIC DAIRY MIND MAP</h2>
+            <p class="comic-subtitle">Explore how all 4 dairy pillars branch out from Mother Dairy Nature into ultimate human wellness:</p>
+        </div>
+
+        <div class="tree-container">
+            <div class="tree-root-node">
+                👑 PURE DESI DAIRY POWER ECOSYSTEM
+            </div>
+
+            <div class="tree-branches-row">
+                <!-- Branch 1 -->
+                <div class="tree-node-card">
+                    <span class="tree-node-icon">🥛</span>
+                    <div class="tree-node-title">PURE MILK</div>
+                    <div class="tree-node-sub">A2 Gir Cow & Murrah Buffalo Raw Milk. Complete biological nutrition.</div>
+                    <div class="tree-node-pills">
+                        <span class="node-pill">34-43g Protein/L</span>
+                        <span class="node-pill">2,000mg Calcium</span>
+                        <span class="node-pill">Whey + Casein</span>
+                    </div>
+                </div>
+
+                <!-- Branch 2 -->
+                <div class="tree-node-card">
+                    <span class="tree-node-icon">🧈</span>
+                    <div class="tree-node-title">BILONA GHEE</div>
+                    <div class="tree-node-sub">Hand-churned from curd. Traditional wooden Bilona process.</div>
+                    <div class="tree-node-pills">
+                        <span class="node-pill">3.8% Butyric Acid</span>
+                        <span class="node-pill">Vitamin K2</span>
+                        <span class="node-pill">250°C Smoke Point</span>
+                    </div>
+                </div>
+
+                <!-- Branch 3 -->
+                <div class="tree-node-card">
+                    <span class="tree-node-icon">🥣</span>
+                    <div class="tree-node-title">DESI DAHI</div>
+                    <div class="tree-node-sub">Live fermentation with beneficial symbiotic cultures.</div>
+                    <div class="tree-node-pills">
+                        <span class="node-pill">Live Lactobacillus</span>
+                        <span class="node-pill">Natural B12</span>
+                        <span class="node-pill">Gut Microbiome</span>
+                    </div>
+                </div>
+
+                <!-- Branch 4 -->
+                <div class="tree-node-card">
+                    <span class="tree-node-icon">🧈</span>
+                    <div class="tree-node-title">WHITE MAKHAN</div>
+                    <div class="tree-node-sub">Fresh unpasteurized curd butter. Zero salt and zero additives.</div>
+                    <div class="tree-node-pills">
+                        <span class="node-pill">Wulzen Factor</span>
+                        <span class="node-pill">Lecithin</span>
+                        <span class="node-pill">Anti-Stiffness</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================
+         SECTION 5: VEDIC TRUTH VS MARKET TRAPS
+         ========================================== -->
+    <section class="comparison-section" id="compare">
+        <div class="comic-section-heading">
+            <span class="comic-chip-label">TRUTH VS ILLUSION</span>
+            <h2 class="comic-h2">SHUDDH DESI vs. MARKET CHEMICAL TRAPS</h2>
+            <p class="comic-subtitle">Don't be fooled by commercial adulteration! Here is how authentic dairy destroys factory duplicates:</p>
+        </div>
+
+        <div class="comic-table-wrap">
+            <table class="comic-table">
+                <thead>
+                    <tr>
+                        <th>PARAMETER</th>
+                        <th>OUR SHUDDH FARM DAIRY (HERO 🦸)</th>
+                        <th>MARKET COMMERCIAL CHEMICALS (VILLAIN 🦹)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Milk Processing</strong></td>
+                        <td class="hero-col">100% Raw, Freshly Milked, Sanitized Glass Bottles</td>
+                        <td class="villain-col">Ultra-processed, Plastic bags, Stripped of fat & nutrients</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Ghee Extraction</strong></td>
+                        <td class="hero-col">Vedic Bilona Churned from Whole Milk Dahi (Curd)</td>
+                        <td class="villain-col">Industrial boiling of cream or mixed with palm oil & dalda</td>
+                    </tr>
+                    <tr>
+                        <td><strong>White Butter (Makhan)</strong></td>
+                        <td class="hero-col">Zero Salt, Natural Wulzen Factor, Churned Fresh Daily</td>
+                        <td class="villain-col">Yellow dyed, Heavy artificial sodium, Chemical emulsifiers</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Digestibility & Gut Feel</strong></td>
+                        <td class="hero-col">A2 Beta-Casein, Heals digestive lining, Zero bloating</td>
+                        <td class="villain-col">A1 BCM-7 peptides cause inflammation, heavy gas & cramps</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Doorstep Assurance</strong></td>
+                        <td class="hero-col">Verified Dairy Delivery, Glass bottle exchange system</td>
+                        <td class="villain-col">Stored in warehouse fridges for days before dispatch</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- ==========================================
+         SECTION 6: COMIC ACTION CTA
+         ========================================== -->
+    <section class="comic-cta-section">
+        <div class="comic-cta-panel">
+            <h2 class="comic-cta-title">READY FOR YOUR 30-DAY TRANSFORMATION?</h2>
+            <p class="comic-cta-desc">
+                Subscribe today to Pure Desi Cow or Buffalo Milk and unleash unbreakable bones, boundless morning stamina, and pure Vedic vitality!
+            </p>
+            <div class="comic-cta-buttons">
+                <a href="index.html#plans" class="btn-comic-action btn-cta-cow">
+                    <span>🐄</span> COW MILK PLAN (₹849 / 30D)
+                </a>
+                <a href="index.html#plans" class="btn-comic-action btn-cta-buffalo">
+                    <span>🐃</span> BUFFALO MILK PLAN (₹999 / 30D)
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Customer Support Footer -->
+    <footer class="customer-support-footer">
+        <div class="support-footer-container">
+            <!-- Top Support Header -->
+            <div class="support-footer-head">
+                <div class="support-badge-pill">
+                    <span class="support-pulse-dot"></span>
+                    <span>24/7 CUSTOMER SUPPORT &amp; ASSISTANCE</span>
+                </div>
+                <h3 class="support-footer-title">Need Help or Have Questions?</h3>
+                <div class="support-footer-instruction">
+                    👉 <strong>support ke lye in logo pr click kro</strong>
+                </div>
+            </div>
+
+            <!-- 3 Support Channel Cards -->
+            <div class="support-channels-grid">
+                <!-- WhatsApp Support -->
+                <a href="https://wa.me/917508990616?text=hi%20i%20want%20to%20know%20more%20about%20your%20business" 
+                   target="_blank" 
+                   rel="noopener noreferrer" 
+                   class="support-channel-card card-whatsapp">
+                    <div class="channel-icon-wrap icon-whatsapp">
+                        <svg viewBox="0 0 32 32" width="34" height="34" fill="currentColor">
+                            <path d="M16 2a13.93 13.93 0 00-12 21.03L2 30l7.2-1.89A13.94 13.94 0 1016 2zm0 25.5a11.51 11.51 0 01-5.88-1.61l-.42-.25-4.36 1.14 1.16-4.25-.27-.44A11.53 11.53 0 1116 27.5zm6.34-8.66c-.35-.18-2.07-1-2.39-1.12s-.56-.17-.79.18-.92 1.13-1.12 1.37-.41.26-.76.09a9.55 9.55 0 01-2.82-1.74 10.53 10.53 0 01-1.95-2.43c-.2-.35 0-.54.16-.71s.35-.41.53-.61a2.38 2.38 0 00.35-.59.66.66 0 000-.62c-.09-.17-.79-1.9-.1-2.6-.3-.7-.61-.6-.79-.61h-.68a1.31 1.31 0 00-.95.44 4 4 0 00-1.25 3c0 1.77 1.28 3.48 1.46 3.72s2.53 3.86 6.13 5.41c.86.37 1.53.59 2.05.76a4.93 4.93 0 002.26.14 3.7 3.7 0 002.43-1.71 3 3 0 00.21-1.71c-.08-.13-.3-.22-.65-.39z"/>
+                        </svg>
+                    </div>
+                    <div class="channel-details">
+                        <span class="channel-tag tag-whatsapp">WhatsApp Chat</span>
+                        <h4 class="channel-name">WhatsApp Support</h4>
+                        <p class="channel-value">+91 75089 90616</p>
+                        <span class="channel-action-hint">Click to Chat on WhatsApp &rarr;</span>
+                    </div>
+                </a>
+
+                <!-- Instagram Support -->
+                <a href="https://www.instagram.com/milkmandairy01?exln=MTZya3pudWg1cmo3cg==" 
+                   target="_blank" 
+                   rel="noopener noreferrer" 
+                   class="support-channel-card card-instagram">
+                    <div class="channel-icon-wrap icon-instagram">
+                        <svg viewBox="0 0 24 24" width="32" height="32" fill="currentColor">
+                            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                        </svg>
+                    </div>
+                    <div class="channel-details">
+                        <span class="channel-tag tag-instagram">Instagram Profile</span>
+                        <h4 class="channel-name">Instagram</h4>
+                        <p class="channel-value">@milkmandairy01</p>
+                        <span class="channel-action-hint">Click to Visit Profile &rarr;</span>
+                    </div>
+                </a>
+
+                <!-- Email Support -->
+                <a href="mailto:pv173597@gmail.com?subject=Milkman%20Inquiry&body=Hi%2C%20I%20want%20to%20know%20more%20about%20your%20business." 
+                   class="support-channel-card card-email">
+                    <div class="channel-icon-wrap icon-email">
+                        <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="4" width="20" height="16" rx="3"></rect>
+                            <path d="M22 7l-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+                        </svg>
+                    </div>
+                    <div class="channel-details">
+                        <span class="channel-tag tag-email">Email Support</span>
+                        <h4 class="channel-name">Direct Email</h4>
+                        <p class="channel-value">pv173597@gmail.com</p>
+                        <span class="channel-action-hint">Click to Send Email &rarr;</span>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Footer Bottom Bar -->
+            <div class="support-footer-bottom">
+                <div class="footer-bottom-brand">
+                    <img src="assets/logo.png" alt="Milkman" class="footer-logo-img">
+                    <div>
+                        <strong>Milkman Pure Dairy</strong>
+                        <span>Fresh farm delivery to your doorstep every morning</span>
+                    </div>
+                </div>
+                <div class="footer-links-group">
+                    <a href="index.html#home">Home</a>
+                    <a href="index.html#plans">Subscription Plans</a>
+                    <a href="index.html#products">Products</a>
+                    <a href="benefits.html">⚡ Super Benefits</a>
+                    <a href="staff.html" id="staffLink">Staff Portal</a>
+                </div>
+                <div class="footer-copyright">
+                    &copy; 2026 Milkman Dairy Farm. All rights reserved. 100% Pure &amp; Unadulterated.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Interactive JS Script -->
+    <script>
+        function switchTimelineStage(stageNum) {
+            // Remove active from all tabs
+            const tabs = document.querySelectorAll('.timeline-tab-btn');
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            // Remove active from all panels
+            const panels = document.querySelectorAll('.timeline-stage-panel');
+            panels.forEach(panel => panel.classList.remove('active'));
+
+            // Activate current
+            tabs[stageNum - 1].classList.add('active');
+            const targetPanel = document.getElementById('stage-' + stageNum);
+            if (targetPanel) {
+                targetPanel.classList.add('active');
+            }
+        }
+
+        // Mobile Drawer Listeners
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const closeMobileNavBtn = document.getElementById('closeMobileNavBtn');
+        const mobileNavDrawer = document.getElementById('mobileNavDrawer');
+        const mobileNavBackdrop = document.getElementById('mobileNavBackdrop');
+
+        const openMobileNav = () => {
+            if (mobileNavDrawer && mobileNavBackdrop) {
+                mobileNavDrawer.classList.add('active');
+                mobileNavBackdrop.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+        };
+
+        const closeMobileNav = () => {
+            if (mobileNavDrawer && mobileNavBackdrop) {
+                mobileNavDrawer.classList.remove('active');
+                mobileNavBackdrop.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        };
+
+        if (mobileMenuBtn) mobileMenuBtn.addEventListener('click', openMobileNav);
+        if (closeMobileNavBtn) closeMobileNavBtn.addEventListener('click', closeMobileNav);
+        if (mobileNavBackdrop) mobileNavBackdrop.addEventListener('click', closeMobileNav);
+        document.querySelectorAll('.mobile-nav-link').forEach(link => {
+            link.addEventListener('click', closeMobileNav);
+        });
+    </script>
+</body>
+</html>

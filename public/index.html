@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Milkman - Fresh Dairy Delivered</title>
+    <meta name="description"
+        content="Get farm-fresh milk and dairy products delivered straight to your doorstep every morning.">
+    <!-- Modern Typography: Outfit -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css?v=2.4">
+    <!-- Firebase Scripts -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
+        import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-messaging.js";
+        window.initializeApp = initializeApp;
+        window.getMessaging = getMessaging;
+        window.getToken = getToken;
+        window.onMessage = onMessage;
+    </script>
+</head>
+
+<body>
+    <!-- CUSTOM POPUP -->
+    <div id="customPopupOverlay" class="custom-popup-overlay">
+        <div class="custom-popup">
+            <div class="custom-popup-content">
+                <div id="customPopupTitle" class="custom-popup-title">Alert</div>
+                <div id="customPopupMessage" class="custom-popup-message">This is a message</div>
+                <input type="text" id="customPopupInput" class="custom-popup-input" placeholder="Enter value...">
+            </div>
+            <div class="custom-popup-buttons" id="customPopupButtons">
+                <!-- Buttons injected via JS -->
+            </div>
+        </div>
+    </div>
+    <nav class="navbar">
+        <div class="logo" style="display: flex; align-items: center; gap: 10px; cursor: pointer;" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+            <img src="assets/logo.png" alt="Milkman" style="height: 52px; width: 52px; object-fit: contain;">
+            <span style="font-weight: 800; font-size: 1.45rem; color: var(--primary-color); letter-spacing: -0.5px;">Milkman</span>
+        </div>
+        <div class="nav-links">
+            <a href="#home">Home</a>
+            <a href="#plans">Plans</a>
+            <a href="#products">Products</a>
+            <a href="benefits.html"
+                style="color: #FF3344; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;">⚡
+                Benefits <span
+                    style="background: #FFD200; color: #111; font-size: 0.65rem; padding: 2px 5px; border-radius: 4px; font-weight: 800; border: 1px solid rgba(0,0,0,0.15);">NEW</span></a>
+            <a href="trace.html"
+                style="color: #00A854; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;">🔍 Trace
+                Batch <span
+                    style="background: #00E676; color: #111; font-size: 0.65rem; padding: 2px 5px; border-radius: 4px; font-weight: 800; border: 1px solid rgba(0,0,0,0.15);">VIDEO</span></a>
+            <a href="subscription.html" id="navSubscription" style="display: none; color: #00E676; font-weight: 700;">🥛
+                My Subscription</a>
+            <a href="#cart" id="navCart" style="display: none;">Cart <span id="cartCount"
+                    style="background: var(--primary-color); color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.8rem;">0</span></a>
+            <a href="orders.html" id="navOrders" style="display: none;">My Orders</a>
+            <div class="auth-buttons">
+                <button class="btn-signup" id="authBtn">Login / Sign Up</button>
+                <div id="userProfile" style="display: none;" class="user-profile">
+                    <span id="userNameDisplay"></span>
+                    <button id="logoutBtn" class="btn-login-outline">Logout</button>
+                </div>
+            </div>
+            <!-- Header Cart Button (Always accessible beside hamburger on mobile) -->
+            <button id="headerCartBtn" class="header-cart-btn" aria-label="View Cart" onclick="window.location.hash = 'cart'">
+                <span class="header-cart-icon">🛒</span>
+                <span id="headerCartBadge" class="header-cart-badge">0</span>
+            </button>
+            <!-- Mobile Hamburger Button beside cart -->
+            <button id="mobileMenuBtn" class="mobile-hamburger-btn" aria-label="Toggle Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Navigation Drawer & Backdrop -->
+    <div id="mobileNavBackdrop" class="mobile-nav-backdrop"></div>
+    <aside id="mobileNavDrawer" class="mobile-nav-drawer" aria-label="Mobile Navigation Menu">
+        <div class="mobile-drawer-header">
+            <div class="logo" style="display: flex; align-items: center; gap: 8px;">
+                <img src="assets/logo.png" alt="Milkman" style="height: 38px; width: 38px; object-fit: contain;">
+                <span style="font-weight: 800; font-size: 1.25rem; color: var(--primary-color);">Milkman Menu</span>
+            </div>
+            <button id="closeMobileNavBtn" class="close-mobile-nav" aria-label="Close Menu">&times;</button>
+        </div>
+        <!-- Drawer Account Section (User Greeting & Logout / Login) -->
+        <div id="drawerAccountSection" class="drawer-account-box">
+            <!-- Dynamically populated in main.js checkSession() -->
+        </div>
+        <div class="mobile-nav-links">
+            <a href="#home" class="mobile-nav-link">
+                <span class="m-icon">🏠</span>
+                <span class="m-title">Home</span>
+            </a>
+            <a href="#plans" class="mobile-nav-link">
+                <span class="m-icon">📋</span>
+                <span class="m-title">Monthly Plans</span>
+            </a>
+            <a href="#products" class="mobile-nav-link">
+                <span class="m-icon">🥛</span>
+                <span class="m-title">Dairy Products</span>
+            </a>
+            <a href="benefits.html" class="mobile-nav-link">
+                <span class="m-icon">⚡</span>
+                <span class="m-title">Super Benefits</span>
+                <span class="m-badge-gold">NEW</span>
+            </a>
+            <a href="trace.html" class="mobile-nav-link">
+                <span class="m-icon">🔍</span>
+                <span class="m-title">Trace Batch Video</span>
+                <span class="m-badge-green">VIDEO</span>
+            </a>
+            <a href="subscription.html" id="mobileNavSubscription" class="mobile-nav-link" style="display: none;">
+                <span class="m-icon">🥛</span>
+                <span class="m-title">My Subscription</span>
+                <span class="m-badge-gold">ACTIVE</span>
+            </a>
+            <a href="#cart" id="mobileNavCart" class="mobile-nav-link" style="display: none;">
+                <span class="m-icon">🛒</span>
+                <span class="m-title">Shopping Cart</span>
+            </a>
+            <a href="orders.html" id="mobileNavOrders" class="mobile-nav-link" style="display: none;">
+                <span class="m-icon">📦</span>
+                <span class="m-title">My Orders</span>
+            </a>
+        </div>
+    </aside>
+
+    <main class="hero" id="home">
+        <div class="hero-content">
+            <h1>Farm Fresh Milk,<br><span class="highlight">Every Morning.</span></h1>
+            <p>Pure, organic dairy products delivered straight to your doorstep before you even wake up. Manage your
+                daily subscriptions effortlessly.</p>
+            <div class="cta-group">
+                <button class="btn-primary"
+                    onclick="document.getElementById('plans').scrollIntoView({behavior: 'smooth'})">See Plans</button>
+                <button class="btn-secondary"
+                    onclick="document.getElementById('products').scrollIntoView({behavior: 'smooth'})">See
+                    Products</button>
+                <button class="btn-secondary" onclick="window.location.href='benefits.html'"
+                    style="background: #FFF9E6; color: #D97706; border: 2px solid #F59E0B; font-weight: 700; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2);">⚡
+                    Super Benefits</button>
+                <button class="btn-secondary" onclick="window.location.href='trace.html'"
+                    style="background: #E8FBF0; color: #059669; border: 2px solid #10B981; font-weight: 700; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);">🔍
+                    Trace Batch Video</button>
+            </div>
+        </div>
+        <div class="hero-image-container">
+            <div style="text-align: center; max-width: 450px; position: relative; z-index: 1;">
+                <img src="assets/delivery_woman.jpg" alt="Daily milk delivery"
+                    style="width: 100%; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.15); margin-bottom: 20px; border: 6px solid white; animation: float 6s ease-in-out infinite;">
+                <h3 style="color: var(--text-dark); font-weight: 700; font-size: 1.6rem; margin-top: 10px;">Daily milk
+                    delivery available</h3>
+            </div>
+        </div>
+    </main>
+
+    <!-- Subscription Plans Section -->
+    <section class="plans-section" id="plans">
+        <div class="section-header">
+            <span class="section-badge-pill">🥛 Farm Fresh Daily Subscription</span>
+            <h2>Monthly Subscription <span class="highlight">Plans</span></h2>
+            <p>Direct from our dairy farm to your doorstep • 100% Pure & Unadulterated</p>
+        </div>
+        <div class="plans-ribbon-layers">
+            <!-- Plan 1: Cow Milk Half Liter (500ml) Ribbon Card - ₹849 / 30 Days -->
+            <div class="plan-horizontal-ribbon ribbon-cow-half">
+                <div class="ribbon-glow-ambient glow-cow-half"></div>
+                <div class="plan-ribbon-visual">
+                    <img src="assets/cow_milk_plan.jpg" alt="Pure Desi Cow Milk - Half Liter" class="plan-ribbon-img">
+                    <div class="plan-ribbon-fade fade-cow-half"></div>
+                    <div class="ribbon-corner-badge badge-cow-half">
+                        <span>🐄 Desi Gir Cow • Half Liter</span>
+                    </div>
+                </div>
+
+                <div class="plan-ribbon-content">
+                    <div class="ribbon-top-badge badge-cow-half-top">
+                        <span class="ribbon-pulse-dot dot-cow-half"></span>
+                        <span class="ribbon-badge-text">Farm Fresh Vedic Cow Milk • 30 Days (500ml/Day)</span>
+                    </div>
+                    <h3 class="ribbon-title cow-half-title-effect">Pure Cow Milk Plan (Half Liter)</h3>
+                    <p class="ribbon-desc">
+                        Naturally sweet, light & easy to digest. Freshly milked every morning under hygienic conditions
+                        and delivered directly in sanitized glass bottles.
+                    </p>
+                    <div class="ribbon-chips">
+                        <span class="ribbon-chip"><span class="chip-icon">🥛</span> 500ml Daily</span>
+                        <span class="ribbon-chip"><span class="chip-icon">🛡️</span> Zero Preservatives</span>
+                        <span class="ribbon-chip"><span class="chip-icon">🛵</span> Free Doorstep Delivery</span>
+                    </div>
+                </div>
+
+                <div class="plan-ribbon-action">
+                    <div class="ribbon-price-box">
+                        <div class="ribbon-liter-rate">
+                            <span class="rate-curr">₹</span><span class="rate-amount">28</span>
+                            <span class="rate-unit">/ 500ml</span>
+                        </div>
+                        <div class="ribbon-monthly-wrap">
+                            <span class="monthly-amount">₹849</span>
+                            <span class="monthly-duration">for 30 days</span>
+                        </div>
+                    </div>
+                    <button class="btn-primary btn-book-plan btn-ribbon-3d btn-cow-half-3d btn-add-cart"
+                        data-id="plan_cow_half" data-name="Cow Milk Plan (Half Liter) - 30 Days (₹28/500ml)"
+                        data-price="849">
+                        <span>Book Plan Now</span>
+                        <span class="btn-arrow-3d">→</span>
+                    </button>
+                    <span class="ribbon-agent-note">🛵 Confirmation & payment at doorstep</span>
+                </div>
+            </div>
+
+            <!-- Plan 2: Buffalo Milk Half Liter (500ml) Ribbon Card - ₹999 / 30 Days -->
+            <div class="plan-horizontal-ribbon ribbon-buffalo-half">
+                <div class="ribbon-glow-ambient glow-buffalo-half"></div>
+                <div class="plan-ribbon-visual">
+                    <img src="assets/buffalo_milk_plan.png" alt="Pure Murrah Buffalo Milk - Half Liter"
+                        class="plan-ribbon-img">
+                    <div class="plan-ribbon-fade fade-buffalo-half"></div>
+                    <div class="ribbon-corner-badge badge-buffalo-half">
+                        <span>🐃 Murrah Buffalo • Half Liter</span>
+                    </div>
+                </div>
+
+                <div class="plan-ribbon-content">
+                    <div class="ribbon-top-badge badge-buffalo-half-top">
+                        <span class="ribbon-pulse-dot dot-buffalo-half"></span>
+                        <span class="ribbon-badge-text">Thick & Creamy High Fat • 30 Days (500ml/Day)</span>
+                    </div>
+                    <h3 class="ribbon-title buffalo-half-title-effect">Pure Buffalo Milk Plan (Half Liter)</h3>
+                    <p class="ribbon-desc">
+                        High in calcium & natural milk fats. Thick, rich & perfect for velvety morning chai, thick set
+                        curd, golden homemade desi ghee and rich malai.
+                    </p>
+                    <div class="ribbon-chips">
+                        <span class="ribbon-chip"><span class="chip-icon">🥛</span> 500ml Daily</span>
+                        <span class="ribbon-chip"><span class="chip-icon">🛡️</span> Zero Preservatives</span>
+                        <span class="ribbon-chip"><span class="chip-icon">🛵</span> Free Doorstep Delivery</span>
+                    </div>
+                </div>
+
+                <div class="plan-ribbon-action">
+                    <div class="ribbon-price-box">
+                        <div class="ribbon-liter-rate">
+                            <span class="rate-curr">₹</span><span class="rate-amount">33</span>
+                            <span class="rate-unit">/ 500ml</span>
+                        </div>
+                        <div class="ribbon-monthly-wrap">
+                            <span class="monthly-amount">₹999</span>
+                            <span class="monthly-duration">for 30 days</span>
+                        </div>
+                    </div>
+                    <button class="btn-primary btn-book-plan btn-ribbon-3d btn-buffalo-half-3d btn-add-cart"
+                        data-id="plan_buffalo_half" data-name="Buffalo Milk Plan (Half Liter) - 30 Days (₹33/500ml)"
+                        data-price="999">
+                        <span>Book Plan Now</span>
+                        <span class="btn-arrow-3d">→</span>
+                    </button>
+                    <span class="ribbon-agent-note">🛵 Confirmation & payment at doorstep</span>
+                </div>
+            </div>
+
+            <!-- Plan 3: Cow Milk 1 Liter Horizontal Ribbon Card - ₹1,699 / 30 Days -->
+            <div class="plan-horizontal-ribbon ribbon-cow">
+                <div class="ribbon-glow-ambient glow-cow"></div>
+                <div class="plan-ribbon-visual">
+                    <img src="assets/cow_milk_plan.jpg" alt="Pure Desi Cow Milk" class="plan-ribbon-img">
+                    <div class="plan-ribbon-fade fade-cow"></div>
+                    <div class="ribbon-corner-badge badge-cow">
+                        <span>🐄 Pure Desi Gir Cow</span>
+                    </div>
+                </div>
+
+                <div class="plan-ribbon-content">
+                    <div class="ribbon-top-badge badge-cow-top">
+                        <span class="ribbon-pulse-dot dot-cow"></span>
+                        <span class="ribbon-badge-text">Farm Fresh Vedic Cow Milk • 30 Days Subscription</span>
+                    </div>
+                    <h3 class="ribbon-title cow-title-effect">Pure Cow Milk Plan</h3>
+                    <p class="ribbon-desc">
+                        Naturally sweet, light & easy to digest. Freshly milked every morning under hygienic conditions
+                        and delivered directly in sanitized glass bottles.
+                    </p>
+                    <div class="ribbon-chips">
+                        <span class="ribbon-chip"><span class="chip-icon">🥛</span> 1 Liter Daily</span>
+                        <span class="ribbon-chip"><span class="chip-icon">🛡️</span> Zero Preservatives</span>
+                        <span class="ribbon-chip"><span class="chip-icon">🛵</span> Free Doorstep Delivery</span>
+                    </div>
+                </div>
+
+                <div class="plan-ribbon-action">
+                    <div class="ribbon-price-box">
+                        <div class="ribbon-liter-rate">
+                            <span class="rate-curr">₹</span><span class="rate-amount">56</span>
+                            <span class="rate-unit">/ Liter</span>
+                        </div>
+                        <div class="ribbon-monthly-wrap">
+                            <span class="monthly-amount">₹1,699</span>
+                            <span class="monthly-duration">for 30 days</span>
+                        </div>
+                    </div>
+                    <button class="btn-primary btn-book-plan btn-ribbon-3d btn-cow-3d btn-add-cart" data-id="plan_cow"
+                        data-name="Cow Milk Plan - 30 Days (₹56/L)" data-price="1699">
+                        <span>Book Plan Now</span>
+                        <span class="btn-arrow-3d">→</span>
+                    </button>
+                    <span class="ribbon-agent-note">🛵 Confirmation & payment at doorstep</span>
+                </div>
+            </div>
+
+            <!-- Plan 4: Buffalo Milk 1 Liter Horizontal Ribbon Card - ₹1,999 / 30 Days -->
+            <div class="plan-horizontal-ribbon ribbon-buffalo">
+                <div class="ribbon-glow-ambient glow-buffalo"></div>
+                <div class="plan-ribbon-visual">
+                    <img src="assets/buffalo_milk_plan.png" alt="Pure Murrah Buffalo Milk" class="plan-ribbon-img">
+                    <div class="plan-ribbon-fade fade-buffalo"></div>
+                    <div class="ribbon-corner-badge badge-buffalo">
+                        <span>🐃 Pure Murrah Buffalo</span>
+                    </div>
+                </div>
+
+                <div class="plan-ribbon-content">
+                    <div class="ribbon-top-badge badge-buffalo-top">
+                        <span class="ribbon-pulse-dot dot-buffalo"></span>
+                        <span class="ribbon-badge-text">Thick & Creamy High Fat • 30 Days Subscription</span>
+                    </div>
+                    <h3 class="ribbon-title buffalo-title-effect">Pure Buffalo Milk Plan</h3>
+                    <p class="ribbon-desc">
+                        High in calcium & natural milk fats. Thick, rich & perfect for velvety morning chai, thick set
+                        curd, golden homemade desi ghee and rich malai.
+                    </p>
+                    <div class="ribbon-chips">
+                        <span class="ribbon-chip"><span class="chip-icon">🥛</span> 1 Liter Daily</span>
+                        <span class="ribbon-chip"><span class="chip-icon">🛡️</span> Zero Preservatives</span>
+                        <span class="ribbon-chip"><span class="chip-icon">🛵</span> Free Doorstep Delivery</span>
+                    </div>
+                </div>
+
+                <div class="plan-ribbon-action">
+                    <div class="ribbon-price-box">
+                        <div class="ribbon-liter-rate">
+                            <span class="rate-curr">₹</span><span class="rate-amount">66</span>
+                            <span class="rate-unit">/ Liter</span>
+                        </div>
+                        <div class="ribbon-monthly-wrap">
+                            <span class="monthly-amount">₹1,999</span>
+                            <span class="monthly-duration">for 30 days</span>
+                        </div>
+                    </div>
+                    <button class="btn-primary btn-book-plan btn-ribbon-3d btn-buffalo-3d btn-add-cart"
+                        data-id="plan_buffalo" data-name="Buffalo Milk Plan - 30 Days (₹66/L)" data-price="1999">
+                        <span>Book Plan Now</span>
+                        <span class="btn-arrow-3d">→</span>
+                    </button>
+                    <span class="ribbon-agent-note">🛵 Confirmation & payment at doorstep</span>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <section class="products-section" id="products">
+        <div class="section-header">
+            <h2>Our <span class="highlight">Fresh Products</span></h2>
+            <p>100% natural, delivered straight to you.</p>
+        </div>
+        <div class="products-grid" id="productsGrid">
+            <!-- Products will be injected here via JavaScript -->
+        </div>
+    </section>
+
+    <!-- Cart / Checkout Section -->
+    <section class="cart-page-section" id="cartSection" style="display: none; min-height: 70vh;">
+        <div class="cart-page-container">
+            <!-- Header Row matching reference design -->
+            <div class="cart-header-row">
+                <a href="#products" class="btn-continue-shopping">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"
+                        stroke-width="2.5">
+                        <path d="M15 19l-7-7 7-7" />
+                    </svg>
+                    Continue Shopping
+                </a>
+                <div class="cart-title-center">
+                    <h2 class="cart-main-heading"><span class="cart-icon-title">🛒</span> Your <span
+                            class="highlight">Cart</span></h2>
+                    <p class="cart-sub-heading">Good products. Better living.</p>
+                </div>
+                <button class="btn-clear-cart" id="clearCartBtn" onclick="clearCart()">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                        <path
+                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                    Clear Cart
+                </button>
+            </div>
+
+            <!-- Items List Container -->
+            <div id="cartItemsContainer" class="cart-items-list">
+                <!-- Injected via renderCart() -->
+            </div>
+
+            <!-- Total Amount Bar (matching reference design) -->
+            <div id="cartTotalBar" class="cart-total-bar" style="display: none;">
+                <div class="cart-total-left">
+                    <div class="cart-total-icon-box">
+                        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#0066FF" stroke-width="2.2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="9" cy="21" r="1"></circle>
+                            <circle cx="20" cy="21" r="1"></circle>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                        </svg>
+                    </div>
+                    <div class="cart-total-labels">
+                        <span class="total-caption">Total Amount</span>
+                        <span class="total-price" id="cartTotalAmountDisplay">₹0</span>
+                    </div>
+                </div>
+                <div class="checkout-proceed-wrap">
+                    <div class="spark-burst-decor">
+                        <svg viewBox="0 0 28 24" width="28" height="24" fill="none" stroke="#0084FF" stroke-width="2.5"
+                            stroke-linecap="round">
+                            <line x1="8" y1="18" x2="3" y2="14" />
+                            <line x1="14" y1="16" x2="14" y2="9" />
+                            <line x1="20" y1="18" x2="25" y2="14" />
+                        </svg>
+                    </div>
+                    <button class="btn-proceed-checkout" id="proceedToDeliveryBtn" onclick="toggleDeliveryForm(true)"
+                        title="Proceed to Delivery">
+                        <span class="btn-checkout-arrow">→</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Delivery Details & Saved Address Container -->
+            <div id="checkoutForm" class="checkout-card-pro" style="display: none;">
+                <!-- Content injected dynamically via loadUserAddressAndRenderForm() -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Orders Section -->
+    <section class="products-section" id="ordersSection" style="display: none; min-height: 50vh;">
+        <div class="section-header">
+            <h2>Track <span class="highlight">Orders</span></h2>
+        </div>
+        <div id="ordersContainer"
+            style="max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 15px;">
+            <!-- Orders injected here -->
+        </div>
+    </section>
+
+    <!-- Promotional Ribbon -->
+    <section class="promo-ribbon">
+        <img src="assets/shobha_banner_new.png" alt="Shobha Toilet Cleaner">
+        <!-- 3D Buy Now Button Overlay -->
+        <button class="btn-buy-now-3d btn-add-cart" data-id="promo_shobha" data-name="Shobha Toilet Cleaner"
+            data-price="99">
+            <svg viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+            BUY NOW &rarr;
+        </button>
+    </section>
+
+    <!-- Comic Superhero Benefits Callout Banner (Above Footer) -->
+    <section class="comic-teaser-footer-section">
+        <div class="comic-teaser-footer-card">
+            <div class="comic-teaser-left">
+                <div class="comic-teaser-avatar-wrap">
+                    <span class="comic-teaser-sparkles">✨</span>
+                    <img src="assets/doctor_avatar.jpg" alt="Nutritionist" class="comic-teaser-avatar-img">
+                </div>
+                <div class="comic-teaser-info">
+                    <span class="comic-teaser-pill">
+                        <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor"
+                            stroke-width="2.5">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+                        </svg>
+                        COMIC HEALTH SAGA
+                    </span>
+                    <h4 class="comic-teaser-title">What Happens When You Drink Pure Milk For 30 Days?</h4>
+                    <p class="comic-teaser-desc">1,290g Muscle Protein • 60,000mg Bone Calcium • Joint &amp; Gut Healing
+                        Mind Maps</p>
+                </div>
+            </div>
+            <a href="benefits.html" class="comic-teaser-btn">
+                <span class="btn-book-icon">📖</span>
+                <span class="btn-text">Read Comic Benefits</span>
+                <span class="btn-arrow">&rarr;</span>
+            </a>
+        </div>
+    </section>
+
+    <!-- Customer Support Footer -->
+    <footer class="customer-support-footer">
+        <div class="support-footer-container">
+            <!-- Top Support Header with Decorative Lines -->
+            <div class="support-footer-head">
+                <div class="support-badge-divider-row">
+                    <span class="support-hairline"></span>
+                    <div class="support-badge-pill">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor"
+                            stroke-width="2.5">
+                            <path d="M3 18v-6a9 9 0 0 1 18 0v6"></path>
+                            <path
+                                d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z">
+                            </path>
+                        </svg>
+                        <span>24/7 CUSTOMER SUPPORT &amp; ASSISTANCE</span>
+                    </div>
+                    <span class="support-hairline"></span>
+                </div>
+                <h2 class="support-footer-title">Need Help or Have <span class="highlight-brown">Questions?</span></h2>
+                <p class="support-footer-subtitle">We're here to help! Feel free to reach out to us through any of the
+                    channels below.</p>
+                <div class="support-instruction-pill">
+                    <span class="comic-sparkles-left">\ | /</span>
+                    <span class="instruction-pill-inner">
+                        <span class="instruction-icon">👉</span>
+                        <span>support ke liye in logo pr click kro</span>
+                    </span>
+                    <span class="comic-sparkles-right">\ | /</span>
+                </div>
+            </div>
+
+            <!-- 3 Support Channel Cards in 1 Row -->
+            <div class="support-channels-grid">
+                <!-- WhatsApp Support -->
+                <a href="https://wa.me/917508990616?text=hi%20i%20want%20to%20know%20more%20about%20your%20business"
+                    target="_blank" rel="noopener noreferrer" class="support-channel-card card-whatsapp">
+                    <div class="channel-icon-wrap icon-whatsapp">
+                        <svg viewBox="0 0 32 32" width="28" height="28" fill="currentColor">
+                            <path
+                                d="M16 2a13.93 13.93 0 00-12 21.03L2 30l7.2-1.89A13.94 13.94 0 1016 2zm0 25.5a11.51 11.51 0 01-5.88-1.61l-.42-.25-4.36 1.14 1.16-4.25-.27-.44A11.53 11.53 0 1116 27.5zm6.34-8.66c-.35-.18-2.07-1-2.39-1.12s-.56-.17-.79.18-.92 1.13-1.12 1.37-.41.26-.76.09a9.55 9.55 0 01-2.82-1.74 10.53 10.53 0 01-1.95-2.43c-.2-.35 0-.54.16-.71s.35-.41.53-.61a2.38 2.38 0 00.35-.59.66.66 0 000-.62c-.09-.17-.79-1.9-.1-2.6-.3-.7-.61-.6-.79-.61h-.68a1.31 1.31 0 00-.95.44 4 4 0 00-1.25 3c0 1.77 1.28 3.48 1.46 3.72s2.53 3.86 6.13 5.41c.86.37 1.53.59 2.05.76a4.93 4.93 0 002.26.14 3.7 3.7 0 002.43-1.71 3 3 0 00.21-1.71c-.08-.13-.3-.22-.65-.39z" />
+                        </svg>
+                    </div>
+                    <div class="channel-details">
+                        <span class="channel-tag tag-whatsapp">WHATSAPP CHAT</span>
+                        <h4 class="channel-name">WhatsApp Support</h4>
+                        <p class="channel-value">+91 75089 90616</p>
+                        <span class="channel-action-btn">
+                            <span class="btn-text-full">💬 Click to Chat on WhatsApp &rarr;</span>
+                            <span class="btn-text-mobile">💬 Chat &rarr;</span>
+                        </span>
+                    </div>
+                </a>
+
+                <!-- Instagram Support (Highlighted) -->
+                <a href="https://www.instagram.com/milkmandairy01?exln=MTZya3pudWg1cmo3cg==" target="_blank"
+                    rel="noopener noreferrer" class="support-channel-card card-instagram is-featured">
+                    <span class="featured-sparkles">/ /</span>
+                    <div class="channel-icon-wrap icon-instagram">
+                        <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
+                            <path
+                                d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                        </svg>
+                    </div>
+                    <div class="channel-details">
+                        <span class="channel-tag tag-instagram">INSTAGRAM PROFILE</span>
+                        <h4 class="channel-name">Instagram</h4>
+                        <p class="channel-value">@milkmandairy01</p>
+                        <span class="channel-action-btn">
+                            <span class="btn-text-full">📷 Click to Visit Profile &rarr;</span>
+                            <span class="btn-text-mobile">📷 Visit &rarr;</span>
+                        </span>
+                    </div>
+                </a>
+
+                <!-- Email Support -->
+                <a href="mailto:pv173597@gmail.com?subject=Milkman%20Inquiry&body=Hi%2C%20I%20want%20to%20know%20more%20about%20your%20business."
+                    class="support-channel-card card-email">
+                    <div class="channel-icon-wrap icon-email">
+                        <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor"
+                            stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="4" width="20" height="16" rx="3"></rect>
+                            <path d="M22 7l-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+                        </svg>
+                    </div>
+                    <div class="channel-details">
+                        <span class="channel-tag tag-email">EMAIL SUPPORT</span>
+                        <h4 class="channel-name">Direct Email</h4>
+                        <p class="channel-value">pv173597@gmail.com</p>
+                        <span class="channel-action-btn">
+                            <span class="btn-text-full">✉️ Click to Send Email &rarr;</span>
+                            <span class="btn-text-mobile">✉️ Email &rarr;</span>
+                        </span>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Footer Delicate Heart Divider -->
+            <div class="support-footer-heart-divider">
+                <span class="heart-hairline"></span>
+                <span class="heart-content">🤎 WE'RE ALWAYS HERE FOR YOU</span>
+                <span class="heart-hairline"></span>
+            </div>
+
+            <!-- Footer Bottom Bar -->
+            <div class="support-footer-bottom">
+                <div class="footer-bottom-brand">
+                    <img src="assets/logo.png" alt="Milkman" class="footer-logo-img">
+                    <div>
+                        <strong>Milkman Pure Dairy</strong>
+                        <span>Fresh farm delivery to your doorstep every morning</span>
+                    </div>
+                </div>
+                <div class="footer-links-group">
+                    <a href="#home">Home</a>
+                    <a href="#plans">Subscription Plans</a>
+                    <a href="#products">Products</a>
+                    <a href="benefits.html">⚡ Super Benefits</a>
+                    <a href="staff.html" id="staffLink">Staff Portal</a>
+                </div>
+                <div class="footer-copyright">
+                    &copy; 2026 Milkman Dairy Farm. All rights reserved. 100% Pure &amp; Unadulterated.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+
+    <!-- Success Screen Overlay -->
+    <div id="successOverlay" class="success-screen-overlay" style="display: none;">
+        <div class="success-screen-backdrop"></div>
+        <div class="success-screen-card">
+            <div class="success-confetti-wrap">
+                <span class="confetti c1">🎉</span>
+                <span class="confetti c2">✨</span>
+                <span class="confetti c3">🥛</span>
+                <span class="confetti c4">🎊</span>
+            </div>
+            <div class="success-icon-wrapper">
+                <div class="success-pulse-ring"></div>
+                <div class="success-check-badge">✓</div>
+            </div>
+            <h2 class="success-card-title">Plan Booked Successfully!</h2>
+            <p class="success-card-desc">
+                Congratulations! Your monthly milk subscription is confirmed.
+            </p>
+            <div class="success-highlight-box">
+                <div class="sh-item">
+                    <span class="sh-icon">🛵</span>
+                    <div class="sh-text">
+                        <strong>Doorstep Agent Visit</strong>
+                        <span>Our agent will visit your location for subscription confirmation & payment.</span>
+                    </div>
+                </div>
+                <div class="sh-item">
+                    <span class="sh-icon">💬</span>
+                    <div class="sh-text">
+                        <strong>WhatsApp Confirmation Sent</strong>
+                        <span>All booking details have been sent directly to your WhatsApp number.</span>
+                    </div>
+                </div>
+            </div>
+            <div class="success-progress-track">
+                <div class="success-progress-bar"></div>
+            </div>
+            <span class="success-countdown-text">Taking you to your orders in a moment...</span>
+        </div>
+    </div>
+
+    <!-- OTP Auth Modal -->
+    <div id="authModal" class="modal-overlay">
+        <div class="modal-content">
+            <span class="close-modal" id="closeModal">&times;</span>
+
+            <div id="step-1" class="auth-step active-step">
+                <h2>Welcome to Milkman 🥛</h2>
+                <p>Login or create an account</p>
+                <div class="input-group">
+                    <label>Full Name</label>
+                    <input type="text" id="authName" placeholder="E.g. Paramvir Singh">
+                </div>
+                <div class="input-group">
+                    <label>Mobile Number</label>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span
+                            style="background: rgba(255,255,255,0.1); padding: 12px; border-radius: 8px; color: var(--text-light);">+91</span>
+                        <input type="tel" id="authPhone" placeholder="9876543210" maxlength="10" style="flex: 1;">
+                    </div>
+                </div>
+                <button id="sendOtpBtn" class="btn-primary" style="width: 100%; margin-top: 15px;">Get OTP via
+                    WhatsApp</button>
+            </div>
+
+            <div id="step-2" class="auth-step" style="display: none;">
+                <h2>Verify OTP 🔒</h2>
+                <p>We've sent a 6-digit code to your WhatsApp</p>
+                <div class="input-group">
+                    <input type="text" id="authOtp" placeholder="Enter 6-digit OTP" maxlength="6"
+                        style="text-align: center; letter-spacing: 5px; font-size: 24px;">
+                </div>
+                <button id="verifyOtpBtn" class="btn-primary" style="width: 100%; margin-top: 15px;">Verify &
+                    Proceed</button>
+                <button id="backBtn" class="btn-login-outline"
+                    style="width: 100%; margin-top: 10px; border: none;">Back</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/loader.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/orders.js"></script>
+</body>
+
+</html>

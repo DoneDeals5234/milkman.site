@@ -1,0 +1,2797 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Subscription - Milkman Dairy</title>
+    <meta name="description"
+        content="Manage your daily farm-fresh milk subscription, track deliveries, view bills, and control your delivery schedule.">
+    <!-- Modern Typography: Outfit -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css?v=2.4">
+    <style>
+        :root {
+            --sub-brown-bg: #1A0F0A;
+            --sub-brown-dark: #26160F;
+            --sub-brown-card: rgba(46, 26, 17, 0.85);
+            --sub-brown-border: rgba(212, 163, 115, 0.22);
+            --sub-amber-gold: #E5A967;
+            --sub-amber-glow: rgba(229, 169, 103, 0.25);
+            --sub-cream-white: #FFFDF9;
+            --sub-cream-soft: #EADBC8;
+            --sub-green: #00E676;
+            --sub-green-glow: rgba(0, 230, 118, 0.25);
+            --sub-amber: #FFAB00;
+            --sub-red: #ff4757;
+        }
+
+        html {
+            overflow-x: hidden !important;
+            width: 100%;
+            max-width: 100vw;
+        }
+
+        body {
+            background-color: var(--sub-brown-bg);
+            background-image:
+                radial-gradient(rgba(229, 169, 103, 0.08) 1.5px, transparent 1.5px),
+                radial-gradient(rgba(198, 120, 60, 0.04) 1.5px, transparent 1.5px);
+            background-size: 24px 24px;
+            background-position: 0 0, 12px 12px;
+            color: var(--sub-cream-white);
+            font-family: 'Outfit', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden !important;
+            width: 100%;
+            max-width: 100vw;
+            position: relative;
+        }
+
+        /* Glassmorphic Navbar for Subscription page (Dark Brown Theme) */
+        .sub-nav {
+            background: rgba(26, 15, 10, 0.94) !important;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(212, 163, 115, 0.18) !important;
+            box-shadow: 0 4px 25px rgba(0, 0, 0, 0.45);
+        }
+
+        .sub-nav .logo span {
+            color: var(--sub-amber-gold) !important;
+            font-weight: 800;
+        }
+
+        .sub-nav .nav-links a {
+            color: var(--sub-cream-soft) !important;
+        }
+
+        .sub-nav .nav-links a:hover,
+        .sub-nav .nav-links a.active {
+            color: var(--sub-amber-gold) !important;
+        }
+
+        /* Fixed Header Gap Fix: Content starts comfortably below navbar without getting cut off */
+        .sub-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 115px 20px 50px;
+            width: 100%;
+            box-sizing: border-box;
+            flex: 1;
+        }
+
+        @media (max-width: 768px) {
+            .sub-container {
+                padding: 95px 14px 35px;
+            }
+        }
+
+        /* Glassmorphic Cards (Dark Brown Theme) */
+        .glass-sub-card {
+            background: var(--sub-brown-card);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid var(--sub-brown-border);
+            border-radius: 22px;
+            padding: 28px;
+            margin-bottom: 24px;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45), 0 0 20px rgba(229, 169, 103, 0.05);
+            transition: border-color 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .glass-sub-card:hover {
+            border-color: rgba(229, 169, 103, 0.35);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55), 0 0 25px var(--sub-amber-glow);
+        }
+
+        /* Premium Plan Card with Real Milk Image */
+        .sub-hero-premium {
+            background: linear-gradient(135deg, rgba(46, 26, 17, 0.95) 0%, rgba(26, 15, 10, 0.98) 100%);
+            border: 1px solid rgba(229, 169, 103, 0.35);
+            border-radius: 20px;
+            padding: 22px 24px;
+            margin-bottom: 18px;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5), 0 0 25px rgba(229, 169, 103, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sub-hero-content-wrap {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .sub-hero-img-wrap {
+            position: relative;
+            width: 90px;
+            height: 90px;
+            flex-shrink: 0;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 2px solid var(--sub-amber-gold);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45), 0 0 14px var(--sub-amber-glow);
+            background: #26160F;
+        }
+
+        .sub-hero-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .sub-hero-img-badge {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(229, 169, 103, 0.95);
+            color: #1A0F0A;
+            font-size: 0.6rem;
+            font-weight: 900;
+            text-align: center;
+            padding: 2px 0;
+            letter-spacing: 0.5px;
+        }
+
+        .sub-hero-text-wrap {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .sub-hero-badge-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 6px;
+            flex-wrap: wrap;
+        }
+
+        .sub-hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(0, 230, 118, 0.15);
+            color: var(--sub-green);
+            border: 1px solid rgba(0, 230, 118, 0.4);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .sub-hero-area-tag {
+            color: #94a3b8;
+            font-size: 0.82rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 320px;
+        }
+
+        .sub-hero-title {
+            font-size: 1.6rem;
+            font-weight: 800;
+            margin: 0 0 6px;
+            color: var(--sub-cream-white);
+            letter-spacing: -0.3px;
+        }
+
+        .sub-hero-info-pills {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 6px;
+        }
+
+        .sub-hero-pill-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(229, 169, 103, 0.12);
+            border: 1px solid rgba(229, 169, 103, 0.3);
+            color: var(--sub-amber-gold);
+            padding: 2px 8px;
+            border-radius: 8px;
+            font-size: 0.76rem;
+            font-weight: 600;
+        }
+
+        .sub-hero-meta {
+            margin: 0;
+            color: var(--sub-cream-soft);
+            font-size: 0.86rem;
+            line-height: 1.35;
+        }
+
+        .sub-hero-period-bar {
+            margin-top: 14px;
+            padding-top: 10px;
+            border-top: 1px dashed rgba(212, 163, 115, 0.22);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .period-bar-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+        }
+
+        .period-label {
+            color: #94a3b8;
+            font-size: 0.74rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        .period-dates {
+            color: #38bdf8;
+            font-weight: 700;
+        }
+
+        .period-days-badge {
+            background: rgba(0, 230, 118, 0.15);
+            color: var(--sub-green);
+            border: 1px solid rgba(0, 230, 118, 0.35);
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.74rem;
+            font-weight: 700;
+        }
+
+        /* Stat Grid */
+        .sub-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .sub-stat-box {
+            background: rgba(30, 16, 10, 0.65);
+            border: 1px solid var(--sub-brown-border);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: left;
+            position: relative;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .sub-stat-box:hover {
+            transform: translateY(-2px);
+            border-color: var(--sub-amber-gold);
+        }
+
+        .sub-stat-num {
+            font-size: 2rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 6px;
+            color: var(--sub-amber-gold);
+        }
+
+        .sub-stat-label {
+            font-size: 0.85rem;
+            color: var(--sub-cream-soft);
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        /* Progress Bar */
+        .sub-progress-wrap {
+            margin-top: 20px;
+        }
+
+        .sub-progress-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            color: var(--sub-cream-soft);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .sub-progress-track {
+            width: 100%;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .sub-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #E5A967, #00E676);
+            border-radius: 10px;
+            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 15px rgba(0, 230, 118, 0.5);
+        }
+
+        /* Pause Tomorrow Card */
+        .pause-action-card {
+            background: linear-gradient(135deg, rgba(48, 26, 17, 0.8) 0%, rgba(26, 15, 10, 0.95) 100%);
+            border: 1px solid rgba(229, 169, 103, 0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .pause-action-card.is-paused {
+            border-color: rgba(255, 71, 87, 0.5);
+            background: linear-gradient(135deg, rgba(65, 20, 20, 0.7) 0%, rgba(26, 15, 10, 0.95) 100%);
+        }
+
+        .pause-info-col h3 {
+            margin: 0 0 6px;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--sub-cream-white);
+        }
+
+        .pause-info-col p {
+            margin: 0;
+            color: var(--sub-cream-soft);
+            font-size: 0.92rem;
+            line-height: 1.5;
+        }
+
+        .cutoff-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--sub-amber-gold);
+            font-size: 0.82rem;
+            font-weight: 700;
+            background: rgba(229, 169, 103, 0.14);
+            border: 1px solid rgba(229, 169, 103, 0.3);
+            padding: 4px 10px;
+            border-radius: 8px;
+            margin-top: 8px;
+        }
+
+        .btn-pause-toggle {
+            padding: 13px 26px;
+            font-size: 1rem;
+            font-weight: 700;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: none;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-pause-stop {
+            background: #ff4757;
+            color: #fff;
+        }
+
+        .btn-pause-stop:hover {
+            background: #ff2e43;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 71, 87, 0.4);
+        }
+
+        .btn-pause-resume {
+            background: var(--sub-green);
+            color: #0b1120;
+        }
+
+        .btn-pause-resume:hover {
+            background: #00c853;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 230, 118, 0.4);
+        }
+
+        /* 30-Day Calendar Grid */
+        .calendar-legend {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+            font-size: 0.85rem;
+            color: var(--sub-cream-soft);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+        }
+
+        .legend-dot.delivered {
+            background: #00E676;
+        }
+
+        .legend-dot.skipped {
+            background: var(--sub-amber-gold);
+        }
+
+        .legend-dot.upcoming {
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px dashed rgba(212, 163, 115, 0.3);
+        }
+
+        .days-calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            margin-top: 15px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .cust-day-card {
+            background: rgba(38, 22, 15, 0.75);
+            border: 1px solid rgba(212, 163, 115, 0.22);
+            border-radius: 10px;
+            padding: 8px 4px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            position: relative;
+            cursor: pointer;
+            min-height: 58px;
+            box-sizing: border-box;
+            overflow: hidden;
+            width: 100%;
+            max-width: 100%;
+            gap: 2px;
+        }
+
+        .cust-day-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--sub-amber-gold);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4), 0 0 12px var(--sub-amber-glow);
+        }
+
+        .cust-day-card.delivered {
+            background: rgba(0, 230, 118, 0.08);
+            border-color: rgba(0, 230, 118, 0.45);
+        }
+
+        .cust-day-card.skipped {
+            background: rgba(229, 169, 103, 0.08);
+            border-color: rgba(229, 169, 103, 0.45);
+        }
+
+        .cust-day-card.past-unmarked {
+            background: rgba(239, 68, 68, 0.07);
+            border-color: rgba(239, 68, 68, 0.35);
+        }
+
+        .cust-day-card.today {
+            box-shadow: 0 0 16px var(--sub-amber-glow);
+            border-color: var(--sub-amber-gold);
+            background: rgba(58, 33, 22, 0.95);
+        }
+
+        .cust-day-num {
+            font-size: 0.62rem;
+            font-weight: 700;
+            color: var(--sub-amber-gold);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-bottom: 1px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+            line-height: 1.1;
+        }
+
+        .cust-day-date {
+            font-size: 0.78rem;
+            font-weight: 800;
+            color: var(--sub-cream-white);
+            margin: 0 0 3px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+            line-height: 1.1;
+        }
+
+        .cust-day-pill-wrap {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            max-width: 100%;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+
+        .cust-day-pill {
+            font-size: 0.50rem;
+            font-weight: 800;
+            padding: 1.5px 4px;
+            border-radius: 4px;
+            display: inline-block;
+            text-transform: uppercase;
+            letter-spacing: -0.1px;
+            white-space: nowrap;
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: clip;
+            box-sizing: border-box;
+            line-height: 1.15;
+        }
+
+        .pill-del {
+            background: rgba(0, 230, 118, 0.2);
+            color: #00E676;
+            border: 1px solid rgba(0, 230, 118, 0.45);
+        }
+
+        .pill-skp {
+            background: rgba(229, 169, 103, 0.2);
+            color: var(--sub-amber-gold);
+            border: 1px solid rgba(229, 169, 103, 0.45);
+        }
+
+        .pill-upc {
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--sub-cream-soft);
+            border: 1px solid rgba(212, 163, 115, 0.2);
+        }
+
+        .pill-today {
+            background: rgba(229, 169, 103, 0.35);
+            color: #FFFDF9;
+            border: 1px solid var(--sub-amber-gold);
+        }
+
+        .pill-missed {
+            background: rgba(239, 68, 68, 0.2);
+            color: #FCA5A5;
+            border: 1px solid rgba(239, 68, 68, 0.45);
+        }
+
+        .legend-dot.today-legend {
+            background: var(--sub-amber-gold);
+            box-shadow: 0 0 6px var(--sub-amber-gold);
+        }
+
+        .cust-day-time {
+            font-size: 0.72rem;
+            color: var(--sub-cream-soft);
+            margin-top: 4px;
+            font-weight: 600;
+        }
+
+        /* --- Live Delivery Notification Feed Styling --- */
+        .delivery-feed-card {
+            border: 1px solid rgba(229, 169, 103, 0.3);
+            background: linear-gradient(135deg, rgba(38, 22, 15, 0.95) 0%, rgba(26, 15, 10, 0.98) 100%);
+        }
+
+        .delivery-feed-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(212, 163, 115, 0.18);
+            padding-bottom: 16px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .feed-header-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: rgba(229, 169, 103, 0.15);
+            border: 1px solid rgba(229, 169, 103, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.35rem;
+            color: var(--sub-amber-gold);
+            flex-shrink: 0;
+        }
+
+        .feed-live-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(0, 230, 118, 0.12);
+            border: 1px solid rgba(0, 230, 118, 0.4);
+            color: #00E676;
+            font-size: 0.75rem;
+            font-weight: 800;
+            padding: 4px 12px;
+            border-radius: 20px;
+            letter-spacing: 0.5px;
+        }
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #00E676;
+            animation: pulseDot 1.8s infinite;
+        }
+
+        @keyframes pulseDot {
+            0% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(0, 230, 118, 0.7);
+            }
+
+            70% {
+                transform: scale(1.1);
+                box-shadow: 0 0 0 6px rgba(0, 230, 118, 0);
+            }
+
+            100% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(0, 230, 118, 0);
+            }
+        }
+
+        .delivery-notification-stream {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .delivery-notif-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: rgba(46, 26, 17, 0.65);
+            border: 1px solid rgba(212, 163, 115, 0.18);
+            border-radius: 16px;
+            padding: 16px 20px;
+            transition: all 0.25s ease;
+        }
+
+        .delivery-notif-item:hover {
+            border-color: rgba(229, 169, 103, 0.45);
+            transform: translateX(4px);
+            background: rgba(58, 33, 22, 0.8);
+        }
+
+        .notif-left-icon {
+            position: relative;
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            background: rgba(0, 230, 118, 0.12);
+            border: 1px solid rgba(0, 230, 118, 0.35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .notif-check-badge {
+            position: absolute;
+            bottom: -3px;
+            right: -3px;
+            width: 18px;
+            height: 18px;
+            background: #00E676;
+            color: #0F172A;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.65rem;
+            font-weight: 900;
+            border: 2px solid #1A0F0A;
+        }
+
+        .notif-content {
+            flex-grow: 1;
+            min-width: 0;
+        }
+
+        .notif-top-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 4px;
+        }
+
+        .notif-title {
+            margin: 0;
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--sub-cream-white);
+        }
+
+        .notif-qty-highlight {
+            color: var(--sub-amber-gold);
+            font-weight: 800;
+            font-size: 1.15rem;
+        }
+
+        .notif-time-tag {
+            font-size: 0.8rem;
+            color: var(--sub-amber-gold);
+            font-weight: 700;
+            background: rgba(229, 169, 103, 0.14);
+            padding: 3px 10px;
+            border-radius: 20px;
+            border: 1px solid rgba(229, 169, 103, 0.28);
+        }
+
+        .notif-details-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 0.84rem;
+            color: var(--sub-cream-soft);
+            flex-wrap: wrap;
+            margin-top: 4px;
+        }
+
+        .notif-badge-delivered {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            color: #00E676;
+            font-weight: 700;
+            background: rgba(0, 230, 118, 0.12);
+            padding: 2px 8px;
+            border-radius: 6px;
+        }
+
+        /* Multi-Subscription App Tabs Carousel */
+        .sub-tabs-container {
+            margin-bottom: 14px;
+        }
+
+        .sub-tabs-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: var(--sub-amber-gold);
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .sub-tabs-scroll {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 6px;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .sub-tabs-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .sub-tab-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            border-radius: 30px;
+            background: rgba(38, 22, 15, 0.85);
+            border: 1px solid rgba(212, 163, 115, 0.25);
+            color: var(--sub-cream-soft);
+            font-size: 0.84rem;
+            font-weight: 700;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+            flex-shrink: 0;
+        }
+
+        .sub-tab-pill:active {
+            transform: scale(0.96);
+        }
+
+        .sub-tab-pill.active {
+            background: linear-gradient(135deg, rgba(229, 169, 103, 0.25) 0%, rgba(38, 22, 15, 0.95) 100%);
+            border-color: var(--sub-amber-gold);
+            color: #fff;
+            box-shadow: 0 4px 18px rgba(229, 169, 103, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .sub-tab-status-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #00E676;
+        }
+
+        .sub-tab-status-dot.paused {
+            background: #ff4757;
+        }
+
+        /* Floating Mobile Day Toast */
+        .sub-day-toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-60px);
+            background: rgba(26, 15, 10, 0.96);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--sub-amber-gold);
+            color: #fff;
+            padding: 10px 18px;
+            border-radius: 30px;
+            font-size: 0.82rem;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6), 0 0 20px var(--sub-amber-glow);
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 99999;
+            white-space: nowrap;
+            max-width: 90vw;
+        }
+
+        .sub-day-toast.visible {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .today-marker {
+            background: var(--sub-amber-gold);
+            color: #1A0F0A;
+            font-size: 0.55rem;
+            padding: 1px 4px;
+            border-radius: 3px;
+            font-weight: 900;
+            margin-left: 2px;
+        }
+
+        /* Bill Accordion Header */
+        .bill-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .bill-accordion-arrow {
+            display: none;
+            color: var(--sub-amber-gold);
+            font-size: 1.2rem;
+            transition: transform 0.25s ease;
+        }
+
+        /* Invoice & Bill Details Grid */
+        .bill-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 14px;
+            transition: all 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .bill-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .sub-hero {
+                text-align: left;
+                justify-content: flex-start;
+            }
+
+            .pause-action-card {
+                text-align: left;
+                justify-content: flex-start;
+            }
+
+            .btn-pause-toggle {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* Native Mobile App Viewport Optimization (<= 640px) */
+        @media (max-width: 640px) {
+            .sub-container {
+                padding: 60px 8px 24px !important;
+                width: 100% !important;
+                max-width: 100vw !important;
+                box-sizing: border-box !important;
+            }
+
+            .glass-sub-card {
+                padding: 10px 10px !important;
+                border-radius: 14px !important;
+                margin-bottom: 8px !important;
+            }
+
+            /* Premium Plan Card on Mobile */
+            .sub-hero-premium {
+                padding: 10px 10px !important;
+                border-radius: 14px !important;
+                margin-bottom: 8px !important;
+            }
+
+            .sub-hero-content-wrap {
+                gap: 12px !important;
+            }
+
+            .sub-hero-img-wrap {
+                width: 72px !important;
+                height: 72px !important;
+                border-radius: 12px !important;
+            }
+
+            .sub-hero-title {
+                font-size: 1.05rem !important;
+                line-height: 1.2 !important;
+                margin: 0 0 3px !important;
+            }
+
+            .sub-hero-badge {
+                font-size: 0.65rem !important;
+                padding: 2px 7px !important;
+            }
+
+            .sub-hero-area-tag {
+                font-size: 0.68rem !important;
+                max-width: 150px !important;
+            }
+
+            .sub-hero-info-pills {
+                gap: 5px !important;
+                margin-bottom: 3px !important;
+            }
+
+            .sub-hero-pill-item {
+                font-size: 0.66rem !important;
+                padding: 1px 5px !important;
+            }
+
+            .sub-hero-meta {
+                font-size: 0.7rem !important;
+                line-height: 1.25 !important;
+            }
+
+            .sub-hero-period-bar {
+                margin-top: 8px !important;
+                padding-top: 6px !important;
+                font-size: 0.72rem !important;
+            }
+
+            .period-label {
+                font-size: 0.62rem !important;
+            }
+
+            .period-dates {
+                font-size: 0.74rem !important;
+            }
+
+            .period-days-badge {
+                font-size: 0.64rem !important;
+                padding: 2px 6px !important;
+            }
+
+            /* Compact Rectangular 2-Column Stat Boxes (App Style) */
+            .sub-stats-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 6px !important;
+                margin-bottom: 8px !important;
+            }
+
+            .sub-stat-box {
+                padding: 8px 10px !important;
+                border-radius: 12px !important;
+                text-align: left !important;
+                background: rgba(30, 16, 10, 0.75) !important;
+                border: 1px solid rgba(212, 163, 115, 0.22) !important;
+                min-height: 50px !important;
+                display: flex !important;
+                flex-direction: column !important;
+                justify-content: center !important;
+            }
+
+            .sub-stat-num {
+                font-size: 1.35rem !important;
+                margin-bottom: 2px !important;
+                line-height: 1 !important;
+                white-space: nowrap !important;
+            }
+
+            .sub-stat-label {
+                font-size: 0.68rem !important;
+                font-weight: 700 !important;
+                letter-spacing: 0.3px !important;
+                white-space: nowrap !important;
+                overflow: hidden !important;
+                text-overflow: ellipsis !important;
+                color: var(--sub-cream-soft) !important;
+                text-transform: uppercase !important;
+            }
+
+            .sub-stat-box small {
+                display: none !important;
+            }
+
+            /* Compact Rectangular Progress Card */
+            .sub-progress-card {
+                padding: 7px 10px !important;
+                margin-bottom: 8px !important;
+                border-radius: 10px !important;
+            }
+
+            .sub-progress-meta {
+                font-size: 0.68rem !important;
+                margin-bottom: 4px !important;
+            }
+
+            .sub-progress-track {
+                height: 5px !important;
+                border-radius: 4px !important;
+            }
+
+            /* Compact Rectangular Tomorrow Delivery Card */
+            .pause-action-card {
+                padding: 8px 10px !important;
+                text-align: left !important;
+                align-items: center !important;
+                flex-direction: row !important;
+                justify-content: space-between !important;
+                gap: 8px !important;
+                margin-bottom: 8px !important;
+                border-radius: 10px !important;
+            }
+
+            .pause-info-col {
+                min-width: 0 !important;
+                flex: 1 1 auto !important;
+            }
+
+            .pause-info-col h3 {
+                font-size: 0.82rem !important;
+                line-height: 1.2 !important;
+                margin: 0 !important;
+                font-weight: 700 !important;
+                white-space: nowrap !important;
+                overflow: hidden !important;
+                text-overflow: ellipsis !important;
+            }
+
+            .pause-info-col p {
+                font-size: 0.68rem !important;
+                line-height: 1.2 !important;
+                margin: 1px 0 0 !important;
+                white-space: nowrap !important;
+                overflow: hidden !important;
+                text-overflow: ellipsis !important;
+            }
+
+            .cutoff-badge {
+                font-size: 0.6rem !important;
+                padding: 1px 5px !important;
+                margin-top: 2px !important;
+                display: inline-flex !important;
+                border-radius: 5px !important;
+            }
+
+            .btn-pause-toggle {
+                width: auto !important;
+                padding: 6px 10px !important;
+                font-size: 0.72rem !important;
+                border-radius: 8px !important;
+                justify-content: center !important;
+                flex-shrink: 0 !important;
+                white-space: nowrap !important;
+            }
+
+            .btn-pause-toggle:active {
+                transform: scale(0.96) !important;
+            }
+
+            /* 30-Day Calendar Grid on Mobile (All 30 Days in Rectangular Cards) */
+            .calendar-card-box {
+                padding: 10px 10px !important;
+                border-radius: 14px !important;
+                margin-bottom: 8px !important;
+            }
+
+            .calendar-card-header h3 {
+                font-size: 0.95rem !important;
+                margin: 0 !important;
+            }
+
+            .calendar-card-header p {
+                font-size: 0.68rem !important;
+                margin: 2px 0 4px !important;
+            }
+
+            .calendar-card-box {
+                padding: 10px 6px !important;
+                border-radius: 14px !important;
+                margin-bottom: 8px !important;
+            }
+
+            .calendar-legend {
+                gap: 6px 10px !important;
+                margin-bottom: 8px !important;
+                font-size: 0.60rem !important;
+                flex-wrap: wrap !important;
+                justify-content: center !important;
+            }
+
+            .legend-dot {
+                width: 7px !important;
+                height: 7px !important;
+            }
+
+            /* 5 Boxes Per Row Grid (NativeCN High-Density Pattern) */
+            .days-calendar-grid {
+                grid-template-columns: repeat(5, 1fr) !important;
+                gap: 4px !important;
+                margin-top: 8px !important;
+                width: 100% !important;
+                box-sizing: border-box !important;
+            }
+
+            .cust-day-card {
+                padding: 5px 2px !important;
+                border-radius: 7px !important;
+                min-height: 52px !important;
+                overflow: hidden !important;
+                box-sizing: border-box !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: center !important;
+                justify-content: center !important;
+                gap: 1px !important;
+            }
+
+            .cust-day-num {
+                font-size: clamp(0.48rem, 2.2vw, 0.58rem) !important;
+                margin-bottom: 1px !important;
+                font-weight: 700 !important;
+                letter-spacing: 0 !important;
+                white-space: nowrap !important;
+                overflow: hidden !important;
+                text-overflow: ellipsis !important;
+                max-width: 100% !important;
+                line-height: 1.1 !important;
+            }
+
+            .cust-day-date {
+                font-size: clamp(0.58rem, 2.6vw, 0.68rem) !important;
+                margin-bottom: 2px !important;
+                font-weight: 800 !important;
+                white-space: nowrap !important;
+                overflow: hidden !important;
+                text-overflow: ellipsis !important;
+                max-width: 100% !important;
+                line-height: 1.1 !important;
+            }
+
+            .cust-day-pill-wrap {
+                width: 100% !important;
+                max-width: 100% !important;
+                overflow: hidden !important;
+                box-sizing: border-box !important;
+                display: flex !important;
+                justify-content: center !important;
+            }
+
+            .cust-day-pill {
+                font-size: clamp(0.38rem, 1.75vw, 0.45rem) !important;
+                padding: 1px 2px !important;
+                border-radius: 4px !important;
+                font-weight: 800 !important;
+                letter-spacing: -0.2px !important;
+                white-space: nowrap !important;
+                overflow: hidden !important;
+                text-overflow: clip !important;
+                display: inline-block !important;
+                max-width: 100% !important;
+                box-sizing: border-box !important;
+                line-height: 1.15 !important;
+                text-transform: uppercase !important;
+            }
+
+            .cust-day-time {
+                display: none !important;
+            }
+
+            /* Live Delivery Feed on Mobile */
+            .delivery-feed-card {
+                padding: 10px 10px !important;
+                margin-top: 10px !important;
+            }
+
+            .delivery-feed-header {
+                padding-bottom: 8px !important;
+                margin-bottom: 8px !important;
+            }
+
+            .feed-header-icon {
+                width: 32px !important;
+                height: 32px !important;
+                font-size: 1rem !important;
+            }
+
+            .delivery-feed-header h3 {
+                font-size: 0.92rem !important;
+            }
+
+            .delivery-feed-header p {
+                font-size: 0.68rem !important;
+            }
+
+            .delivery-notif-item {
+                padding: 8px 8px !important;
+                gap: 8px !important;
+                border-radius: 10px !important;
+            }
+
+            .notif-left-icon {
+                width: 32px !important;
+                height: 32px !important;
+                font-size: 1rem !important;
+            }
+
+            .notif-title {
+                font-size: 0.8rem !important;
+            }
+
+            .notif-qty-highlight {
+                font-size: 0.88rem !important;
+            }
+
+            .notif-time-tag {
+                font-size: 0.66rem !important;
+                padding: 2px 6px !important;
+            }
+
+            .notif-details-row {
+                font-size: 0.68rem !important;
+                gap: 6px !important;
+            }
+
+            /* Bill Grid & Other Subscriptions */
+            .bill-accordion-arrow {
+                display: inline-block !important;
+            }
+
+            .bill-grid.collapsed {
+                display: none !important;
+            }
+
+            .bill-accordion-arrow.rotated {
+                transform: rotate(180deg) !important;
+            }
+
+            .bill-grid {
+                gap: 6px !important;
+            }
+
+            .bill-row {
+                padding: 6px 0 !important;
+                font-size: 0.78rem !important;
+            }
+
+            .bill-val {
+                font-size: 0.8rem !important;
+            }
+
+            .sub-card-item {
+                padding: 10px 10px !important;
+                border-radius: 12px !important;
+            }
+
+            .btn-toggle-sub-expand {
+                padding: 8px 12px !important;
+                font-size: 0.76rem !important;
+                border-radius: 8px !important;
+            }
+
+            .btn-toggle-sub-expand:active {
+                transform: scale(0.97) !important;
+            }
+
+            .drawer-sub-section {
+                padding: 10px 8px !important;
+                border-radius: 10px !important;
+            }
+
+            /* Sub Nav Mobile Cleanup */
+            .sub-nav .auth-buttons .btn-signup {
+                display: none !important;
+            }
+        }
+
+        .bill-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(212, 163, 115, 0.12);
+            font-size: 0.95rem;
+        }
+
+        .bill-row:last-child {
+            border-bottom: none;
+        }
+
+        .bill-label {
+            color: var(--sub-cream-soft);
+        }
+
+        .bill-val {
+            font-weight: 700;
+            color: var(--sub-cream-white);
+        }
+
+        /* Empty / Not Subscribed Screen */
+        #emptySubView {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        #emptySubView img {
+            width: 140px;
+            height: 140px;
+            object-fit: contain;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 10px 20px rgba(229, 169, 103, 0.2));
+        }
+
+        /* Loading Skeleton */
+        #subLoadingView {
+            text-align: center;
+            padding: 80px 20px;
+            color: var(--sub-cream-soft);
+        }
+
+        .sub-spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid rgba(212, 163, 115, 0.2);
+            border-top-color: var(--sub-amber-gold);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Previous / Other Subscriptions Section */
+        .sub-card-item {
+            position: relative;
+            border-radius: 20px;
+            background: linear-gradient(135deg, rgba(38, 22, 15, 0.94) 0%, rgba(26, 15, 10, 0.98) 100%);
+            border: 1px solid var(--sub-brown-border);
+            padding: 26px;
+            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.45);
+            transition: all 0.3s ease;
+        }
+
+        .sub-card-item:hover {
+            border-color: rgba(229, 169, 103, 0.4);
+            box-shadow: 0 20px 48px rgba(0, 0, 0, 0.55), 0 0 22px rgba(229, 169, 103, 0.12);
+        }
+
+        .btn-toggle-sub-expand {
+            width: 100%;
+            margin-top: 18px;
+            background: rgba(229, 169, 103, 0.1);
+            border: 1px solid rgba(229, 169, 103, 0.32);
+            color: var(--sub-amber-gold);
+            font-size: 0.92rem;
+            font-weight: 700;
+            padding: 13px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+        }
+
+        .btn-toggle-sub-expand:hover {
+            background: rgba(229, 169, 103, 0.22);
+            border-color: var(--sub-amber-gold);
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(229, 169, 103, 0.28);
+        }
+
+        .sub-expanded-drawer {
+            display: none;
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px dashed rgba(212, 163, 115, 0.25);
+            animation: fadeInDrawer 0.35s ease-out;
+        }
+
+        .sub-expanded-drawer.open {
+            display: block;
+        }
+
+        @keyframes fadeInDrawer {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .drawer-sub-section {
+            background: rgba(20, 10, 6, 0.55);
+            border: 1px solid rgba(212, 163, 115, 0.16);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+    </style>
+    <!-- Milkman Animated Loader Component -->
+    <script src="js/loader.js"></script>
+</head>
+
+<body>
+
+    <!-- CUSTOM POPUP OVERLAY -->
+    <div id="customPopupOverlay" class="custom-popup-overlay">
+        <div class="custom-popup">
+            <div class="custom-popup-content">
+                <div id="customPopupTitle" class="custom-popup-title">Alert</div>
+                <div id="customPopupMessage" class="custom-popup-message">Message</div>
+                <input type="text" id="customPopupInput" class="custom-popup-input" placeholder="Enter value...">
+            </div>
+            <div class="custom-popup-buttons" id="customPopupButtons"></div>
+        </div>
+    </div>
+
+    <!-- NAVBAR (Dark Brown Theme & Mobile Hamburger) -->
+    <nav class="navbar sub-nav">
+        <div class="logo" style="display: flex; align-items: center; gap: 10px; cursor: pointer;"
+            onclick="window.location.href='index.html'">
+            <img src="assets/logo.png" alt="Milkman" style="height: 50px; width: 50px; object-fit: contain;">
+            <span>Milkman</span>
+        </div>
+        <div class="nav-links">
+            <a href="index.html#home">Home</a>
+            <a href="index.html#plans">Plans</a>
+            <a href="index.html#products">Products</a>
+            <a href="benefits.html"
+                style="color: #FF3344; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;">⚡
+                Benefits <span
+                    style="background: #FFD200; color: #111; font-size: 0.65rem; padding: 1px 5px; border-radius: 4px; font-weight: 800;">NEW</span></a>
+            <a href="trace.html"
+                style="color: #00A854; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;">🔍 Trace
+                Batch <span
+                    style="background: #00E676; color: #111; font-size: 0.65rem; padding: 1px 5px; border-radius: 4px; font-weight: 800;">VIDEO</span></a>
+            <a href="subscription.html" class="active"
+                style="color: var(--sub-amber-gold); font-weight: 700; border-bottom: 2px solid var(--sub-amber-gold);">🥛
+                My Subscription</a>
+            <a href="orders.html" id="navOrders" style="display: none;">My Orders</a>
+            <div class="auth-buttons">
+                <button class="btn-signup" id="authBtn"
+                    style="background: linear-gradient(135deg, #E5A967 0%, #C68B59 100%); color: #1A0F0A; font-weight: 800;">Login
+                    / Sign Up</button>
+                <div id="userProfile" style="display: none;" class="user-profile">
+                    <span id="userNameDisplay" style="color: var(--sub-cream-white); font-weight: 700;"></span>
+                    <button id="logoutBtn" class="btn-login-outline"
+                        style="color: var(--sub-amber-gold); border-color: var(--sub-amber-gold);">Logout</button>
+                </div>
+            </div>
+            <!-- Header Cart Button -->
+            <button id="headerCartBtn" class="header-cart-btn" aria-label="View Cart"
+                onclick="window.location.href='index.html#cart'"
+                style="background: rgba(229, 169, 103, 0.12); border-color: rgba(229, 169, 103, 0.3);">
+                <span class="header-cart-icon">🛒</span>
+                <span id="headerCartBadge" class="header-cart-badge">0</span>
+            </button>
+            <!-- Mobile Right Controls (Beside Login) -->
+            <button id="mobileMenuBtn" class="mobile-hamburger-btn" aria-label="Toggle Menu"
+                style="background: rgba(229, 169, 103, 0.12); border-color: rgba(229, 169, 103, 0.3);">
+                <span style="background: var(--sub-amber-gold);"></span>
+                <span style="background: var(--sub-amber-gold);"></span>
+                <span style="background: var(--sub-amber-gold);"></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- MOBILE NAVIGATION DRAWER & BACKDROP -->
+    <div id="mobileNavBackdrop" class="mobile-nav-backdrop"></div>
+    <aside id="mobileNavDrawer" class="mobile-nav-drawer" aria-label="Mobile Navigation Menu"
+        style="background: #1A0F0A; color: #FFFDF9; border-left: 1px solid rgba(212, 163, 115, 0.2);">
+        <div class="mobile-drawer-header"
+            style="background: #26160F; border-bottom: 1px solid rgba(212, 163, 115, 0.2);">
+            <div class="logo" style="display: flex; align-items: center; gap: 8px;">
+                <img src="assets/logo.png" alt="Milkman" style="height: 38px; width: 38px; object-fit: contain;">
+                <span style="font-weight: 800; font-size: 1.25rem; color: var(--sub-amber-gold);">Milkman Menu</span>
+            </div>
+            <button id="closeMobileNavBtn" class="close-mobile-nav" aria-label="Close Menu"
+                style="color: #EADBC8;">&times;</button>
+        </div>
+        <!-- Drawer Account Section -->
+        <div id="drawerAccountSection" class="drawer-account-box"
+            style="background: #26160F; border-color: rgba(212, 163, 115, 0.25);">
+            <!-- Populated via JS -->
+        </div>
+        <div class="mobile-nav-links">
+            <a href="index.html#home" class="mobile-nav-link" style="color: #FFFDF9;">
+                <span class="m-icon">🏠</span>
+                <span class="m-title">Home</span>
+            </a>
+            <a href="index.html#plans" class="mobile-nav-link" style="color: #FFFDF9;">
+                <span class="m-icon">📋</span>
+                <span class="m-title">Monthly Plans</span>
+            </a>
+            <a href="index.html#products" class="mobile-nav-link" style="color: #FFFDF9;">
+                <span class="m-icon">🥛</span>
+                <span class="m-title">Dairy Products</span>
+            </a>
+            <a href="benefits.html" class="mobile-nav-link" style="color: #FFFDF9;">
+                <span class="m-icon">⚡</span>
+                <span class="m-title">Super Benefits</span>
+                <span class="m-badge-gold">NEW</span>
+            </a>
+            <a href="trace.html" class="mobile-nav-link" style="color: #FFFDF9;">
+                <span class="m-icon">🔍</span>
+                <span class="m-title">Trace Batch Video</span>
+                <span class="m-badge-green">VIDEO</span>
+            </a>
+            <a href="subscription.html" class="mobile-nav-link active"
+                style="color: var(--sub-amber-gold); background: rgba(229, 169, 103, 0.1);">
+                <span class="m-icon">🥛</span>
+                <span class="m-title">My Subscription</span>
+                <span class="m-badge-gold">ACTIVE</span>
+            </a>
+            <a href="index.html#cart" class="mobile-nav-link" style="color: #FFFDF9;">
+                <span class="m-icon">🛒</span>
+                <span class="m-title">Shopping Cart</span>
+            </a>
+            <a href="orders.html" class="mobile-nav-link" style="color: #FFFDF9;">
+                <span class="m-icon">📦</span>
+                <span class="m-title">My Orders</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- MAIN SUBSCRIPTION CONTENT CONTAINER -->
+    <div class="sub-container">
+
+        <!-- 1. LOADING VIEW WITH ANIMATED MILKING LOADER -->
+        <div id="subLoadingView"
+            style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px 0;">
+            <div style="width: 100%; max-width: 420px; aspect-ratio: 1/1; margin: 0 auto 15px;">
+                <object type="image/svg+xml" data="assets/animated_loader.svg"
+                    style="width: 100%; height: 100%; pointer-events: none;"></object>
+            </div>
+            <h3 style="color: #fff; margin-bottom: 8px;">Loading Your Milk Subscription...</h3>
+            <p style="color: var(--sub-cream-soft); font-size: 0.95rem;">Fetching active plan, delivery schedule &amp;
+                invoices</p>
+        </div>
+
+        <!-- 2. NOT SUBSCRIBED / EMPTY STATE -->
+        <div id="emptySubView" class="glass-sub-card" style="display: none;">
+            <img src="assets/logo.png" alt="Milkman Dairy">
+            <h2 style="font-size: 1.8rem; color: #fff; margin-bottom: 10px;">No Active Milk Subscription Found</h2>
+            <p style="color: #94a3b8; max-width: 500px; margin: 0 auto 25px; line-height: 1.6;">
+                You don't have an active daily milk plan linked to this account yet. Subscribe today to receive 100%
+                farm-fresh Vedic cow or buffalo milk at your doorstep every morning!
+            </p>
+            <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                <a href="index.html#plans" class="btn-primary"
+                    style="padding: 12px 28px; font-size: 1rem; text-decoration: none;">
+                    Explore Monthly Plans (From ₹28/day)
+                </a>
+                <button id="openAuthEmptyBtn" class="btn-login-outline" style="padding: 12px 24px; font-size: 1rem;">
+                    Login with Another Number
+                </button>
+            </div>
+        </div>
+
+        <!-- 3. SUBSCRIBED ACTIVE VIEW -->
+        <div id="activeSubView" style="display: none;">
+
+            <!-- Multi-Subscription App Tabs Carousel -->
+            <div id="subTabsWrapper" class="sub-tabs-container" style="display: none;">
+                <div class="sub-tabs-label">
+                    <span>📱 Switch Subscription:</span>
+                    <span id="subTabsCountBadge"
+                        style="background: rgba(229,169,103,0.15); color: var(--sub-amber-gold); padding: 2px 8px; border-radius: 12px; font-size: 0.72rem; border: 1px solid rgba(229,169,103,0.3);"></span>
+                </div>
+                <div class="sub-tabs-scroll" id="subTabsScroll">
+                    <!-- Populated dynamically via JS -->
+                </div>
+            </div>
+
+            <!-- Beautiful Plan Card with Real Milk Image & Details -->
+            <div class="glass-sub-card sub-hero-premium">
+                <div class="sub-hero-content-wrap">
+                    <div class="sub-hero-img-wrap">
+                        <img src="assets/fresh_milk_card.jpg" alt="Pure Farm Fresh Milk" class="sub-hero-img" id="subPlanImage" onerror="this.src='assets/cow_milk_plan.jpg'">
+                        <span class="sub-hero-img-badge">A2 PURE</span>
+                    </div>
+                    <div class="sub-hero-text-wrap">
+                        <div class="sub-hero-badge-row">
+                            <span class="sub-hero-badge">● Active Subscription</span>
+                            <span class="sub-hero-area-tag" id="subAreaHeader">📍 Delivery Area</span>
+                        </div>
+                        <h1 class="sub-hero-title" id="subPlanTitle">Pure Desi Cow Milk (1L)</h1>
+                        <div class="sub-hero-info-pills">
+                            <span class="sub-hero-pill-item">🥛 <span id="subDailyQtyHeader">1 Liter / Morning</span></span>
+                            <span class="sub-hero-pill-item">₹ <span id="subDailyRateHeader">₹56/day</span></span>
+                            <span class="sub-hero-pill-item">🌱 <span>Farm Fresh</span></span>
+                        </div>
+                        <p class="sub-hero-meta">
+                            Subscriber: <strong style="color: #fff;" id="subCustomerName">Paramvir Singh</strong> • <span id="subCustomerPhone">+91 98765 43210</span>
+                        </p>
+                    </div>
+                </div>
+                <div class="sub-hero-period-bar">
+                    <div class="period-bar-left">
+                        <span class="period-label">Subscription Cycle:</span>
+                        <strong class="period-dates" id="subDateRange">14 Oct - 13 Nov</strong>
+                    </div>
+                    <span class="period-days-badge">30-Day Plan</span>
+                </div>
+            </div>
+
+            <!-- Compact Rectangular Stats Grid -->
+            <div class="sub-stats-grid">
+                <div class="sub-stat-box">
+                    <div class="sub-stat-num" id="statRemainingDays" style="color: #38bdf8;">0</div>
+                    <div class="sub-stat-label">Days Remaining</div>
+                    <small style="color: #64748b; font-size: 0.72rem;">out of 30 days cycle</small>
+                </div>
+                <div class="sub-stat-box">
+                    <div class="sub-stat-num" id="statDeliveredDays" style="color: var(--sub-green);">0</div>
+                    <div class="sub-stat-label">Delivered Days</div>
+                    <small style="color: #64748b; font-size: 0.72rem;">bottles delivered fresh</small>
+                </div>
+                <div class="sub-stat-box">
+                    <div class="sub-stat-num" id="statSkippedDays" style="color: var(--sub-amber);">0</div>
+                    <div class="sub-stat-label">Paused / Skipped</div>
+                    <small style="color: #64748b; font-size: 0.72rem;">skipped by your request</small>
+                </div>
+                <div class="sub-stat-box">
+                    <div class="sub-stat-num" id="statBillAmount" style="color: #fff;">₹0</div>
+                    <div class="sub-stat-label" id="statPaymentBadge">Doorstep Bill</div>
+                    <small style="color: #64748b; font-size: 0.72rem;" id="statPaymentMethod">Pay at Doorstep</small>
+                </div>
+            </div>
+
+            <!-- Progress Bar Card (Compact Rectangular) -->
+            <div class="glass-sub-card sub-progress-card" style="padding: 16px 20px;">
+                <div class="sub-progress-meta">
+                    <span>30-Day Delivery Cycle Progress</span>
+                    <span id="subProgressPercent" style="color: var(--sub-green); font-weight: 800;">0% Completed</span>
+                </div>
+                <div class="sub-progress-track">
+                    <div class="sub-progress-bar" id="subProgressBar" style="width: 0%;"></div>
+                </div>
+            </div>
+
+            <!-- STOP / RESUME TOMORROW'S DELIVERY CARD (Key User Feature) -->
+            <div class="glass-sub-card pause-action-card" id="pauseTomorrowCard">
+                <div class="pause-info-col">
+                    <h3 id="pauseStatusHeader">
+                        <span>🥛</span> Delivery Scheduled for Tomorrow
+                    </h3>
+                    <p id="pauseStatusDesc">
+                        Your fresh milk bottle is scheduled for morning delivery on <strong style="color: #fff;"
+                            id="tomorrowDateDisplay">Tomorrow</strong>.
+                    </p>
+                    <div class="cutoff-badge">
+                        ⏰ Cut-off Time: 11:00 PM IST tonight (Change before 11 PM)
+                    </div>
+                </div>
+                <div>
+                    <button id="togglePauseBtn" class="btn-pause-toggle btn-pause-stop">
+                        <span>⏸</span> Stop Tomorrow's Delivery
+                    </button>
+                </div>
+            </div>
+
+            <!-- 30-DAY DELIVERY CALENDAR / HISTORY -->
+            <div class="glass-sub-card calendar-card-box">
+                <div
+                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
+                    <div>
+                        <h3 style="margin: 0; font-size: 1.3rem;">📅 30-Day Delivery Schedule &amp; History</h3>
+                        <p style="margin: 4px 0 0; color: #94a3b8; font-size: 0.88rem;">
+                            Live tracker showing which days milk was delivered or paused by you.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Calendar Legend -->
+                <div class="calendar-legend">
+                    <div class="legend-item">
+                        <span class="legend-dot delivered"></span>
+                        <span>Delivered</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-dot skipped"></span>
+                        <span>Skipped</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-dot" style="background: #ef4444; box-shadow: 0 0 6px rgba(239,68,68,0.5);"></span>
+                        <span>Undelivered</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-dot today-legend"></span>
+                        <span style="color: var(--sub-amber-gold); font-weight: 700;">Scheduled (Today)</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-dot upcoming"></span>
+                        <span>Upcoming</span>
+                    </div>
+                </div>
+
+                <!-- Days Grid -->
+                <div class="days-calendar-grid" id="customerDaysGrid">
+                    <!-- Populated dynamically via JS -->
+                </div>
+            </div>
+
+            <!-- BILL DETAILS & INVOICE BREAKDOWN -->
+            <div class="glass-sub-card" id="billDetailsCard">
+                <div class="bill-header-row" onclick="window.toggleBillAccordion ? window.toggleBillAccordion() : null">
+                    <h3 style="margin: 0; font-size: 1.25rem; display: flex; align-items: center; gap: 8px;">
+                        <span>🧾</span> Subscription Bill &amp; Payment Status
+                    </h3>
+                    <span id="billAccordionArrow" class="bill-accordion-arrow">▾</span>
+                </div>
+
+                <div class="bill-grid" id="billGridContent">
+                    <div>
+                        <div class="bill-row">
+                            <span class="bill-label">Selected Plan</span>
+                            <span class="bill-val" id="billPlanName">Pure Cow Milk</span>
+                        </div>
+                        <div class="bill-row">
+                            <span class="bill-label">Daily Quantity</span>
+                            <span class="bill-val" id="billDailyQty">1 Liter / Morning</span>
+                        </div>
+                        <div class="bill-row">
+                            <span class="bill-label">Daily Rate</span>
+                            <span class="bill-val" id="billDailyRate">₹56 / day</span>
+                        </div>
+                        <div class="bill-row">
+                            <span class="bill-label">Billing Duration</span>
+                            <span class="bill-val">30 Days Cycle</span>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="bill-row">
+                            <span class="bill-label">Total Monthly Amount</span>
+                            <span class="bill-val" style="color: var(--sub-green); font-size: 1.15rem;"
+                                id="billTotalAmount">₹1,699</span>
+                        </div>
+                        <div class="bill-row">
+                            <span class="bill-label">Payment Mode</span>
+                            <span class="bill-val" id="billPaymentStatus">
+                                <span
+                                    style="background: rgba(0,230,118,0.15); color: #00E676; padding: 3px 10px; border-radius: 6px;">Pre-Paid</span>
+                            </span>
+                        </div>
+                        <div class="bill-row">
+                            <span class="bill-label">Delivery Address</span>
+                            <span class="bill-val" id="billAddress">Area, House No</span>
+                        </div>
+                        <div class="bill-row">
+                            <span class="bill-label">Need Help with Billing?</span>
+                            <span class="bill-val">
+                                <a href="https://wa.me/917508990616?text=Hi,%20I%20have%20a%20question%20regarding%20my%20Milkman%20Subscription%20bill."
+                                    target="_blank" style="color: #38bdf8; text-decoration: none; font-weight: 700;">
+                                    Chat on WhatsApp &rarr;
+                                </a>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LIVE DELIVERY NOTIFICATION FEED SECTION (Before Footer) -->
+            <div class="glass-sub-card delivery-feed-card" id="deliveryFeedSection" style="margin-top: 24px;">
+                <div class="delivery-feed-header">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div class="feed-header-icon">🔔</div>
+                        <div>
+                            <h3 style="margin: 0; font-size: 1.35rem; color: var(--sub-cream-white);">
+                                Live Delivery Notifications &amp; Log
+                            </h3>
+                            <p style="margin: 3px 0 0; color: var(--sub-cream-soft); font-size: 0.88rem;">
+                                Daily morning drop-off confirmation with exact liters and timestamp
+                            </p>
+                        </div>
+                    </div>
+                    <span class="feed-live-badge">
+                        <span class="live-dot"></span> LIVE UPDATES
+                    </span>
+                </div>
+
+                <!-- Notification Stream -->
+                <div id="deliveryNotificationList" class="delivery-notification-stream">
+                    <!-- Populated dynamically via JS -->
+                </div>
+            </div>
+
+            <!-- PREVIOUS / OTHER SUBSCRIPTIONS SECTION -->
+            <div id="previousSubsSection" style="display: none; margin-top: 40px;">
+                <div
+                    style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 22px; border-bottom: 1px solid rgba(212, 163, 115, 0.22); padding-bottom: 14px; flex-wrap: wrap; gap: 10px;">
+                    <div>
+                        <div style="display: inline-flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                            <span style="font-size: 1.35rem;">📦</span>
+                            <h3 style="margin: 0; font-size: 1.45rem; color: var(--sub-cream-white); font-weight: 800;">
+                                Other &amp; Previous Subscriptions
+                            </h3>
+                        </div>
+                        <p style="margin: 0; color: var(--sub-cream-soft); font-size: 0.9rem;">
+                            View previous subscriptions, 30-day calendar history, and control delivery schedule.
+                        </p>
+                    </div>
+                    <span id="previousSubsCountBadge"
+                        style="background: rgba(229, 169, 103, 0.15); color: var(--sub-amber-gold); border: 1px solid rgba(229, 169, 103, 0.35); padding: 5px 14px; border-radius: 20px; font-weight: 700; font-size: 0.85rem;">
+                        2 Subscriptions
+                    </span>
+                </div>
+
+                <!-- Container where rectangular cards matching the screenshot are rendered -->
+                <div id="previousSubsList" style="display: flex; flex-direction: column; gap: 26px;">
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- CUSTOMER SUPPORT FOOTER -->
+    <section class="support-channels-section" style="margin-top: 40px;">
+        <div class="support-inner-container">
+            <div class="support-section-header">
+                <span class="support-badge-pill">💬 24/7 Dedicated Support</span>
+                <h2>We're Here <span class="highlight">To Help You</span></h2>
+                <p>Support ke liye in logos par click karo — Direct connection with Milkman Dairy team</p>
+            </div>
+
+            <div class="support-cards-grid">
+                <!-- WhatsApp Support -->
+                <a href="https://wa.me/917508990616?text=Hi%20i%20want%20to%20know%20more%20about%20your%20business"
+                    target="_blank" rel="noopener noreferrer" class="support-channel-card card-whatsapp">
+                    <div class="channel-icon-wrap icon-whatsapp">
+                        <svg viewBox="0 0 32 32" width="34" height="34" fill="currentColor">
+                            <path
+                                d="M16 2a13.93 13.93 0 00-12 21.03L2 30l7.2-1.89A13.94 13.94 0 1016 2zm0 25.5a11.51 11.51 0 01-5.88-1.61l-.42-.25-4.36 1.14 1.16-4.25-.27-.44A11.53 11.53 0 1116 27.5zm6.34-8.66c-.35-.18-2.07-1-2.39-1.12s-.56-.17-.79.18-.92 1.13-1.12 1.37-.41.26-.76.09a9.55 9.55 0 01-2.82-1.74 10.53 10.53 0 01-1.95-2.43c-.2-.35 0-.54.16-.71s.35-.41.53-.61a2.38 2.38 0 00.35-.59.66.66 0 000-.62c-.09-.17-.79-1.9-.1-2.6-.3-.7-.61-.6-.79-.61h-.68a1.31 1.31 0 00-.95.44 4 4 0 00-1.25 3c0 1.77 1.28 3.48 1.46 3.72s2.53 3.86 6.13 5.41c.86.37 1.53.59 2.05.76a4.93 4.93 0 002.26.14 3.7 3.7 0 002.43-1.71 3 3 0 00.21-1.71c-.08-.13-.3-.22-.65-.39z" />
+                        </svg>
+                    </div>
+                    <div class="channel-details">
+                        <span class="channel-tag tag-whatsapp">WhatsApp Chat</span>
+                        <h4 class="channel-name">WhatsApp Support</h4>
+                        <p class="channel-value">+91 75089 90616</p>
+                        <span class="channel-action-hint">Click to Chat on WhatsApp &rarr;</span>
+                    </div>
+                </a>
+
+                <!-- Instagram Support -->
+                <a href="https://www.instagram.com/milkmandairy01?exln=MTZya3pudWg1cmo3cg==" target="_blank"
+                    rel="noopener noreferrer" class="support-channel-card card-instagram">
+                    <div class="channel-icon-wrap icon-instagram">
+                        <svg viewBox="0 0 24 24" width="32" height="32" fill="currentColor">
+                            <path
+                                d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                        </svg>
+                    </div>
+                    <div class="channel-details">
+                        <span class="channel-tag tag-instagram">Instagram Profile</span>
+                        <h4 class="channel-name">Instagram</h4>
+                        <p class="channel-value">@milkmandairy01</p>
+                        <span class="channel-action-hint">Click to Visit Profile &rarr;</span>
+                    </div>
+                </a>
+
+                <!-- Email Support -->
+                <a href="mailto:pv173597@gmail.com?subject=Milkman%20Subscription%20Inquiry&body=Hi%2C%20I%20have%20a%20question%20regarding%20my%20subscription."
+                    class="support-channel-card card-email">
+                    <div class="channel-icon-wrap icon-email">
+                        <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor"
+                            stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="4" width="20" height="16" rx="3"></rect>
+                            <path d="M22 7l-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+                        </svg>
+                    </div>
+                    <div class="channel-details">
+                        <span class="channel-tag tag-email">Email Support</span>
+                        <h4 class="channel-name">Direct Email</h4>
+                        <p class="channel-value">pv173597@gmail.com</p>
+                        <span class="channel-action-hint">Click to Send Email &rarr;</span>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Footer Bottom Bar -->
+            <div class="support-footer-bottom">
+                <div class="footer-bottom-brand">
+                    <img src="assets/logo.png" alt="Milkman" class="footer-logo-img">
+                    <div>
+                        <strong>Milkman Pure Dairy</strong>
+                        <span>Fresh farm delivery to your doorstep every morning</span>
+                    </div>
+                </div>
+                <div class="footer-links-group">
+                    <a href="index.html#home">Home</a>
+                    <a href="index.html#plans">Plans</a>
+                    <a href="index.html#products">Products</a>
+                    <a href="benefits.html">Benefits</a>
+                    <a href="subscription.html">My Subscription</a>
+                    <a href="staff.html" style="color: #64748b; font-size: 0.8rem;">Staff Portal</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- OTP Auth Modal -->
+    <div id="authModal" class="modal-overlay">
+        <div class="modal-content">
+            <span class="close-modal" id="closeModal">&times;</span>
+
+            <div id="step-1" class="auth-step active-step">
+                <h2>Welcome to Milkman 🥛</h2>
+                <p>Login to check your subscription status</p>
+                <div class="input-group">
+                    <label>Full Name</label>
+                    <input type="text" id="authName" placeholder="E.g. Paramvir Singh">
+                </div>
+                <div class="input-group">
+                    <label>Mobile Number</label>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span
+                            style="background: rgba(255,255,255,0.1); padding: 12px; border-radius: 8px; color: var(--text-light);">+91</span>
+                        <input type="tel" id="authPhone" placeholder="9876543210" maxlength="10" style="flex: 1;">
+                    </div>
+                </div>
+                <button id="sendOtpBtn" class="btn-primary" style="width: 100%; margin-top: 15px;">Continue /
+                    Login</button>
+            </div>
+
+            <div id="step-2" class="auth-step" style="display: none;">
+                <h2>Verify OTP 🔒</h2>
+                <p>We've sent a 6-digit code to your WhatsApp</p>
+                <div class="input-group">
+                    <input type="text" id="authOtp" placeholder="Enter 6-digit OTP" maxlength="6"
+                        style="text-align: center; letter-spacing: 5px; font-size: 24px;">
+                </div>
+                <button id="verifyOtpBtn" class="btn-primary" style="width: 100%; margin-top: 15px;">Verify &
+                    Proceed</button>
+                <button id="backBtn" class="btn-login-outline"
+                    style="width: 100%; margin-top: 10px; border: none;">Back</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN APP SCRIPT -->
+    <script src="js/main.js"></script>
+    <script>
+        const API_HOST = (window.location.hostname && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1')
+            ? window.location.hostname
+            : 'localhost';
+        const API_BASE = window.location.origin.includes(':8080')
+            ? window.location.origin
+            : (window.location.protocol === 'file:' ? 'http://localhost:8080' : window.location.origin);
+
+        // Custom Alert & Confirm Helper
+        window.customAlert = (title, message) => {
+            return new Promise((resolve) => {
+                const overlay = document.getElementById('customPopupOverlay');
+                document.getElementById('customPopupTitle').innerText = title || 'Alert';
+                document.getElementById('customPopupMessage').innerText = message || '';
+                document.getElementById('customPopupInput').style.display = 'none';
+                const buttonsEl = document.getElementById('customPopupButtons');
+                buttonsEl.innerHTML = `<button class="custom-popup-btn btn-confirm">OK</button>`;
+                overlay.classList.add('active');
+                buttonsEl.querySelector('.btn-confirm').onclick = () => {
+                    overlay.classList.remove('active');
+                    resolve(true);
+                };
+            });
+        };
+
+        window.customConfirm = (title, message) => {
+            return new Promise((resolve) => {
+                const overlay = document.getElementById('customPopupOverlay');
+                document.getElementById('customPopupTitle').innerText = title || 'Confirm';
+                document.getElementById('customPopupMessage').innerText = message || '';
+                document.getElementById('customPopupInput').style.display = 'none';
+                const buttonsEl = document.getElementById('customPopupButtons');
+                buttonsEl.innerHTML = `
+                    <button class="custom-popup-btn btn-cancel">Cancel</button>
+                    <button class="custom-popup-btn btn-confirm">Confirm</button>
+                `;
+                overlay.classList.add('active');
+                buttonsEl.querySelector('.btn-cancel').onclick = () => {
+                    overlay.classList.remove('active');
+                    resolve(false);
+                };
+                buttonsEl.querySelector('.btn-confirm').onclick = () => {
+                    overlay.classList.remove('active');
+                    resolve(true);
+                };
+            });
+        };
+
+        // DOM elements
+        const subLoadingView = document.getElementById('subLoadingView');
+        const emptySubView = document.getElementById('emptySubView');
+        const activeSubView = document.getElementById('activeSubView');
+
+        const subPlanTitle = document.getElementById('subPlanTitle');
+        const subCustomerName = document.getElementById('subCustomerName');
+        const subCustomerPhone = document.getElementById('subCustomerPhone');
+        const subAreaHeader = document.getElementById('subAreaHeader');
+        const subDateRange = document.getElementById('subDateRange');
+
+        const statRemainingDays = document.getElementById('statRemainingDays');
+        const statDeliveredDays = document.getElementById('statDeliveredDays');
+        const statSkippedDays = document.getElementById('statSkippedDays');
+        const statBillAmount = document.getElementById('statBillAmount');
+        const statPaymentBadge = document.getElementById('statPaymentBadge');
+        const statPaymentMethod = document.getElementById('statPaymentMethod');
+
+        const subProgressPercent = document.getElementById('subProgressPercent');
+        const subProgressBar = document.getElementById('subProgressBar');
+
+        const pauseTomorrowCard = document.getElementById('pauseTomorrowCard');
+        const pauseStatusHeader = document.getElementById('pauseStatusHeader');
+        const pauseStatusDesc = document.getElementById('pauseStatusDesc');
+        const tomorrowDateDisplay = document.getElementById('tomorrowDateDisplay');
+        const togglePauseBtn = document.getElementById('togglePauseBtn');
+
+        const customerDaysGrid = document.getElementById('customerDaysGrid');
+
+        const billPlanName = document.getElementById('billPlanName');
+        const billDailyQty = document.getElementById('billDailyQty');
+        const billDailyRate = document.getElementById('billDailyRate');
+        const billTotalAmount = document.getElementById('billTotalAmount');
+        const billPaymentStatus = document.getElementById('billPaymentStatus');
+        const billAddress = document.getElementById('billAddress');
+
+        let allSubscriptions = [];
+        let activeSubscription = null;
+        let activeSubscriptionIndex = 0;
+        let currentUser = null;
+        const openDrawers = new Set();
+
+        async function initSubscriptionPage() {
+            // Check stored user
+            const rawUser = localStorage.getItem('milkmanUser');
+            if (!rawUser) {
+                subLoadingView.style.display = 'none';
+                emptySubView.style.display = 'block';
+                return;
+            }
+
+            try {
+                currentUser = JSON.parse(rawUser);
+            } catch (e) {
+                subLoadingView.style.display = 'none';
+                emptySubView.style.display = 'block';
+                return;
+            }
+
+            await loadMySubscription();
+        }
+
+        async function loadMySubscription() {
+            subLoadingView.style.display = 'block';
+            emptySubView.style.display = 'none';
+            activeSubView.style.display = 'none';
+
+            try {
+                const phone = currentUser.phone || '';
+                const userId = currentUser.id || '';
+                const res = await fetch(`${API_BASE}/api/subscription/my-status?phone=${encodeURIComponent(phone)}&userId=${encodeURIComponent(userId)}`);
+                const data = await res.json();
+
+                subLoadingView.style.display = 'none';
+
+                if (data.success && data.hasSubscription) {
+                    allSubscriptions = data.subscriptions && data.subscriptions.length > 0
+                        ? data.subscriptions
+                        : (data.subscription ? [data.subscription] : []);
+
+                    if (allSubscriptions.length > 0) {
+                        if (activeSubscriptionIndex >= allSubscriptions.length) {
+                            activeSubscriptionIndex = 0;
+                        }
+                        activeSubscription = allSubscriptions[activeSubscriptionIndex];
+                        renderSubscriptionView(activeSubscription);
+                        renderSubTabs(activeSubscriptionIndex);
+
+                        const previousSubs = allSubscriptions.filter((_, idx) => idx !== activeSubscriptionIndex);
+                        renderPreviousSubscriptions(previousSubs);
+
+                        activeSubView.style.display = 'block';
+                    } else {
+                        emptySubView.style.display = 'block';
+                    }
+                } else {
+                    emptySubView.style.display = 'block';
+                }
+            } catch (e) {
+                console.error("Subscription load error:", e);
+                subLoadingView.style.display = 'none';
+                emptySubView.style.display = 'block';
+            }
+        }
+
+        function renderSubTabs(activeIndex) {
+            const wrapper = document.getElementById('subTabsWrapper');
+            const scroll = document.getElementById('subTabsScroll');
+            const countBadge = document.getElementById('subTabsCountBadge');
+            if (!wrapper || !scroll) return;
+
+            if (!allSubscriptions || allSubscriptions.length <= 1) {
+                wrapper.style.display = 'none';
+                return;
+            }
+
+            wrapper.style.display = 'block';
+            if (countBadge) countBadge.innerText = `${allSubscriptions.length} Plans`;
+
+            scroll.innerHTML = allSubscriptions.map((sub, idx) => {
+                const isSelected = idx === activeIndex;
+                const isPaused = !!sub.nextDayPaused;
+                const icon = (sub.planName || '').toLowerCase().includes('buf') ? '🐃' : '🥛';
+                const cleanName = sub.planName || `Plan #${idx + 1}`;
+                const shortName = cleanName.length > 24 ? cleanName.slice(0, 22) + '…' : cleanName;
+
+                return `
+                    <button type="button" class="sub-tab-pill ${isSelected ? 'active' : ''}" onclick="selectSubscriptionByIndex(${idx})">
+                        <span>${icon}</span>
+                        <span>${shortName}</span>
+                        <span class="sub-tab-status-dot ${isPaused ? 'paused' : ''}" title="${isPaused ? 'Paused Tomorrow' : 'Active Delivery'}"></span>
+                    </button>
+                `;
+            }).join('');
+        }
+
+        window.selectSubscriptionByIndex = function (idx) {
+            if (idx < 0 || idx >= allSubscriptions.length) return;
+            activeSubscriptionIndex = idx;
+            activeSubscription = allSubscriptions[idx];
+            renderSubscriptionView(activeSubscription);
+            renderSubTabs(idx);
+
+            const otherSubs = allSubscriptions.filter((_, i) => i !== idx);
+            renderPreviousSubscriptions(otherSubs);
+
+            const hero = document.querySelector('.sub-hero');
+            if (hero) {
+                hero.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        };
+
+        window.toggleBillAccordion = function () {
+            const grid = document.getElementById('billGridContent');
+            const arrow = document.getElementById('billAccordionArrow');
+            if (!grid) return;
+            grid.classList.toggle('collapsed');
+            if (arrow) arrow.classList.toggle('rotated');
+        };
+
+        window.showDayToast = function (dayNum, dateLabel, details) {
+            let toast = document.getElementById('subDayToast');
+            if (!toast) {
+                toast = document.createElement('div');
+                toast.id = 'subDayToast';
+                toast.className = 'sub-day-toast';
+                document.body.appendChild(toast);
+            }
+            toast.innerHTML = `<span style="color: var(--sub-amber-gold); font-weight: 800;">Day ${dayNum} (${dateLabel}):</span> ${details}`;
+            toast.classList.add('visible');
+            clearTimeout(window._dayToastTimer);
+            window._dayToastTimer = setTimeout(() => {
+                toast.classList.remove('visible');
+            }, 3000);
+        };
+
+        function renderSubscriptionView(sub) {
+            // Header Info & Image
+            if (document.getElementById('subPlanTitle')) subPlanTitle.innerText = sub.planName || 'Daily Milk Plan';
+            if (document.getElementById('subCustomerName')) subCustomerName.innerText = currentUser.name || sub.userName || 'Valued Subscriber';
+            if (document.getElementById('subCustomerPhone')) subCustomerPhone.innerText = sub.phoneNumber || currentUser.phone || '';
+            if (document.getElementById('subAreaHeader')) subAreaHeader.innerText = `📍 ${currentUser.deliveryArea || sub.deliveryArea || 'Home Delivery'}${currentUser.houseNo || sub.houseNo ? ` (${currentUser.houseNo || sub.houseNo})` : ''}`;
+
+            const planImg = document.getElementById('subPlanImage');
+            if (planImg) {
+                const isBuffalo = (sub.planName || '').toLowerCase().includes('buf');
+                planImg.src = isBuffalo ? 'assets/buffalo_milk_plan.png' : 'assets/fresh_milk_card.jpg';
+            }
+            const qtyHeader = document.getElementById('subDailyQtyHeader');
+            if (qtyHeader) qtyHeader.innerText = sub.dailyQuantity || '1 Liter / Morning';
+            const rateHeader = document.getElementById('subDailyRateHeader');
+            if (rateHeader) rateHeader.innerText = `₹${sub.ratePerUnit || 56}/day`;
+
+            const startObj = sub.startDate ? new Date(sub.startDate) : new Date();
+            const endObj = sub.endDate ? new Date(sub.endDate) : new Date(startObj.getTime() + 30 * 24 * 60 * 60 * 1000);
+            const fmtDate = (d) => d.toLocaleDateString('en-US', { day: 'numeric', month: 'short' });
+            if (document.getElementById('subDateRange')) subDateRange.innerText = `${fmtDate(startObj)} - ${fmtDate(endObj)}`;
+
+            // Stats
+            const delivered = sub.deliveredDays || 0;
+            const totalDays = sub.totalDays || 30;
+            const remaining = sub.remainingDays !== undefined ? sub.remainingDays : Math.max(0, totalDays - delivered);
+            const skipped = (sub.deliveries || []).filter(d => d.status === 'SKIPPED_BY_USER' || d.status === 'SKIPPED').length;
+
+            statRemainingDays.innerText = remaining;
+            statDeliveredDays.innerText = delivered;
+            statSkippedDays.innerText = skipped;
+            statBillAmount.innerText = `₹${sub.totalAmount || 0}`;
+
+            const isPrepaid = sub.paymentStatus === 'PREPAID';
+            statPaymentBadge.innerText = isPrepaid ? '✅ Pre-Paid Plan' : '💵 Pay at Doorstep';
+            statPaymentMethod.innerText = isPrepaid ? 'Payment Confirmed' : 'Doorstep Cash / UPI';
+
+            // Progress Bar
+            const percent = Math.min(100, Math.round((delivered / totalDays) * 100));
+            subProgressPercent.innerText = `${percent}% Completed (${delivered}/${totalDays} Days)`;
+            subProgressBar.style.width = `${percent}%`;
+
+            // Tomorrow's Delivery Status
+            const tomStr = sub.tomorrowDate;
+            let tomFormatted = tomStr;
+            if (tomStr) {
+                const tomDate = new Date(tomStr);
+                tomFormatted = tomDate.toLocaleDateString('en-US', { weekday: 'short', day: 'numeric', month: 'short' });
+            }
+            tomorrowDateDisplay.innerText = tomFormatted;
+
+            const isPaused = !!sub.nextDayPaused;
+            if (isPaused) {
+                pauseTomorrowCard.classList.add('is-paused');
+                pauseStatusHeader.innerHTML = `<span style="color: #ff4757;">⏸</span> Milk Delivery Paused for Tomorrow`;
+                pauseStatusDesc.innerHTML = `You have paused morning delivery for <strong style="color: #fff;">${tomFormatted}</strong>. No milk will be delivered and this day will not be deducted.`;
+                togglePauseBtn.className = 'btn-pause-toggle btn-pause-resume';
+                togglePauseBtn.innerHTML = `<span>▶</span> Resume Tomorrow's Milk`;
+            } else {
+                pauseTomorrowCard.classList.remove('is-paused');
+                pauseStatusHeader.innerHTML = `<span style="color: var(--sub-green);">🟢</span> Morning Delivery Scheduled for Tomorrow`;
+                pauseStatusDesc.innerHTML = `Your fresh milk bottle is scheduled for morning delivery on <strong style="color: #fff;">${tomFormatted}</strong> before 7:00 AM.`;
+                togglePauseBtn.className = 'btn-pause-toggle btn-pause-stop';
+                togglePauseBtn.innerHTML = `<span>⏸</span> Stop Tomorrow's Delivery`;
+            }
+
+            // 30-Day Grid (Date-Aware)
+            customerDaysGrid.innerHTML = generateCalendarGridHtml(sub);
+
+            // Live Delivery Notifications & Log (Before Footer)
+            const listEl = document.getElementById('deliveryNotificationList');
+            if (listEl) {
+                listEl.innerHTML = generateNotificationsHtml(sub);
+            }
+
+            // Bill Breakdown
+            billPlanName.innerText = sub.planName || 'Daily Milk';
+            billDailyQty.innerText = sub.dailyQuantity || '1 Liter / Morning';
+            billDailyRate.innerText = `₹${sub.ratePerUnit || 56} / day`;
+            billTotalAmount.innerText = `₹${sub.totalAmount || 1699}`;
+            billPaymentStatus.innerHTML = isPrepaid
+                ? '<span style="background: rgba(0,230,118,0.15); color: #00E676; padding: 4px 12px; border-radius: 6px; font-weight: 700;">✅ Pre-Paid Online</span>'
+                : '<span style="background: rgba(255,171,0,0.15); color: #FFAB00; padding: 4px 12px; border-radius: 6px; font-weight: 700;">💵 Pay at Doorstep (Pending)</span>';
+            billAddress.innerText = `${currentUser.deliveryArea || sub.deliveryArea || 'Registered Area'}${currentUser.houseNo || sub.houseNo ? `, ${currentUser.houseNo || sub.houseNo}` : ''}`;
+        }
+
+        // Render previous subscriptions in compact rectangular cards matching the screenshot
+        function renderPreviousSubscriptions(subs) {
+            const section = document.getElementById('previousSubsSection');
+            const listEl = document.getElementById('previousSubsList');
+            const badgeEl = document.getElementById('previousSubsCountBadge');
+            if (!section || !listEl) return;
+
+            if (!subs || subs.length === 0) {
+                section.style.display = 'none';
+                listEl.innerHTML = '';
+                return;
+            }
+
+            section.style.display = 'block';
+            badgeEl.innerText = `${subs.length} ${subs.length === 1 ? 'Subscription' : 'Subscriptions'}`;
+
+            listEl.innerHTML = subs.map((sub, idx) => {
+                const delivered = sub.deliveredDays || 0;
+                const totalDays = sub.totalDays || 30;
+                const remaining = sub.remainingDays !== undefined ? sub.remainingDays : Math.max(0, totalDays - delivered);
+                const skipped = (sub.deliveries || []).filter(d => d.status === 'SKIPPED_BY_USER' || d.status === 'SKIPPED').length;
+                const percent = Math.min(100, Math.round((delivered / totalDays) * 100));
+
+                const startObj = sub.startDate ? new Date(sub.startDate) : new Date();
+                const endObj = sub.endDate ? new Date(sub.endDate) : new Date(startObj.getTime() + 30 * 24 * 60 * 60 * 1000);
+                const fmtDate = (d) => d.toLocaleDateString('en-US', { day: 'numeric', month: 'short' });
+                const dateRange = `${fmtDate(startObj)} - ${fmtDate(endObj)}`;
+
+                const isPrepaid = sub.paymentStatus === 'PREPAID';
+                const subArea = sub.deliveryArea || currentUser.deliveryArea || 'Home Delivery';
+                const subUserName = currentUser.name || sub.userName || 'Subscriber';
+                const subPhone = sub.phoneNumber || currentUser.phone || '';
+
+                const tomStr = sub.tomorrowDate;
+                let tomFormatted = tomStr;
+                if (tomStr) {
+                    const tomDate = new Date(tomStr);
+                    tomFormatted = tomDate.toLocaleDateString('en-US', { weekday: 'short', day: 'numeric', month: 'short' });
+                }
+
+                const isOpen = openDrawers.has(sub.id);
+                const isPaused = !!sub.nextDayPaused;
+
+                const calendarHtml = generateCalendarGridHtml(sub);
+                const notifHtml = generateNotificationsHtml(sub);
+
+                return `
+                    <div class="sub-card-item" id="subCard_${sub.id}">
+                        <!-- Top Header Row (Matches Screenshot Image 1) -->
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 15px; margin-bottom: 20px; border-bottom: 1px solid rgba(212, 163, 115, 0.16); padding-bottom: 16px;">
+                            <div>
+                                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                                    <span class="sub-hero-badge" style="font-size: 0.78rem; padding: 4px 10px;">● ACTIVE SUBSCRIPTION</span>
+                                    <span style="color: #94a3b8; font-size: 0.82rem;">📍 ${subArea}</span>
+                                </div>
+                                <h2 style="font-size: 1.65rem; font-weight: 800; margin: 0 0 6px; color: var(--sub-cream-white);">
+                                    ${sub.planName || 'Daily Milk Plan'}
+                                </h2>
+                                <p style="color: #cbd5e1; margin: 0; font-size: 0.92rem;">
+                                    Subscriber: <strong style="color: #fff;">${subUserName}</strong> • <span>${subPhone}</span>
+                                </p>
+                            </div>
+                            <div style="text-align: right;">
+                                <div style="font-size: 0.75rem; color: #94a3b8; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">Subscription Period</div>
+                                <div style="font-size: 1.1rem; font-weight: 700; color: #38bdf8;">${dateRange}</div>
+                            </div>
+                        </div>
+
+                        <!-- 4 Stat Boxes (Matches Screenshot Image 1) -->
+                        <div class="sub-stats-grid" style="margin-bottom: 20px;">
+                            <div class="sub-stat-box">
+                                <div class="sub-stat-num" style="color: #38bdf8;">${remaining}</div>
+                                <div class="sub-stat-label">Days Remaining</div>
+                                <small style="color: #64748b; font-size: 0.75rem;">out of ${totalDays} days cycle</small>
+                            </div>
+                            <div class="sub-stat-box">
+                                <div class="sub-stat-num" style="color: var(--sub-green);">${delivered}</div>
+                                <div class="sub-stat-label">Delivered Days</div>
+                                <small style="color: #64748b; font-size: 0.75rem;">bottles delivered fresh</small>
+                            </div>
+                            <div class="sub-stat-box">
+                                <div class="sub-stat-num" style="color: var(--sub-amber);">${skipped}</div>
+                                <div class="sub-stat-label">Paused / Skipped</div>
+                                <small style="color: #64748b; font-size: 0.75rem;">skipped by your request</small>
+                            </div>
+                            <div class="sub-stat-box">
+                                <div class="sub-stat-num" style="color: #fff;">₹${sub.totalAmount || 0}</div>
+                                <div class="sub-stat-label">${isPrepaid ? '✅ Pre-Paid Plan' : '💵 Pay at Doorstep'}</div>
+                                <small style="color: #64748b; font-size: 0.75rem;">${isPrepaid ? 'Payment Confirmed' : 'Doorstep Cash / UPI'}</small>
+                            </div>
+                        </div>
+
+                        <!-- 30-Day Delivery Cycle Progress (Matches Screenshot Image 1) -->
+                        <div style="background: rgba(30, 16, 10, 0.55); border: 1px solid var(--sub-brown-border); border-radius: 14px; padding: 16px 20px;">
+                            <div class="sub-progress-meta" style="margin-bottom: 8px;">
+                                <span style="font-size: 0.88rem; font-weight: 600;">30-Day Delivery Cycle Progress</span>
+                                <span style="color: var(--sub-green); font-weight: 800; font-size: 0.88rem;">${percent}% Completed (${delivered}/${totalDays} Days)</span>
+                            </div>
+                            <div class="sub-progress-track">
+                                <div class="sub-progress-bar" style="width: ${percent}%;"></div>
+                            </div>
+                        </div>
+
+                        <!-- Expand / Collapse Toggle Button -->
+                        <button class="btn-toggle-sub-expand" id="expandBtn_${sub.id}" onclick="toggleSubDrawer('${sub.id}')">
+                            <span class="btn-text">${isOpen ? '🔼 Hide Calendar & Details' : '🔽 View 30-Day Calendar, Pause/Resume & Delivery Log'}</span>
+                            <span class="arrow-indicator" style="transform: ${isOpen ? 'rotate(180deg)' : 'rotate(0deg)'}; transition: transform 0.25s;">▼</span>
+                        </button>
+
+                        <!-- Expandable Drawer (Reveals Calendar, Pause/Resume, Logs & Bill) -->
+                        <div class="sub-expanded-drawer ${isOpen ? 'open' : ''}" id="drawer_${sub.id}">
+                            
+                            <!-- Pause / Resume Card for this subscription -->
+                            <div class="glass-sub-card pause-action-card ${isPaused ? 'is-paused' : ''}" style="margin-bottom: 22px;">
+                                <div class="pause-info-col">
+                                    <h3>
+                                        ${isPaused ? '<span style="color: #ff4757;">⏸</span> Milk Delivery Paused for Tomorrow' : '<span style="color: var(--sub-green);">🟢</span> Morning Delivery Scheduled for Tomorrow'}
+                                    </h3>
+                                    <p>
+                                        ${isPaused
+                        ? `You have paused morning delivery for <strong style="color: #fff;">${tomFormatted}</strong>. No milk will be delivered and this day will not be deducted.`
+                        : `Your fresh milk bottle is scheduled for morning delivery on <strong style="color: #fff;">${tomFormatted}</strong> before 7:00 AM.`}
+                                    </p>
+                                    <div class="cutoff-badge">
+                                        ⏰ Cut-off Time: 11:00 PM IST tonight (Change before 11 PM)
+                                    </div>
+                                </div>
+                                <div>
+                                    <button onclick="toggleSingleSubPause('${sub.id}')" class="btn-pause-toggle ${isPaused ? 'btn-pause-resume' : 'btn-pause-stop'}">
+                                        ${isPaused ? '<span>▶</span> Resume Tomorrow\'s Milk' : '<span>⏸</span> Stop Tomorrow\'s Delivery'}
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- 30-Day Calendar for this subscription -->
+                            <div class="drawer-sub-section">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 10px;">
+                                    <div>
+                                        <h4 style="margin: 0; font-size: 1.2rem; color: var(--sub-cream-white);">📅 30-Day Delivery Schedule &amp; History</h4>
+                                        <p style="margin: 3px 0 0; color: #94a3b8; font-size: 0.85rem;">Live tracker for ${sub.planName || 'this subscription'}</p>
+                                    </div>
+                                    <div class="calendar-legend" style="margin: 0;">
+                                        <div class="legend-item"><span class="legend-dot delivered"></span><span>Delivered</span></div>
+                                        <div class="legend-item"><span class="legend-dot skipped"></span><span>Paused</span></div>
+                                        <div class="legend-item"><span class="legend-dot today-legend"></span><span style="color: var(--sub-amber-gold); font-weight: 700;">Today</span></div>
+                                        <div class="legend-item"><span class="legend-dot upcoming"></span><span>Upcoming</span></div>
+                                    </div>
+                                </div>
+                                <div class="days-calendar-grid">
+                                    ${calendarHtml}
+                                </div>
+                            </div>
+
+                            <!-- Delivery Notifications Stream for this subscription -->
+                            <div class="drawer-sub-section">
+                                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px; border-bottom: 1px solid rgba(212, 163, 115, 0.16); padding-bottom: 10px;">
+                                    <span style="font-size: 1.25rem;">🔔</span>
+                                    <h4 style="margin: 0; font-size: 1.15rem; color: var(--sub-cream-white);">Delivery Log &amp; Drop-off Confirmations</h4>
+                                </div>
+                                <div class="delivery-notification-stream">
+                                    ${notifHtml}
+                                </div>
+                            </div>
+
+                            <!-- Subscription Bill Breakdown -->
+                            <div class="drawer-sub-section" style="margin-bottom: 0;">
+                                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px; border-bottom: 1px solid rgba(212, 163, 115, 0.16); padding-bottom: 10px;">
+                                    <span style="font-size: 1.25rem;">🧾</span>
+                                    <h4 style="margin: 0; font-size: 1.15rem; color: var(--sub-cream-white);">Bill &amp; Plan Breakdown</h4>
+                                </div>
+                                <div class="bill-grid">
+                                    <div>
+                                        <div class="bill-row"><span class="bill-label">Selected Plan</span><span class="bill-val">${sub.planName || 'Daily Milk'}</span></div>
+                                        <div class="bill-row"><span class="bill-label">Daily Quantity</span><span class="bill-val">${sub.dailyQuantity || '500 ml'}</span></div>
+                                        <div class="bill-row"><span class="bill-label">Daily Rate</span><span class="bill-val">₹${sub.ratePerUnit || 28} / day</span></div>
+                                        <div class="bill-row"><span class="bill-label">Billing Duration</span><span class="bill-val">${totalDays} Days Cycle</span></div>
+                                    </div>
+                                    <div>
+                                        <div class="bill-row"><span class="bill-label">Total Monthly Amount</span><span class="bill-val" style="color: var(--sub-green); font-size: 1.15rem;">₹${sub.totalAmount || 0}</span></div>
+                                        <div class="bill-row">
+                                            <span class="bill-label">Payment Mode</span>
+                                            <span class="bill-val">
+                                                ${isPrepaid
+                        ? '<span style="background: rgba(0,230,118,0.15); color: #00E676; padding: 3px 10px; border-radius: 6px; font-weight: 700;">✅ Pre-Paid Online</span>'
+                        : '<span style="background: rgba(255,171,0,0.15); color: #FFAB00; padding: 3px 10px; border-radius: 6px; font-weight: 700;">💵 Pay at Doorstep (Pending)</span>'}
+                                            </span>
+                                        </div>
+                                        <div class="bill-row"><span class="bill-label">Delivery Address</span><span class="bill-val">${subArea}${sub.houseNo ? `, ${sub.houseNo}` : ''}</span></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Toggle drawer open/close for previous subscriptions
+        window.toggleSubDrawer = function (subId) {
+            const drawer = document.getElementById(`drawer_${subId}`);
+            const btn = document.getElementById(`expandBtn_${subId}`);
+            if (!drawer || !btn) return;
+
+            const isOpen = drawer.classList.contains('open');
+            if (isOpen) {
+                drawer.classList.remove('open');
+                openDrawers.delete(subId);
+                btn.querySelector('.btn-text').innerText = '🔽 View 30-Day Calendar, Pause/Resume & Delivery Log';
+                btn.querySelector('.arrow-indicator').style.transform = 'rotate(0deg)';
+            } else {
+                drawer.classList.add('open');
+                openDrawers.add(subId);
+                btn.querySelector('.btn-text').innerText = '🔼 Hide Calendar & Details';
+                btn.querySelector('.arrow-indicator').style.transform = 'rotate(180deg)';
+            }
+        };
+
+        // Date-Aware 30-Day Delivery Calendar Generator (Reusable for any subscription)
+        function generateCalendarGridHtml(sub) {
+            const deliveries = sub.deliveries || [];
+            const delMap = {};
+            deliveries.forEach(d => { delMap[d.deliveryDate] = d; });
+
+            const baseDate = sub.startDate ? new Date(sub.startDate) : new Date();
+            const today = new Date();
+            const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+            let html = '';
+
+            for (let i = 0; i < (sub.totalDays || 30); i++) {
+                const d = new Date(baseDate.getTime() + i * 24 * 60 * 60 * 1000);
+                const y = d.getFullYear();
+                const m = String(d.getMonth() + 1).padStart(2, '0');
+                const dayVal = String(d.getDate()).padStart(2, '0');
+                const dStr = `${y}-${m}-${dayVal}`;
+
+                const dayNum = i + 1;
+                const dateLabel = d.toLocaleDateString('en-US', { day: 'numeric', month: 'short' });
+                const weekday = d.toLocaleDateString('en-US', { weekday: 'short' });
+
+                const record = delMap[dStr];
+                const status = record ? record.status : null;
+                const qty = record && record.quantityDelivered ? record.quantityDelivered : (sub.dailyQuantity || '1L');
+                const time = record && record.deliveryTime ? record.deliveryTime : '';
+
+                const isPast = dStr < todayStr;
+                const isToday = dStr === todayStr;
+
+                let cardClass = '';
+                let pillClass = 'pill-upc';
+                let pillText = 'Upcoming';
+                let timeNote = '';
+
+                if (status === 'DELIVERED') {
+                    cardClass = 'delivered';
+                    pillClass = 'pill-del';
+                    pillText = 'Delivered';
+                    if (time) timeNote = `<div class="cust-day-time">⏰ ${time}</div>`;
+                } else if (status === 'SKIPPED_BY_USER' || status === 'SKIPPED') {
+                    cardClass = 'skipped';
+                    pillClass = 'pill-skp';
+                    pillText = 'Skipped';
+                } else {
+                    if (isPast) {
+                        cardClass = 'past-unmarked';
+                        pillClass = 'pill-missed';
+                        pillText = 'Undelivered';
+                    } else if (isToday) {
+                        cardClass = 'today-pending';
+                        pillClass = 'pill-today';
+                        pillText = 'Scheduled';
+                    } else {
+                        cardClass = 'upcoming';
+                        pillClass = 'pill-upc';
+                        pillText = 'Upcoming';
+                    }
+                }
+
+                if (isToday) {
+                    cardClass += ' today';
+                }
+
+                html += `
+                    <div class="cust-day-card ${cardClass}" title="${isToday ? 'Today: ' + dStr : dStr} - ${pillText}" onclick="showDayToast(${dayNum}, '${dateLabel}', '${pillText}${time ? ' (Time: ' + time + ')' : ''}')">
+                        <div class="cust-day-num">Day ${dayNum}</div>
+                        <div class="cust-day-date">${dateLabel}</div>
+                        <div class="cust-day-pill-wrap">
+                            <span class="cust-day-pill ${pillClass}">${pillText}</span>
+                        </div>
+                        ${timeNote}
+                    </div>
+                `;
+            }
+
+            return html;
+        }
+
+        // Live Delivery Notifications & Timestamped Log Generator (Reusable for any subscription)
+        function generateNotificationsHtml(sub) {
+            const deliveries = (sub.deliveries || []).filter(d => d.status === 'DELIVERED');
+            if (deliveries.length === 0) {
+                return `
+                    <div style="text-align: center; padding: 32px 20px; background: rgba(0,0,0,0.2); border-radius: 14px; border: 1px dashed rgba(212,163,115,0.22);">
+                        <div style="font-size: 2.2rem; margin-bottom: 8px;">📭</div>
+                        <h4 style="margin: 0 0 6px; color: var(--sub-cream-white); font-size: 1.05rem; font-weight: 700;">No Milk Deliveries Logged Yet</h4>
+                        <p style="margin: 0; color: var(--sub-cream-soft); font-size: 0.86rem; max-width: 460px; margin: 0 auto; line-height: 1.45;">
+                            When our delivery rider drops off your morning milk and confirms it on the staff portal, real-time notification with exact liters and time will be recorded here.
+                        </p>
+                    </div>
+                `;
+            }
+
+            // Sort deliveries descending (most recent delivery first)
+            const sorted = [...deliveries].sort((a, b) => (b.deliveryDate || '').localeCompare(a.deliveryDate || ''));
+
+            const today = new Date();
+            const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+
+            return sorted.map(d => {
+                const qty = d.quantityDelivered || sub.dailyQuantity || '1 Liter';
+                const time = d.deliveryTime || (d.markedAt ? new Date(d.markedAt).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }) : '06:45 AM');
+
+                let dateObj = new Date(d.deliveryDate + 'T00:00:00');
+                if (isNaN(dateObj.getTime())) dateObj = new Date(d.deliveryDate);
+
+                const fullDateStr = dateObj.toLocaleDateString('en-US', { weekday: 'long', day: 'numeric', month: 'short', year: 'numeric' });
+                const isToday = d.deliveryDate === todayStr;
+                const timeBadge = isToday ? `Today • ${time}` : `${dateObj.toLocaleDateString('en-US', { day: 'numeric', month: 'short' })} • ${time}`;
+
+                return `
+                    <div class="delivery-notif-item">
+                        <div class="notif-left-icon">
+                            <span class="notif-bottle-icon">🥛</span>
+                            <span class="notif-check-badge">✓</span>
+                        </div>
+                        <div class="notif-content">
+                            <div class="notif-top-row">
+                                <h4 class="notif-title">
+                                    <span class="notif-qty-highlight">${qty}</span> • ${sub.planName || 'Pure Farm Milk'}
+                                </h4>
+                                <span class="notif-time-tag">${timeBadge}</span>
+                            </div>
+                            <div class="notif-details-row">
+                                <span>📅 ${fullDateStr}</span>
+                                <span>⏰ ${time}</span>
+                                <span>📍 Doorstep Crate</span>
+                                <span class="notif-badge-delivered">✓ Successfully Delivered</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Handle Stop / Resume Tomorrow Delivery for ANY subscription
+        window.toggleSingleSubPause = async function (subId) {
+            const sub = allSubscriptions.find(s => s.id === subId);
+            if (!sub) return;
+
+            const isCurrentlyPaused = !!sub.nextDayPaused;
+            const action = isCurrentlyPaused ? 'resume' : 'pause';
+            const planTitle = sub.planName || 'Milk Plan';
+
+            const confirmMsg = isCurrentlyPaused
+                ? `Are you sure you want to RESUME tomorrow's milk delivery for "${planTitle}"?`
+                : `Are you sure you want to STOP / PAUSE tomorrow's milk delivery for "${planTitle}"? (No milk will be delivered and your 30-day quota is preserved)`;
+
+            const confirmed = await customConfirm(
+                isCurrentlyPaused ? "Resume Delivery" : "Pause Delivery",
+                confirmMsg
+            );
+            if (!confirmed) return;
+
+            try {
+                const res = await fetch(`${API_BASE}/api/subscription/toggle-pause`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        subscriptionId: sub.id,
+                        userId: currentUser.id,
+                        action: action
+                    })
+                });
+
+                const data = await res.json();
+                if (data.success) {
+                    await customAlert("Schedule Updated", data.message || "Your delivery preference has been recorded.");
+                    await loadMySubscription();
+                } else {
+                    await customAlert("Cut-off Time Passed", data.error || "Failed to update delivery preference");
+                }
+            } catch (e) {
+                await customAlert("Error", "Network connection failed. Please try again.");
+            }
+        };
+
+        // Handle Stop / Resume for top active subscription
+        togglePauseBtn.addEventListener('click', async () => {
+            if (!activeSubscription) return;
+            await toggleSingleSubPause(activeSubscription.id);
+        });
+
+        // Trigger auth modal from empty state button
+        const openAuthEmptyBtn = document.getElementById('openAuthEmptyBtn');
+        if (openAuthEmptyBtn) {
+            openAuthEmptyBtn.addEventListener('click', () => {
+                const authBtn = document.getElementById('authBtn');
+                if (authBtn) authBtn.click();
+            });
+        }
+
+        // Mobile Navigation Drawer Handlers
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const closeMobileNavBtn = document.getElementById('closeMobileNavBtn');
+        const mobileNavDrawer = document.getElementById('mobileNavDrawer');
+        const mobileNavBackdrop = document.getElementById('mobileNavBackdrop');
+
+        const openMobileNav = () => {
+            if (mobileNavDrawer && mobileNavBackdrop) {
+                mobileNavDrawer.classList.add('active');
+                mobileNavBackdrop.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+        };
+
+        const closeMobileNav = () => {
+            if (mobileNavDrawer && mobileNavBackdrop) {
+                mobileNavDrawer.classList.remove('active');
+                mobileNavBackdrop.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        };
+
+        if (mobileMenuBtn) mobileMenuBtn.addEventListener('click', openMobileNav);
+        if (closeMobileNavBtn) closeMobileNavBtn.addEventListener('click', closeMobileNav);
+        if (mobileNavBackdrop) mobileNavBackdrop.addEventListener('click', closeMobileNav);
+        document.querySelectorAll('.mobile-nav-link').forEach(link => {
+            link.addEventListener('click', closeMobileNav);
+        });
+
+        // Initialize on DOM load
+        document.addEventListener('DOMContentLoaded', initSubscriptionPage);
+    </script>
+</body>
+
+</html>

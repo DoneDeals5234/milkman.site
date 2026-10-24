@@ -1,0 +1,1360 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Batch Traceability & Preparation Video - Milkman</title>
+    <meta name="description"
+        content="Enter your product batch number to verify purity, view lab test reports, and watch the preparation video on YouTube.">
+    <!-- Typography: Outfit & Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css?v=2.4">
+    <style>
+        :root {
+            --trace-brown-bg: #1A0F0A;
+            --trace-brown-dark: #26160F;
+            --trace-brown-card: rgba(46, 26, 17, 0.75);
+            --trace-brown-border: rgba(212, 163, 115, 0.22);
+            --trace-amber-gold: #E5A967;
+            --trace-amber-glow: rgba(229, 169, 103, 0.25);
+            --trace-cream-white: #FFFDF9;
+            --trace-cream-soft: #EADBC8;
+            --trace-green: #10B981;
+            --trace-green-glow: rgba(16, 185, 129, 0.25);
+            --yt-red: #FF0000;
+        }
+
+        html {
+            width: 100%;
+            max-width: 100vw;
+            overflow-x: hidden !important;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--trace-brown-bg);
+            background-image:
+                radial-gradient(rgba(229, 169, 103, 0.08) 1.5px, transparent 1.5px),
+                radial-gradient(rgba(198, 120, 60, 0.04) 1.5px, transparent 1.5px);
+            background-size: 24px 24px;
+            background-position: 0 0, 12px 12px;
+            color: var(--trace-cream-white);
+            min-height: 100vh;
+            width: 100%;
+            max-width: 100vw;
+            overflow-x: hidden !important;
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+        }
+
+        /* Glassmorphism Navbar for Trace page */
+        .trace-nav {
+            background: rgba(26, 15, 10, 0.92);
+            backdrop-filter: blur(14px);
+            border-bottom: 1px solid rgba(212, 163, 115, 0.16);
+        }
+
+        .trace-nav .nav-links a {
+            color: var(--trace-cream-soft);
+        }
+
+        .trace-nav .nav-links a:hover {
+            color: var(--trace-amber-gold);
+        }
+
+        /* Hero Section */
+        .trace-hero {
+            padding: 130px 5% 60px;
+            text-align: center;
+            position: relative;
+            background: radial-gradient(circle at 50% 20%, rgba(229, 169, 103, 0.16) 0%, rgba(38, 22, 15, 0.8) 50%, transparent 80%);
+            overflow: hidden;
+            width: 100%;
+            max-width: 100vw;
+            box-sizing: border-box;
+        }
+
+        .trace-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(229, 169, 103, 0.12);
+            color: var(--trace-amber-gold);
+            border: 1px solid rgba(229, 169, 103, 0.35);
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 0.88rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 18px;
+        }
+
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--trace-amber-gold);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--trace-amber-gold);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(229, 169, 103, 0.7);
+            }
+
+            70% {
+                transform: scale(1.15);
+                box-shadow: 0 0 0 10px rgba(229, 169, 103, 0);
+            }
+
+            100% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(229, 169, 103, 0);
+            }
+        }
+
+        .trace-title {
+            font-size: clamp(2.2rem, 5vw, 3.4rem);
+            font-weight: 900;
+            line-height: 1.15;
+            margin-bottom: 18px;
+            color: var(--trace-cream-white);
+        }
+
+        .trace-title span.glow-text {
+            background: linear-gradient(135deg, #F59E0B 0%, #E5A967 50%, #FFFDF9 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .trace-desc {
+            max-width: 680px;
+            margin: 0 auto 35px;
+            color: var(--trace-cream-soft);
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        /* Search Box Container */
+        .search-box-card {
+            max-width: 680px;
+            width: 100%;
+            box-sizing: border-box;
+            margin: 0 auto;
+            background: rgba(46, 26, 17, 0.85);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(212, 163, 115, 0.28);
+            border-radius: 20px;
+            padding: 12px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 25px rgba(229, 169, 103, 0.12);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .search-box-card:focus-within {
+            border-color: var(--trace-amber-gold);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 30px var(--trace-amber-glow);
+        }
+
+        .search-input-field {
+            flex: 1 1 0%;
+            min-width: 0 !important;
+            width: 100%;
+            box-sizing: border-box;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #ffffff;
+            font-size: 1.15rem;
+            font-weight: 700;
+            padding: 10px 16px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .search-input-field::placeholder {
+            color: #A89080;
+            font-weight: 400;
+            text-transform: none;
+            letter-spacing: normal;
+        }
+
+        .search-submit-btn {
+            background: linear-gradient(135deg, #E5A967 0%, #C68B59 100%);
+            color: #1A0F0A;
+            font-weight: 800;
+            font-size: 1rem;
+            border: none;
+            border-radius: 14px;
+            padding: 14px 26px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+            box-shadow: 0 4px 15px rgba(229, 169, 103, 0.35);
+        }
+
+        .search-submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(229, 169, 103, 0.5);
+        }
+
+        /* Sample Chips Bar */
+        .sample-chips-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .sample-chip-label {
+            font-size: 0.85rem;
+            color: var(--trace-cream-soft);
+            font-weight: 600;
+        }
+
+        .sample-chip {
+            background: rgba(62, 36, 25, 0.5);
+            border: 1px solid rgba(212, 163, 115, 0.2);
+            color: var(--trace-cream-soft);
+            font-size: 0.82rem;
+            font-weight: 700;
+            padding: 5px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .sample-chip:hover {
+            background: rgba(229, 169, 103, 0.2);
+            color: #ffffff;
+            border-color: var(--trace-amber-gold);
+            transform: translateY(-2px);
+        }
+
+        /* Result Section */
+        .result-section {
+            padding: 30px 5% 60px;
+            max-width: 1100px;
+            margin: 0 auto;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        /* Batch Card */
+        .batch-card {
+            background: var(--trace-brown-card);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--trace-brown-border);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+            display: grid;
+            grid-template-columns: 1.15fr 1fr;
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+
+        @media (max-width: 880px) {
+            .batch-card {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Video Showcase Column */
+        .video-showcase-box {
+            position: relative;
+            background: #000;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .video-thumb-img {
+            width: 100%;
+            height: 100%;
+            min-height: 380px;
+            max-height: 480px;
+            object-fit: cover;
+            transition: transform 0.5s ease, filter 0.3s ease;
+            filter: brightness(0.9);
+        }
+
+        .video-showcase-box:hover .video-thumb-img {
+            transform: scale(1.04);
+            filter: brightness(1);
+        }
+
+        .video-overlay-gradient {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(26, 15, 10, 0.95) 0%, rgba(26, 15, 10, 0.2) 60%, rgba(0, 0, 0, 0.5) 100%);
+            pointer-events: none;
+        }
+
+        .yt-floating-badge {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 0, 0, 0.92);
+            color: #ffffff;
+            font-size: 0.8rem;
+            font-weight: 800;
+            padding: 6px 14px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 15px rgba(255, 0, 0, 0.4);
+            backdrop-filter: blur(6px);
+            z-index: 2;
+        }
+
+        .video-play-center {
+            position: absolute;
+            top: 45%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            text-align: center;
+            z-index: 3;
+            pointer-events: none;
+        }
+
+        .play-button-circle {
+            width: 76px;
+            height: 76px;
+            background: #FF0000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.7);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 4px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .video-showcase-box:hover .play-button-circle {
+            transform: scale(1.15);
+            box-shadow: 0 0 45px rgba(255, 0, 0, 0.9);
+            border-color: #ffffff;
+        }
+
+        .play-label {
+            background: rgba(26, 15, 10, 0.85);
+            backdrop-filter: blur(8px);
+            padding: 6px 14px;
+            border-radius: 20px;
+            color: #ffffff;
+            font-size: 0.85rem;
+            font-weight: 700;
+            border: 1px solid rgba(212, 163, 115, 0.25);
+        }
+
+        .video-bottom-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 20px;
+            z-index: 2;
+        }
+
+        .video-redirect-cta {
+            background: #FF0000;
+            color: #ffffff;
+            font-weight: 800;
+            font-size: 0.95rem;
+            text-align: center;
+            padding: 12px 18px;
+            border-radius: 12px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 8px 20px rgba(255, 0, 0, 0.4);
+            transition: all 0.25s ease;
+        }
+
+        .video-redirect-cta:hover {
+            background: #cc0000;
+            transform: translateY(-2px);
+        }
+
+        /* Batch Details Column */
+        .batch-details-box {
+            padding: 35px 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .batch-header-tags {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .batch-code-tag {
+            background: rgba(229, 169, 103, 0.15);
+            color: var(--trace-amber-gold);
+            border: 1px solid rgba(229, 169, 103, 0.4);
+            font-weight: 800;
+            font-size: 0.9rem;
+            padding: 5px 14px;
+            border-radius: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .batch-date-tag {
+            color: var(--trace-cream-soft);
+            font-size: 0.88rem;
+            font-weight: 600;
+        }
+
+        .batch-product-name {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 6px;
+            line-height: 1.25;
+        }
+
+        .batch-video-title {
+            font-size: 1rem;
+            color: var(--trace-amber-gold);
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        /* Metrics Grid */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .metric-card {
+            background: rgba(26, 15, 10, 0.5);
+            border: 1px solid rgba(212, 163, 115, 0.15);
+            border-radius: 12px;
+            padding: 12px 14px;
+        }
+
+        .metric-num {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--trace-amber-gold);
+            margin-bottom: 2px;
+        }
+
+        .metric-label {
+            font-size: 0.78rem;
+            color: var(--trace-cream-soft);
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        /* Quality Notes Banner */
+        .notes-banner {
+            background: rgba(217, 119, 6, 0.12);
+            border-left: 4px solid #D97706;
+            padding: 12px 16px;
+            border-radius: 0 10px 10px 0;
+            margin-bottom: 25px;
+            font-size: 0.9rem;
+            color: var(--trace-cream-soft);
+            line-height: 1.5;
+        }
+
+        /* Steps Timeline */
+        .trace-timeline-card {
+            margin-top: 40px;
+            background: rgba(46, 26, 17, 0.6);
+            border: 1px solid rgba(212, 163, 115, 0.18);
+            border-radius: 20px;
+            padding: 30px;
+        }
+
+        .timeline-title {
+            font-size: 1.3rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .steps-flow {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 18px;
+        }
+
+        .step-item {
+            background: rgba(26, 15, 10, 0.45);
+            border: 1px solid rgba(212, 163, 115, 0.12);
+            border-radius: 14px;
+            padding: 16px;
+            position: relative;
+        }
+
+        .step-icon {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .step-name {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 4px;
+        }
+
+        .step-desc {
+            font-size: 0.8rem;
+            color: var(--trace-cream-soft);
+            line-height: 1.4;
+        }
+
+        /* Explore Batches Grid */
+        .explore-section {
+            padding: 40px 5% 80px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .section-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .batches-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+        }
+
+        .explore-batch-card {
+            background: rgba(46, 26, 17, 0.65);
+            border: 1px solid rgba(212, 163, 115, 0.18);
+            border-radius: 18px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .explore-batch-card:hover {
+            transform: translateY(-6px);
+            border-color: var(--trace-amber-gold);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6), 0 0 20px var(--trace-amber-glow);
+        }
+
+        .explore-thumb-wrap {
+            position: relative;
+            width: 100%;
+            height: 190px;
+            overflow: hidden;
+            background: #000;
+            display: block;
+        }
+
+        .explore-thumb-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .explore-batch-card:hover .explore-thumb-img {
+            transform: scale(1.06);
+        }
+
+        .explore-yt-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #FF0000;
+            color: #fff;
+            font-size: 0.7rem;
+            font-weight: 800;
+            padding: 3px 8px;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        .explore-play-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.85;
+            transition: opacity 0.2s ease;
+        }
+
+        .explore-batch-card:hover .explore-play-overlay {
+            opacity: 1;
+            background: rgba(0, 0, 0, 0.45);
+        }
+
+        .explore-card-body {
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* Not found notice */
+        .not-found-card {
+            background: rgba(217, 119, 6, 0.15);
+            border: 1px solid rgba(217, 119, 6, 0.4);
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            color: var(--trace-cream-soft);
+            max-width: 600px;
+            margin: 20px auto;
+        }
+
+        /* Footer */
+        .trace-footer {
+            margin-top: auto;
+            background: #140B07;
+            border-top: 1px solid rgba(212, 163, 115, 0.12);
+            padding: 40px 5%;
+            text-align: center;
+            color: #A89080;
+            font-size: 0.9rem;
+        }
+
+        /* --- MOBILE ADAPTIVE RESPONSIVENESS --- */
+        @media (max-width: 768px) {
+            .trace-nav {
+                padding: 0.7rem 4%;
+            }
+
+            .trace-nav .logo img {
+                height: 38px !important;
+                width: 38px !important;
+            }
+
+            .trace-nav .nav-links a {
+                display: none;
+            }
+
+            .trace-nav .btn-signup {
+                padding: 6px 14px !important;
+                font-size: 0.82rem !important;
+            }
+
+            .trace-hero {
+                padding: 95px 4% 35px;
+            }
+
+            .trace-title {
+                font-size: clamp(1.75rem, 6.5vw, 2.3rem);
+                margin-bottom: 12px;
+            }
+
+            .trace-desc {
+                font-size: 0.95rem;
+                margin-bottom: 22px;
+            }
+
+            .search-box-card {
+                padding: 6px 8px !important;
+                border-radius: 14px !important;
+                max-width: 100% !important;
+                box-sizing: border-box !important;
+                gap: 6px !important;
+            }
+
+            .search-input-field {
+                font-size: 0.88rem !important;
+                padding: 8px 6px !important;
+                min-width: 0 !important;
+                flex: 1 1 0% !important;
+                box-sizing: border-box !important;
+            }
+
+            .search-submit-btn {
+                padding: 9px 12px !important;
+                font-size: 0.82rem !important;
+                border-radius: 10px !important;
+                flex-shrink: 0 !important;
+                white-space: nowrap !important;
+            }
+
+            .sample-chips-row {
+                gap: 6px;
+                margin-top: 12px;
+            }
+
+            .sample-chip {
+                font-size: 0.72rem;
+                padding: 4px 8px;
+            }
+
+            .result-section {
+                padding: 15px 3% 30px;
+            }
+
+            .batch-card {
+                border-radius: 18px;
+                grid-template-columns: 1fr;
+            }
+
+            .video-thumb-img {
+                min-height: 220px !important;
+                max-height: 250px !important;
+            }
+
+            .play-button-circle {
+                width: 58px;
+                height: 58px;
+                font-size: 1.5rem;
+            }
+
+            .batch-details-box {
+                padding: 20px 16px;
+            }
+
+            .batch-product-name {
+                font-size: 1.25rem;
+                margin-bottom: 4px;
+            }
+
+            .batch-video-title {
+                font-size: 0.88rem;
+                margin-bottom: 14px;
+            }
+
+            .metrics-grid {
+                gap: 8px;
+                margin-bottom: 16px;
+            }
+
+            .metric-card {
+                padding: 8px 10px;
+                border-radius: 10px;
+            }
+
+            .metric-num {
+                font-size: 1.15rem;
+            }
+
+            .metric-label {
+                font-size: 0.68rem;
+            }
+
+            .trace-timeline-card {
+                padding: 20px 16px;
+                border-radius: 16px;
+            }
+
+            .timeline-title {
+                font-size: 1.1rem;
+                margin-bottom: 14px;
+            }
+
+            .steps-flow {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .step-item {
+                padding: 12px;
+            }
+
+            .explore-section {
+                padding: 20px 4% 50px;
+                max-width: 100%;
+                box-sizing: border-box;
+            }
+
+            .batches-grid {
+                grid-template-columns: 1fr !important;
+                gap: 16px !important;
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            .explore-batch-card {
+                border-radius: 16px;
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            .explore-thumb-wrap {
+                height: 180px !important;
+            }
+
+            .explore-play-overlay .play-button-circle {
+                width: 48px !important;
+                height: 48px !important;
+                font-size: 1.25rem !important;
+            }
+
+            .explore-card-body {
+                padding: 16px 14px !important;
+            }
+
+            .explore-card-body h3 {
+                font-size: 1.05rem !important;
+                line-height: 1.35 !important;
+                margin-bottom: 6px !important;
+            }
+
+            .explore-card-body p {
+                font-size: 0.85rem !important;
+                margin-bottom: 12px !important;
+            }
+
+            .video-redirect-cta {
+                font-size: 0.82rem !important;
+                padding: 10px 14px !important;
+                border-radius: 10px !important;
+            }
+
+            .explore-card-body .sample-chip {
+                padding: 8px 14px !important;
+                font-size: 0.82rem !important;
+            }
+
+            .trace-nav .auth-buttons .btn-signup {
+                display: none !important;
+            }
+
+            .trace-badge {
+                font-size: 0.72rem !important;
+                padding: 5px 12px !important;
+                white-space: normal !important;
+                line-height: 1.35 !important;
+                max-width: 95% !important;
+            }
+        }
+
+        @media (min-width: 641px) and (max-width: 1024px) {
+            .batches-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 16px !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar trace-nav">
+        <div class="logo" style="display: flex; align-items: center; gap: 10px; cursor: pointer;"
+            onclick="window.location.href='index.html'">
+            <img src="assets/logo.png" alt="Milkman" style="height: 48px; width: 48px; object-fit: contain;">
+            <span style="color: var(--trace-amber-gold); font-weight: 800;">Milkman</span>
+        </div>
+        <div class="nav-links">
+            <a href="index.html#home">Home</a>
+            <a href="index.html#plans">Plans</a>
+            <a href="index.html#products">Products</a>
+            <a href="benefits.html" style="color: #FFD200; font-weight: 700;">⚡ Super Benefits</a>
+            <a href="trace.html"
+                style="color: var(--trace-amber-gold); font-weight: 800; border-bottom: 2px solid var(--trace-amber-gold);">🔍
+                Trace Batch</a>
+            <a href="subscription.html" style="color: #00E676; font-weight: 700;">🥛 My Subscription</a>
+            <div class="auth-buttons">
+                <button class="btn-signup" onclick="window.location.href='index.html'"
+                    style="background: linear-gradient(135deg, #E5A967 0%, #C68B59 100%); color: #1A0F0A; font-weight: 800; border-radius: 20px; box-shadow: 0 4px 12px rgba(229, 169, 103, 0.3);">Order
+                    Farm Fresh</button>
+            </div>
+            <!-- Mobile Hamburger Button beside login -->
+            <button id="mobileMenuBtn" class="mobile-hamburger-btn" aria-label="Toggle Menu" style="background: rgba(229, 169, 103, 0.12); border-color: rgba(229, 169, 103, 0.3);">
+                <span style="background: var(--trace-amber-gold);"></span>
+                <span style="background: var(--trace-amber-gold);"></span>
+                <span style="background: var(--trace-amber-gold);"></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Navigation Drawer & Backdrop -->
+    <div id="mobileNavBackdrop" class="mobile-nav-backdrop"></div>
+    <aside id="mobileNavDrawer" class="mobile-nav-drawer" aria-label="Mobile Navigation Menu" style="background: #1A0F0A; color: #FFFDF9; border-left: 1px solid rgba(212, 163, 115, 0.2);">
+        <div class="mobile-drawer-header" style="background: #26160F; border-bottom: 1px solid rgba(212, 163, 115, 0.2);">
+            <div class="logo" style="display: flex; align-items: center; gap: 8px;">
+                <img src="assets/logo.png" alt="Milkman" style="height: 38px; width: 38px; object-fit: contain;">
+                <span style="font-weight: 800; font-size: 1.25rem; color: var(--trace-amber-gold);">Milkman Menu</span>
+            </div>
+            <button id="closeMobileNavBtn" class="close-mobile-nav" aria-label="Close Menu" style="color: #EADBC8;">&times;</button>
+        </div>
+        <div class="mobile-nav-links">
+            <a href="index.html#home" class="mobile-nav-link" style="color: #FFFDF9;">
+                <span class="m-icon">🏠</span>
+                <span class="m-title">Home</span>
+            </a>
+            <a href="index.html#plans" class="mobile-nav-link" style="color: #FFFDF9;">
+                <span class="m-icon">📋</span>
+                <span class="m-title">Monthly Plans</span>
+            </a>
+            <a href="index.html#products" class="mobile-nav-link" style="color: #FFFDF9;">
+                <span class="m-icon">🥛</span>
+                <span class="m-title">Dairy Products</span>
+            </a>
+            <a href="benefits.html" class="mobile-nav-link" style="color: #FFFDF9;">
+                <span class="m-icon">⚡</span>
+                <span class="m-title">Super Benefits</span>
+                <span class="m-badge-gold">NEW</span>
+            </a>
+            <a href="trace.html" class="mobile-nav-link active" style="color: var(--trace-amber-gold); background: rgba(229, 169, 103, 0.1);">
+                <span class="m-icon">🔍</span>
+                <span class="m-title">Trace Batch Video</span>
+                <span class="m-badge-green">VIDEO</span>
+            </a>
+            <a href="subscription.html" class="mobile-nav-link" style="color: #FFFDF9;">
+                <span class="m-icon">🥛</span>
+                <span class="m-title">My Subscription</span>
+            </a>
+            <a href="index.html#cart" class="mobile-nav-link" style="color: #FFFDF9;">
+                <span class="m-icon">🛒</span>
+                <span class="m-title">Shopping Cart</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- HERO SEARCH SECTION -->
+    <header class="trace-hero">
+        <div class="trace-badge">
+            <span class="pulse-dot"></span>
+            <span>100% Farm Transparency • Live YouTube Video Trace</span>
+        </div>
+
+        <h1 class="trace-title">
+            Search Batch Number &amp;<br>
+            <span class="glow-text">Watch Preparation Video</span>
+        </h1>
+
+        <p class="trace-desc">
+            Enter the unique batch code printed on your milk bottle cap or delivery label. Verify laboratory purity,
+            milking timestamps, and watch raw preparation footage directly on YouTube.
+        </p>
+
+        <!-- Search Bar -->
+        <form id="batchSearchForm" class="search-box-card" onsubmit="event.preventDefault(); executeBatchSearch();">
+            <input type="text" id="batchSearchInput" class="search-input-field"
+                placeholder="Enter Batch No (e.g. BATCH-COW-101)..." autocomplete="off" required>
+            <button type="submit" class="search-submit-btn">
+                <span>🔍</span>
+                <span>Trace Video</span>
+            </button>
+        </form>
+
+        <!-- Quick Sample Chips -->
+        <div class="sample-chips-row">
+            <span class="sample-chip-label">Try sample batches:</span>
+            <button type="button" class="sample-chip" onclick="quickFillSearch('BATCH-COW-101')">🥛 BATCH-COW-101 (Gir
+                Cow)</button>
+            <button type="button" class="sample-chip" onclick="quickFillSearch('BATCH-BUF-202')">🐃 BATCH-BUF-202
+                (Murrah Buffalo)</button>
+            <button type="button" class="sample-chip" onclick="quickFillSearch('BATCH-GHEE-303')">🧈 BATCH-GHEE-303
+                (Bilona Ghee)</button>
+            <button type="button" class="sample-chip" onclick="quickFillSearch('BATCH-PANEER-404')">🧀 BATCH-PANEER-404
+                (Malai Paneer)</button>
+        </div>
+    </header>
+
+    <!-- SEARCH RESULT CONTAINER -->
+    <main class="result-section" id="resultContainer">
+        <!-- Result dynamically injected here via JS -->
+    </main>
+
+    <!-- FARM-TO-BOTTLE TIMELINE -->
+    <section class="result-section" style="padding-top: 0;">
+        <div class="trace-timeline-card">
+            <h2 class="timeline-title">
+                <span>🌱</span> Our 5-Step Farm-to-Bottle Purity Promise
+            </h2>
+            <div class="steps-flow">
+                <div class="step-item">
+                    <span class="step-icon">🌅</span>
+                    <div class="step-name">1. Morning Milking</div>
+                    <div class="step-desc">Sanitized automated touch-free milking at 4:30 AM from Vedic free-range cows.
+                    </div>
+                </div>
+                <div class="step-item">
+                    <span class="step-icon">🧪</span>
+                    <div class="step-name">2. Lab Testing</div>
+                    <div class="step-desc">Fat &amp; SNF analyzed instantly. 100% negative for urea, detergent and
+                        starch.</div>
+                </div>
+                <div class="step-item">
+                    <span class="step-icon">❄️</span>
+                    <div class="step-name">3. 4°C Plate Chilling</div>
+                    <div class="step-desc">Rapid temperature drop in 15 mins to inhibit bacterial growth without
+                        boiling.</div>
+                </div>
+                <div class="step-item">
+                    <span class="step-icon">🧴</span>
+                    <div class="step-name">4. Glass Bottling</div>
+                    <div class="step-desc">Filled in sterilized glass containers with date and batch ID stamped on cap.
+                    </div>
+                </div>
+                <div class="step-item">
+                    <span class="step-icon">🚪</span>
+                    <div class="step-name">5. 6:30 AM Delivery</div>
+                    <div class="step-desc">Delivered in chilled insulated bags before you wake up.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- RECENT BATCHES EXPLORER -->
+    <section class="explore-section">
+        <div class="section-header-row">
+            <div>
+                <h2 style="font-size: 1.8rem; font-weight: 800; color: #ffffff; margin: 0;">
+                    Verified Farm Batches &amp; Videos
+                </h2>
+                <p style="color: #94a3b8; margin: 5px 0 0; font-size: 0.95rem;">
+                    Click any preparation video below to watch the farm milking and processing directly on YouTube.
+                </p>
+            </div>
+        </div>
+
+        <div class="batches-grid" id="exploreBatchesGrid">
+            <!-- Batches loaded via JS -->
+            <div style="grid-column: 1/-1; text-align: center; color: #64748b; padding: 40px;">
+                Loading fresh batches...
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="trace-footer">
+        <p style="margin-bottom: 6px; font-weight: 600; color: #94a3b8;">
+            Milkman • Authentic Dairy Traceability &amp; Farm Video Verification
+        </p>
+        <p style="font-size: 0.8rem;">
+            All video links redirect to our verified YouTube channel. Zero artificial additives, 100% natural pure
+            dairy.
+        </p>
+        <p style="margin-top: 12px;">
+            <a href="staff.html" style="color: #64748b; font-size: 0.82rem; text-decoration: none;">Staff Portal</a>
+        </p>
+    </footer>
+
+    <!-- LOGIC SCRIPT -->
+    <script>
+        const API_HOST = (window.location.hostname && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1')
+            ? window.location.hostname
+            : 'localhost';
+        const API_BASE = window.location.origin.includes(':8080')
+            ? window.location.origin
+            : (window.location.protocol === 'file:' ? 'http://localhost:8080' : window.location.origin);
+        let allBatchesCache = [];
+
+        // Helper: Format YouTube URL
+        function getYouTubeId(url) {
+            if (!url) return '';
+            const regExp = /(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|shorts\/))([\w-]{11})/;
+            const match = url.match(regExp);
+            return match ? match[1] : '';
+        }
+
+        // Quick fill search from chips
+        function quickFillSearch(batchCode) {
+            const input = document.getElementById('batchSearchInput');
+            input.value = batchCode;
+            executeBatchSearch();
+        }
+
+        // Search execution
+        async function executeBatchSearch() {
+            const input = document.getElementById('batchSearchInput');
+            const batchNo = input.value.trim().toUpperCase();
+            if (!batchNo) return;
+
+            const container = document.getElementById('resultContainer');
+            container.innerHTML = `
+                <div style="text-align: center; padding: 40px; color: #94a3b8;">
+                    <div style="font-size: 2rem; margin-bottom: 10px;">🔍</div>
+                    <p style="font-size: 1.1rem; font-weight: 700;">Searching batch ${batchNo} in database...</p>
+                </div>
+            `;
+
+            try {
+                const res = await fetch(`${API_BASE}/api/batches/${encodeURIComponent(batchNo)}`);
+                const data = await res.json();
+
+                if (data.success && data.batch) {
+                    renderBatchResult(data.batch);
+                    container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                } else {
+                    renderNotFound(batchNo);
+                }
+            } catch (err) {
+                // If backend offline, search in cache
+                const cached = allBatchesCache.find(b => b.batch_no && b.batch_no.toUpperCase() === batchNo);
+                if (cached) {
+                    renderBatchResult(cached);
+                    container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                } else {
+                    renderNotFound(batchNo);
+                }
+            }
+        }
+
+        // Render Found Batch Card
+        function renderBatchResult(b) {
+            const container = document.getElementById('resultContainer');
+            const thumbUrl = b.thumbnail_url || 'assets/cow_milk_plan.jpg';
+            const ytId = getYouTubeId(b.video_url);
+
+            container.innerHTML = `
+                <div class="batch-card">
+                    <!-- Column 1: Video Showcase (Clicking redirects to YouTube) -->
+                    <div class="video-showcase-box" onclick="window.open('${b.video_url}', '_blank')" title="Click to watch preparation video on YouTube">
+                        <img src="${thumbUrl}" alt="${b.title}" class="video-thumb-img" onerror="this.onerror=null; this.src='assets/cow_milk_plan.jpg';">
+                        <div class="video-overlay-gradient"></div>
+                        
+                        <div class="yt-floating-badge">
+                            <span>▶</span>
+                            <span>YouTube Video</span>
+                        </div>
+
+                        <div class="video-play-center">
+                            <div class="play-button-circle">▶</div>
+                            <span class="play-label">Click to Watch Preparation Video</span>
+                        </div>
+
+                        <div class="video-bottom-bar">
+                            <a href="${b.video_url}" target="_blank" rel="noopener noreferrer" class="video-redirect-cta" onclick="event.stopPropagation()">
+                                <span>▶</span>
+                                <span>Watch Full HD Video on YouTube ↗</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Column 2: Purity & Transparency Details -->
+                    <div class="batch-details-box">
+                        <div>
+                            <div class="batch-header-tags">
+                                <span class="batch-code-tag">🏷️ ${b.batch_no}</span>
+                                <span class="batch-date-tag">📅 ${b.preparation_date || 'Fresh Morning'}</span>
+                            </div>
+
+                            <h2 class="batch-product-name">${b.product_name}</h2>
+                            <div class="batch-video-title">🎥 ${b.title}</div>
+
+                            <!-- Purity Metrics -->
+                            <div class="metrics-grid">
+                                <div class="metric-card">
+                                    <div class="metric-num">${b.fat_percentage || '4.8%'}</div>
+                                    <div class="metric-label">Lab Fat Content</div>
+                                </div>
+                                <div class="metric-card">
+                                    <div class="metric-num">${b.snf_percentage || '8.9%'}</div>
+                                    <div class="metric-label">SNF (Solid Not Fat)</div>
+                                </div>
+                                <div class="metric-card">
+                                    <div class="metric-num" style="color: #38bdf8;">4°C</div>
+                                    <div class="metric-label">Plate Chilled Temp</div>
+                                </div>
+                                <div class="metric-card">
+                                    <div class="metric-num" style="color: #f59e0b;">100%</div>
+                                    <div class="metric-label">Purity Verified</div>
+                                </div>
+                            </div>
+
+                            <!-- Quality Notes -->
+                            <div class="notes-banner">
+                                <strong>Farm Location:</strong> ${b.farm_location || 'Vedic Dairy Sanctuary'}<br>
+                                <span style="font-size: 0.85rem; color: #94a3b8; display: block; margin-top: 4px;">
+                                    📝 ${b.notes || '100% Raw, untouched by human hands, certified free from synthetic hormones & preservatives.'}
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Action Button to YouTube -->
+                        <div>
+                            <button onclick="window.open('${b.video_url}', '_blank')" class="search-submit-btn" style="width: 100%; justify-content: center; background: #FF0000; color: #ffffff; box-shadow: 0 4px 20px rgba(255, 0, 0, 0.4);">
+                                <span>▶</span>
+                                <span>Open Video on YouTube (New Tab) ↗</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Render Not Found Card
+        function renderNotFound(batchNo) {
+            const container = document.getElementById('resultContainer');
+            container.innerHTML = `
+                <div class="not-found-card">
+                    <div style="font-size: 2.2rem; margin-bottom: 10px;">⚠️</div>
+                    <h3 style="margin: 0 0 8px; color: #ffffff; font-size: 1.3rem;">Batch '${batchNo}' Not Found</h3>
+                    <p style="margin: 0 0 16px; font-size: 0.95rem;">
+                        Please verify the batch code printed on your bottle cap or delivery label. Or click one of the sample batches above to test.
+                    </p>
+                    <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+                        <button onclick="quickFillSearch('BATCH-COW-101')" class="sample-chip" style="background: rgba(0, 230, 118, 0.2); color: #00E676; border-color: #00E676;">
+                            Try BATCH-COW-101
+                        </button>
+                        <button onclick="quickFillSearch('BATCH-BUF-202')" class="sample-chip" style="background: rgba(0, 230, 118, 0.2); color: #00E676; border-color: #00E676;">
+                            Try BATCH-BUF-202
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Fetch All Batches to Populate Explorer Grid
+        async function loadAllBatches() {
+            const grid = document.getElementById('exploreBatchesGrid');
+            try {
+                const res = await fetch(`${API_BASE}/api/batches`);
+                const data = await res.json();
+                if (data.success && data.batches) {
+                    allBatchesCache = data.batches;
+                    renderExploreGrid(data.batches);
+                } else {
+                    grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #64748b;">No batch videos found.</div>';
+                }
+            } catch (e) {
+                grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #64748b;">Unable to fetch live batches. Please ensure backend is running.</div>';
+            }
+        }
+
+        function renderExploreGrid(batches) {
+            const grid = document.getElementById('exploreBatchesGrid');
+            if (batches.length === 0) {
+                grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #64748b;">No batch videos uploaded yet.</div>';
+                return;
+            }
+
+            grid.innerHTML = batches.map(b => {
+                const thumb = b.thumbnail_url || 'assets/cow_milk_plan.jpg';
+                return `
+                    <div class="explore-batch-card">
+                        <!-- Clickable thumbnail redirecting to YouTube -->
+                        <a href="${b.video_url}" target="_blank" rel="noopener noreferrer" class="explore-thumb-wrap" title="Watch on YouTube">
+                            <img src="${thumb}" alt="${b.title}" class="explore-thumb-img" onerror="this.onerror=null; this.src='assets/cow_milk_plan.jpg';">
+                            <div class="explore-yt-badge">▶ YouTube</div>
+                            <div class="explore-play-overlay">
+                                <div class="play-button-circle" style="width: 50px; height: 50px; font-size: 1.3rem;">▶</div>
+                            </div>
+                        </a>
+
+                        <div class="explore-card-body">
+                            <div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px; margin-bottom: 8px;">
+                                    <span class="batch-code-tag" style="font-size: 0.8rem; padding: 4px 10px;">
+                                        🏷️ ${b.batch_no}
+                                    </span>
+                                    <span style="font-size: 0.8rem; color: #EADBC8; font-weight: 600;">
+                                        📅 ${b.preparation_date || 'Fresh'}
+                                    </span>
+                                </div>
+
+                                <h3 style="font-size: 1.05rem; color: #ffffff; margin: 0 0 6px; font-weight: 700; line-height: 1.35;">
+                                    ${b.title}
+                                </h3>
+                                <p style="font-size: 0.85rem; color: #00E676; margin: 0 0 12px; font-weight: 600;">
+                                    🥛 ${b.product_name}
+                                </p>
+                            </div>
+
+                            <div style="display: flex; gap: 8px; margin-top: 10px;">
+                                <a href="${b.video_url}" target="_blank" rel="noopener noreferrer" class="video-redirect-cta" style="flex: 1; padding: 10px 12px; font-size: 0.85rem;">
+                                    <span>▶</span> Watch Video ↗
+                                </a>
+                                <button onclick="quickFillSearch('${b.batch_no}')" class="sample-chip" style="padding: 8px 14px; font-size: 0.82rem; border-color: rgba(0, 230, 118, 0.4); color: #00E676; font-weight: 700; white-space: nowrap;">
+                                    🔍 Trace
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Mobile Drawer Handlers
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const closeMobileNavBtn = document.getElementById('closeMobileNavBtn');
+        const mobileNavDrawer = document.getElementById('mobileNavDrawer');
+        const mobileNavBackdrop = document.getElementById('mobileNavBackdrop');
+
+        const openMobileNav = () => {
+            if (mobileNavDrawer && mobileNavBackdrop) {
+                mobileNavDrawer.classList.add('active');
+                mobileNavBackdrop.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+        };
+
+        const closeMobileNav = () => {
+            if (mobileNavDrawer && mobileNavBackdrop) {
+                mobileNavDrawer.classList.remove('active');
+                mobileNavBackdrop.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        };
+
+        if (mobileMenuBtn) mobileMenuBtn.addEventListener('click', openMobileNav);
+        if (closeMobileNavBtn) closeMobileNavBtn.addEventListener('click', closeMobileNav);
+        if (mobileNavBackdrop) mobileNavBackdrop.addEventListener('click', closeMobileNav);
+        document.querySelectorAll('.mobile-nav-link').forEach(link => {
+            link.addEventListener('click', closeMobileNav);
+        });
+
+        // On Page Load: Check URL Params (e.g. trace.html?batch=BATCH-COW-101)
+        window.addEventListener('DOMContentLoaded', () => {
+            loadAllBatches();
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const batchParam = urlParams.get('batch');
+            if (batchParam) {
+                document.getElementById('batchSearchInput').value = batchParam;
+                setTimeout(executeBatchSearch, 300);
+            }
+        });
+    </script>
+    <script src="js/loader.js"></script>
+</body>
+
+</html>

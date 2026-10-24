@@ -1,0 +1,2528 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Portal - Milkman</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body {
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+        }
+
+        /* Login Screen */
+        #loginScreen {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Dashboard Layout */
+        #dashboardScreen {
+            display: none;
+            width: 100%;
+            height: 100%;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .sidebar h2 {
+            margin-top: 0;
+            margin-bottom: 30px;
+            color: var(--primary-color);
+        }
+
+        .nav-item {
+            padding: 12px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background: var(--primary-color);
+            color: var(--bg-color);
+        }
+
+        .content-area {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .card {
+            background: #ffffff;
+            border: 1px solid #E2E8F0;
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .full-width {
+            grid-column: span 2;
+        }
+
+        /* --- Custom Popup Styles --- */
+        .custom-popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(4px);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .custom-popup-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .custom-popup {
+            background: #fff;
+            color: #333;
+            width: 320px;
+            border-radius: 14px;
+            text-align: center;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transform: scale(0.95);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .custom-popup-overlay.active .custom-popup {
+            transform: scale(1);
+        }
+
+        .custom-popup-content {
+            padding: 20px;
+        }
+
+        .custom-popup-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .custom-popup-message {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .custom-popup-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            outline: none;
+            display: none;
+        }
+
+        .custom-popup-input:focus {
+            border-color: #007aff;
+        }
+
+        .custom-popup-buttons {
+            display: flex;
+            border-top: 1px solid #eee;
+        }
+
+        .custom-popup-btn {
+            flex: 1;
+            padding: 15px;
+            background: none;
+            border: none;
+            font-size: 1rem;
+            cursor: pointer;
+            color: #007aff;
+            transition: background 0.2s;
+        }
+
+        .custom-popup-btn:active {
+            background: #f5f5f5;
+        }
+
+        .custom-popup-btn.btn-cancel {
+            border-right: 1px solid #eee;
+            font-weight: 400;
+            color: #ff3b30;
+        }
+
+        /* Subscription Management Styles */
+        .sub-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .sub-stat-card {
+            background: #ffffff;
+            border: 1px solid #E2E8F0;
+            border-radius: 12px;
+            padding: 16px 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .sub-stat-num {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            margin-bottom: 4px;
+        }
+
+        .sub-stat-label {
+            font-size: 0.82rem;
+            color: #64748B;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .sub-toolbar {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .sub-filter-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .sub-filter-group input,
+        .sub-filter-group select {
+            background: #ffffff;
+            border: 1px solid #CBD5E1;
+            color: #0F172A;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            outline: none;
+            font-weight: 600;
+        }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 20px;
+            text-transform: uppercase;
+        }
+
+        .pill-delivered {
+            background: rgba(0, 230, 118, 0.15);
+            color: #00E676;
+            border: 1px solid #00E676;
+        }
+
+        .pill-skipped {
+            background: rgba(255, 171, 0, 0.15);
+            color: #FFAB00;
+            border: 1px solid #FFAB00;
+        }
+
+        .pill-pending {
+            background: rgba(0, 102, 255, 0.15);
+            color: #2979FF;
+            border: 1px solid #2979FF;
+        }
+
+        .pill-paid {
+            background: rgba(0, 230, 118, 0.1);
+            color: #00E676;
+        }
+
+        .pill-doorstep {
+            background: rgba(255, 171, 0, 0.1);
+            color: #FFAB00;
+        }
+
+        /* Modal styling */
+        .staff-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(6px);
+            z-index: 10000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .staff-modal-overlay.active {
+            display: flex;
+        }
+
+        .staff-modal-card {
+            background: #ffffff;
+            color: #1e293b;
+            width: 100%;
+            max-width: 580px;
+            max-height: 90vh;
+            overflow-y: auto;
+            border-radius: 18px;
+            padding: 30px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .staff-modal-card h3 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+            color: #0f172a;
+        }
+
+        .close-staff-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 1.6rem;
+            cursor: pointer;
+            color: #64748b;
+        }
+
+        .staff-form-group {
+            margin-bottom: 16px;
+        }
+
+        .staff-form-group label {
+            display: block;
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: #475569;
+            margin-bottom: 6px;
+        }
+
+        .staff-form-group input,
+        .staff-form-group select {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            color: #1e293b;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        .days-grid-30 {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(75px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .day-cell {
+            padding: 8px 6px;
+            border-radius: 8px;
+            text-align: center;
+            border: 2px solid #e2e8f0;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+
+        .day-cell:hover {
+            transform: scale(1.05);
+        }
+
+        .day-cell.delivered {
+            background: #dcfce7;
+            border-color: #22c55e;
+            color: #15803d;
+            font-weight: 700;
+        }
+
+        .day-cell.skipped {
+            background: #fef3c7;
+            border-color: #f59e0b;
+            color: #b45309;
+            font-weight: 700;
+        }
+
+        .day-cell.pending,
+        .day-cell.upcoming {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+            color: #64748b;
+        }
+
+        .day-cell.today-pending {
+            background: #eff6ff;
+            border-color: #3b82f6;
+            color: #1d4ed8;
+            font-weight: 700;
+        }
+
+        .day-cell.past-unmarked {
+            background: #fef2f2;
+            border-color: #fca5a5;
+            color: #b91c1c;
+        }
+
+        .day-cell.is-today-cell {
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.4);
+            position: relative;
+        }
+
+        .del-qty-chip {
+            background: #F1F5F9;
+            border: 1px solid #CBD5E1;
+            color: #1E293B;
+            font-size: 0.82rem;
+            font-weight: 700;
+            padding: 5px 12px;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .del-qty-chip:hover {
+            background: #E0E7FF;
+            border-color: #6366F1;
+            color: #4338CA;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- CUSTOM POPUP -->
+    <div id="customPopupOverlay" class="custom-popup-overlay">
+        <div class="custom-popup">
+            <div class="custom-popup-content">
+                <div id="customPopupTitle" class="custom-popup-title">Alert</div>
+                <div id="customPopupMessage" class="custom-popup-message">This is a message</div>
+                <input type="text" id="customPopupInput" class="custom-popup-input" placeholder="Enter value...">
+            </div>
+            <div class="custom-popup-buttons" id="customPopupButtons">
+                <!-- Buttons injected via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- LOGIN SCREEN -->
+    <div id="loginScreen">
+        <div class="glass-card" style="width: 100%; max-width: 400px; text-align: center;">
+            <h2>Staff Portal 🔐</h2>
+            <p>Please enter your PIN</p>
+            <div class="input-group">
+                <input type="password" id="staffPin" placeholder="Enter PIN (123456)"
+                    style="text-align: center; letter-spacing: 3px;">
+            </div>
+            <button id="loginBtn" class="btn-primary" style="width: 100%;">Login</button>
+        </div>
+    </div>
+
+    <!-- DASHBOARD SCREEN -->
+    <div id="dashboardScreen">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <h2 style="display: flex; align-items: center; gap: 10px;">
+                <img src="assets/logo.png" alt="Milkman" style="height: 45px; width: 45px; object-fit: contain;">
+                Staff Portal
+            </h2>
+            <div class="nav-item active" data-target="manageOrders">📦 Order Manager</div>
+            <div class="nav-item" data-target="manageSubscribers">🥛 Subscriptions &amp; Deliveries</div>
+            <div class="nav-item" data-target="manageUsers">👥 Users</div>
+            <div class="nav-item" data-target="manageAreas">🗺️ Area Management</div>
+            <div class="nav-item" data-target="manageProducts">🥛 Manage Products</div>
+            <div class="nav-item" data-target="manageBatches">🎥 Batch Videos</div>
+            <div class="nav-item" data-target="manageCampaigns">📢 Campaigns</div>
+            <div style="flex-grow: 1;"></div>
+            <div class="nav-item" id="logoutBtn" style="color: #ff4757;">🚪 Logout</div>
+        </div>
+
+        <!-- Content Area -->
+        <div class="content-area">
+
+            <!-- SECTION: Manage Orders -->
+            <div id="manageOrders" class="section active">
+                <h2>Live Orders</h2>
+                <button id="refreshOrdersBtn" class="btn-primary" style="margin-bottom: 20px;">Refresh Feed</button>
+                <div id="ordersFeed" style="display: flex; flex-direction: column; gap: 15px;">
+                    <!-- Orders will load here -->
+                </div>
+            </div>
+
+            <!-- SECTION: Subscriptions & Daily Deliveries -->
+            <div id="manageSubscribers" class="section">
+                <div
+                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
+                    <div>
+                        <h2 style="margin: 0;">Daily Milk Subscriptions &amp; Deliveries</h2>
+                        <p style="margin: 5px 0 0; color: var(--text-light); font-size: 0.95rem;">Track daily milk
+                            distribution, mark dates, and manage subscribers.</p>
+                    </div>
+                    <button id="openAddSubModalBtn" class="btn-primary"
+                        style="background: #00E676; border-color: #00E676; color: #111; font-weight: 700; box-shadow: 0 4px 14px rgba(0,230,118,0.3);">
+                        + Add New Subscriber
+                    </button>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="sub-stats-grid">
+                    <div class="sub-stat-card">
+                        <div class="sub-stat-num" id="statTotalSubs">0</div>
+                        <div class="sub-stat-label">Active Subscribers</div>
+                    </div>
+                    <div class="sub-stat-card">
+                        <div class="sub-stat-num" id="statDeliveredToday" style="color: #00E676;">0</div>
+                        <div class="sub-stat-label">Delivered on Date</div>
+                    </div>
+                    <div class="sub-stat-card">
+                        <div class="sub-stat-num" id="statSkippedToday" style="color: #FFAB00;">0</div>
+                        <div class="sub-stat-label">Paused / Skipped</div>
+                    </div>
+                    <div class="sub-stat-card">
+                        <div class="sub-stat-num" id="statPendingToday" style="color: #2979FF;">0</div>
+                        <div class="sub-stat-label">Pending Delivery</div>
+                    </div>
+                </div>
+
+                <!-- Toolbar Controls -->
+                <div class="sub-toolbar card" style="padding: 16px 20px;">
+                    <div class="sub-filter-group">
+                        <label style="font-weight: 700; font-size: 0.9rem; color: var(--text-light);">📅 Date:</label>
+                        <input type="date" id="subDatePicker">
+
+                        <label
+                            style="font-weight: 700; font-size: 0.9rem; color: var(--text-light); margin-left: 8px;">🥛
+                            Plan:</label>
+                        <select id="subPlanFilter">
+                            <option value="ALL">All Plans</option>
+                            <option value="plan_cow">Cow Milk (1L)</option>
+                            <option value="plan_buffalo">Buffalo Milk (1L)</option>
+                            <option value="plan_cow_half">Cow Milk (500ml)</option>
+                            <option value="plan_buffalo_half">Buffalo Milk (500ml)</option>
+                        </select>
+
+                        <input type="text" id="subSearchInput" placeholder="🔍 Search customer / phone..."
+                            style="min-width: 200px;">
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <button id="refreshSubsBtn" class="btn-login-outline"
+                            style="padding: 8px 14px; font-size: 0.9rem;">🔄 Refresh</button>
+                        <button id="markAllDeliveredBtn" class="btn-primary"
+                            style="padding: 8px 16px; font-size: 0.9rem; background: #0066FF;">✓ Mark All Pending as
+                            Delivered</button>
+                    </div>
+                </div>
+
+                <!-- Subscribers List Container -->
+                <div class="card"
+                    style="padding: 0; overflow-x: auto; background: #ffffff; border: 1px solid #E2E8F0; border-radius: 14px; box-shadow: 0 4px 16px rgba(0,0,0,0.04);">
+                    <table style="width: 100%; border-collapse: collapse; min-width: 750px; text-align: left;"
+                        id="subscribersTable">
+                        <thead>
+                            <tr style="border-bottom: 2px solid #E2E8F0; background: #F8FAFC;">
+                                <th
+                                    style="padding: 14px 18px; color: #475569; font-size: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">
+                                    Customer</th>
+                                <th
+                                    style="padding: 14px 18px; color: #475569; font-size: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">
+                                    Address</th>
+                                <th
+                                    style="padding: 14px 18px; color: #475569; font-size: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">
+                                    Plan Details</th>
+                                <th
+                                    style="padding: 14px 18px; color: #475569; font-size: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">
+                                    30-Day Progress</th>
+                                <th
+                                    style="padding: 14px 18px; color: #475569; font-size: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">
+                                    Bill / Payment</th>
+                                <th
+                                    style="padding: 14px 18px; color: #475569; font-size: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">
+                                    Delivery Status</th>
+                                <th
+                                    style="padding: 14px 18px; color: #475569; font-size: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; text-align: right;">
+                                    Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="subscribersListBody">
+                            <!-- Populated dynamically via JS -->
+                        </tbody>
+                    </table>
+                    <div id="noSubsNotice"
+                        style="display: none; padding: 40px; text-align: center; color: var(--text-light);">
+                        No subscribers found for this date. Click "+ Add New Subscriber" to register one.
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION: Users Management -->
+            <div id="manageUsers" class="section">
+                <h2>Registered Users</h2>
+                <button id="refreshUsersBtn" class="btn-primary" style="margin-bottom: 20px;">Refresh Users</button>
+                <div class="card" style="padding: 0;">
+                    <div id="usersList"
+                        style="display: flex; flex-direction: column; divide-y: 1px solid rgba(255,255,255,0.1);">
+                        <!-- Users will load here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION: Area Management -->
+            <div id="manageAreas" class="section">
+                <h2>Serviceable Areas</h2>
+                <div class="card">
+                    <h3>Add New Area</h3>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="newAreaName" placeholder="E.g. Phase 2"
+                            style="flex: 1; padding: 10px; border-radius: 5px;">
+                        <button id="addAreaBtn" class="btn-primary">Add Area</button>
+                    </div>
+                </div>
+                <div id="areasList" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <!-- Areas will load here -->
+                </div>
+            </div>
+
+            <!-- SECTION: Manage Products -->
+            <div id="manageProducts" class="section">
+                <h2>Manage Products</h2>
+                <div class="card" id="productFormCard">
+                    <h3 id="productFormTitle">Add New Product</h3>
+                    <div class="form-grid">
+                        <div class="input-group">
+                            <label>Product Name</label>
+                            <input type="text" id="prodName" placeholder="E.g. Fresh Cow Milk">
+                        </div>
+                        <div class="input-group" style="display: flex; gap: 10px;">
+                            <div style="flex: 1;">
+                                <label>Price (₹)</label>
+                                <input type="number" id="prodPrice" placeholder="E.g. 65">
+                            </div>
+                            <div style="flex: 1;">
+                                <label>Unit</label>
+                                <input type="text" id="prodUnit" placeholder="E.g. / liter, / kg">
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label>Available Stock</label>
+                            <input type="number" id="prodStock" placeholder="E.g. 100" value="100">
+                        </div>
+                        <div class="input-group full-width">
+                            <label>Description</label>
+                            <textarea id="prodDesc" rows="2" placeholder="Product description..."></textarea>
+                        </div>
+                        <div class="input-group full-width">
+                            <label>Product Image</label>
+                            <input type="file" id="prodImgFile" accept="image/*"
+                                style="padding: 10px; cursor: pointer;">
+                            <small style="color: var(--text-light); margin-top: 5px; display: block;">Or provide an
+                                Image URL below:</small>
+                            <input type="text" id="prodImgUrl" placeholder="https://..." style="margin-top: 5px;">
+                        </div>
+                    </div>
+                    <button id="addProductBtn" class="btn-primary" style="margin-top: 20px;">Save Product</button>
+                </div>
+
+                <h3 style="margin-top: 40px;">Existing Products</h3>
+                <button id="refreshProductsBtn" class="btn-primary" style="margin-bottom: 20px;">Refresh
+                    Products</button>
+                <div id="productsList" style="display: flex; flex-direction: column; gap: 15px;">
+                    <!-- Products will load here -->
+                </div>
+            </div>
+
+            <!-- SECTION: Batch Videos & Traceability -->
+            <div id="manageBatches" class="section">
+                <div
+                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 15px;">
+                    <div>
+                        <h2 style="margin: 0; display: flex; align-items: center; gap: 10px;">
+                            <span>🎥</span> Product Batch Videos &amp; Farm Traceability
+                        </h2>
+                        <p style="margin: 5px 0 0; color: var(--text-light); font-size: 0.95rem;">
+                            Upload preparation/milking videos with YouTube links, custom thumbnails, titles, and lab
+                            test data so customers can trace their milk bottles.
+                        </p>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <a href="trace.html" target="_blank" class="btn-secondary"
+                            style="padding: 10px 18px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; font-weight: 700; background: rgba(0, 230, 118, 0.15); color: #00E676; border: 1px solid #00E676; border-radius: 8px;">
+                            <span>🔍</span> Open Customer Trace Page ↗
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Split Layout: Form & Live Batches -->
+                <div style="display: grid; grid-template-columns: 1fr 1.2fr; gap: 25px;">
+                    <!-- Column 1: Upload / Add Batch Form -->
+                    <div class="card" style="padding: 25px;">
+                        <h3 id="batchFormTitle"
+                            style="margin-top: 0; margin-bottom: 20px; color: var(--primary-color); display: flex; align-items: center; gap: 8px;">
+                            <span>➕</span> Add / Upload Batch Video
+                        </h3>
+
+                        <div style="display: flex; flex-direction: column; gap: 16px;">
+                            <!-- Batch No -->
+                            <div class="input-group">
+                                <div
+                                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                                    <label style="font-weight: 700; font-size: 0.9rem;">Batch Number *</label>
+                                    <button type="button" id="btnGenBatchNo"
+                                        style="background: none; border: none; color: var(--primary-color); cursor: pointer; font-size: 0.82rem; font-weight: 700;">✨
+                                        Auto Generate</button>
+                                </div>
+                                <input type="text" id="batchNoInput" placeholder="e.g. BATCH-COW-101"
+                                    style="text-transform: uppercase; font-weight: 700; letter-spacing: 1px;">
+                            </div>
+
+                            <!-- Product Name -->
+                            <div class="input-group">
+                                <label
+                                    style="font-weight: 700; font-size: 0.9rem; margin-bottom: 6px; display: block;">Product
+                                    Name *</label>
+                                <select id="batchProductSelect"
+                                    style="width: 100%; padding: 11px 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.08); color: var(--text-dark); font-size: 0.95rem;">
+                                    <option value="Pure Desi Gir Cow Milk (A2 Raw)">Pure Desi Gir Cow Milk (A2 Raw)
+                                    </option>
+                                    <option value="Rich Murrah Buffalo Milk (A2 Fresh)">Rich Murrah Buffalo Milk (A2
+                                        Fresh)</option>
+                                    <option value="Vedic Bilona Cow Ghee">Vedic Bilona Cow Ghee</option>
+                                    <option value="Fresh Farm Malai Paneer">Fresh Farm Malai Paneer</option>
+                                    <option value="Artisanal Probiotic Dahi">Artisanal Probiotic Dahi</option>
+                                    <option value="Fresh White Makhan">Fresh White Makhan</option>
+                                </select>
+                            </div>
+
+                            <!-- Video Title -->
+                            <div class="input-group">
+                                <label
+                                    style="font-weight: 700; font-size: 0.9rem; margin-bottom: 6px; display: block;">Video
+                                    Title *</label>
+                                <input type="text" id="batchTitleInput"
+                                    placeholder="e.g. Early Dawn Milking &amp; 4°C Rapid Plate Cooling">
+                            </div>
+
+                            <!-- YouTube Video URL -->
+                            <div class="input-group">
+                                <label
+                                    style="font-weight: 700; font-size: 0.9rem; margin-bottom: 6px; display: block;">YouTube
+                                    Video Link *</label>
+                                <input type="url" id="batchVideoUrlInput"
+                                    placeholder="https://www.youtube.com/watch?v=... or https://youtu.be/...">
+                                <small
+                                    style="color: var(--text-light); font-size: 0.8rem; margin-top: 4px; display: block;">When
+                                    user clicks this video on trace page, they will be redirected to YouTube.</small>
+                            </div>
+
+                            <!-- Thumbnail URL + Auto Fetch Preview -->
+                            <div class="input-group">
+                                <div
+                                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                                    <label style="font-weight: 700; font-size: 0.9rem;">Video Thumbnail Image
+                                        URL</label>
+                                    <button type="button" id="btnFetchThumb"
+                                        style="background: none; border: none; color: #00E676; cursor: pointer; font-size: 0.82rem; font-weight: 700;">⚡
+                                        Fetch from YouTube</button>
+                                </div>
+                                <input type="url" id="batchThumbUrlInput"
+                                    placeholder="https://img.youtube.com/vi/... or paste image URL">
+
+                                <!-- Live Thumbnail Preview Container -->
+                                <div id="batchThumbPreviewBox"
+                                    style="margin-top: 10px; display: none; position: relative; border-radius: 10px; overflow: hidden; border: 2px solid rgba(0, 102, 255, 0.4); max-height: 160px;">
+                                    <img id="batchThumbPreviewImg" src="" alt="Thumbnail preview"
+                                        style="width: 100%; height: 160px; object-fit: cover;">
+                                    <div
+                                        style="position: absolute; top: 8px; right: 8px; background: rgba(255, 0, 0, 0.9); color: white; padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 800; display: flex; align-items: center; gap: 4px;">
+                                        ▶ YouTube
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Preparation Date & Time -->
+                            <div class="input-group">
+                                <label
+                                    style="font-weight: 700; font-size: 0.9rem; margin-bottom: 6px; display: block;">Preparation
+                                    / Milking Date &amp; Time</label>
+                                <input type="text" id="batchDateInput"
+                                    placeholder="e.g. Today, 04:30 AM (or 2026-04-12, Morning)">
+                            </div>
+
+                            <!-- Lab Metrics Grid -->
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                                <div class="input-group">
+                                    <label
+                                        style="font-weight: 700; font-size: 0.85rem; margin-bottom: 4px; display: block;">Fat
+                                        Percentage (%)</label>
+                                    <input type="text" id="batchFatInput" placeholder="e.g. 4.8%" value="4.8%">
+                                </div>
+                                <div class="input-group">
+                                    <label
+                                        style="font-weight: 700; font-size: 0.85rem; margin-bottom: 4px; display: block;">SNF
+                                        Percentage (%)</label>
+                                    <input type="text" id="batchSnfInput" placeholder="e.g. 8.9%" value="8.9%">
+                                </div>
+                            </div>
+
+                            <!-- Farm Location -->
+                            <div class="input-group">
+                                <label
+                                    style="font-weight: 700; font-size: 0.85rem; margin-bottom: 4px; display: block;">Farm
+                                    / Shed Location</label>
+                                <input type="text" id="batchFarmInput" placeholder="e.g. Vedic Gir Cow Farm, Shed #2"
+                                    value="Gir Cow Sanctuary &amp; Vedic Farm - Shed A">
+                            </div>
+
+                            <!-- Quality Notes -->
+                            <div class="input-group">
+                                <label
+                                    style="font-weight: 700; font-size: 0.85rem; margin-bottom: 4px; display: block;">Quality
+                                    &amp; Lab Notes</label>
+                                <textarea id="batchNotesInput" rows="2"
+                                    placeholder="e.g. 100% Raw, untouched by hand, zero preservatives.">100% Pure &amp; Raw, chilled rapidly to 4°C, zero adulteration certified.</textarea>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <button id="saveBatchBtn" class="btn-primary"
+                                style="margin-top: 10px; padding: 14px; font-weight: 700; font-size: 1rem; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                <span>🚀</span> Upload &amp; Save Batch Video
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Column 2: Uploaded Batches List -->
+                    <div>
+                        <div class="card" style="padding: 20px; margin-bottom: 15px;">
+                            <div
+                                style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                                <h3 style="margin: 0; color: var(--text-light); font-size: 1.1rem;">
+                                    Uploaded Batch Videos (<span id="batchCountBadge">0</span>)
+                                </h3>
+                                <button id="refreshBatchesBtn" class="btn-login-outline"
+                                    style="padding: 6px 14px; font-size: 0.85rem;">
+                                    🔄 Refresh List
+                                </button>
+                            </div>
+                            <input type="text" id="searchStaffBatchesInput"
+                                placeholder="🔍 Search batch by code or title..."
+                                style="width: 100%; margin-top: 12px; padding: 10px 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.06); color: var(--text-dark); font-size: 0.9rem; box-sizing: border-box;">
+                        </div>
+
+                        <div id="batchesListFeed" style="display: flex; flex-direction: column; gap: 15px;">
+                            <!-- Batches loaded via JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION: Campaigns -->
+            <div id="manageCampaigns" class="section">
+                <h2>Campaign Manager</h2>
+
+                <div class="card">
+                    <h3>💬 WhatsApp Campaign</h3>
+                    <div class="input-group">
+                        <label>Message Content</label>
+                        <textarea id="waMessage" rows="4"
+                            placeholder="Hello users! Today's special offer..."></textarea>
+                    </div>
+                    <button id="sendWaBtn" class="btn-primary" style="margin-top: 15px;">Send WhatsApp
+                        Broadcast</button>
+                </div>
+
+                <div class="card">
+                    <h3>🔔 Push Notification (App)</h3>
+                    <div class="form-grid">
+                        <div class="input-group">
+                            <label>Notification Title</label>
+                            <input type="text" id="pushTitle" placeholder="Big Sale!">
+                        </div>
+                        <div class="input-group">
+                            <label>Image URL (Optional)</label>
+                            <input type="text" id="pushImage" placeholder="https://...">
+                        </div>
+                        <div class="input-group full-width">
+                            <label>Notification Body</label>
+                            <textarea id="pushBody" rows="2" placeholder="Get 50% off on your next order..."></textarea>
+                        </div>
+                    </div>
+                    <button id="sendPushBtn" class="btn-primary" style="margin-top: 15px;">Send App
+                        Notification</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- MODAL: Add / Register Subscriber -->
+    <div id="addSubscriberModal" class="staff-modal-overlay">
+        <div class="staff-modal-card">
+            <span class="close-staff-modal" id="closeAddSubModalBtn">&times;</span>
+            <h3 style="display: flex; align-items: center; gap: 8px;">
+                <span>🥛</span> Register New Milk Subscriber
+            </h3>
+            <p style="color: #64748b; font-size: 0.9rem; margin-top: -10px; margin-bottom: 20px;">
+                Add customer to daily route, record their plan, and track delivery status.
+            </p>
+
+            <form id="addSubscriberForm">
+                <div class="staff-form-group">
+                    <label>Customer Full Name *</label>
+                    <input type="text" id="addSubName" placeholder="e.g. Ramesh Kumar" required>
+                </div>
+
+                <div class="staff-form-group">
+                    <label>Phone Number (WhatsApp) *</label>
+                    <input type="tel" id="addSubPhone" placeholder="e.g. 9876543210" required>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div class="staff-form-group">
+                        <label>Service Area *</label>
+                        <select id="addSubArea" required>
+                            <option value="">Select Area...</option>
+                        </select>
+                    </div>
+                    <div class="staff-form-group">
+                        <label>House / Flat No / Street</label>
+                        <input type="text" id="addSubHouseNo" placeholder="e.g. H.No 142, Street 3">
+                    </div>
+                </div>
+
+                <div class="staff-form-group">
+                    <label>Milk Plan *</label>
+                    <select id="addSubPlan" required>
+                        <option value="plan_cow_half" data-price="849" data-rate="28" data-qty="500ml Cow Milk">Cow Milk
+                            (500ml) — ₹849 / mo (₹28/day)</option>
+                        <option value="plan_buffalo_half" data-price="999" data-rate="33" data-qty="500ml Buffalo Milk">
+                            Buffalo Milk (500ml) — ₹999 / mo (₹33/day)</option>
+                        <option value="plan_cow" data-price="1699" data-rate="56" data-qty="1 Liter Cow Milk" selected>
+                            Cow Milk (1L) — ₹1,699 / mo (₹56/day)</option>
+                        <option value="plan_buffalo" data-price="1999" data-rate="66" data-qty="1 Liter Buffalo Milk">
+                            Buffalo Milk (1L) — ₹1,999 / mo (₹66/day)</option>
+                    </select>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div class="staff-form-group">
+                        <label>Start Date *</label>
+                        <input type="date" id="addSubStartDate" required>
+                    </div>
+                    <div class="staff-form-group">
+                        <label>Bill / Payment Status *</label>
+                        <select id="addSubPayment" required>
+                            <option value="PENDING_AT_DOORSTEP">💵 Pay at Doorstep (Pending)</option>
+                            <option value="PREPAID">✅ Pre-Paid (Online / Paid)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 25px;">
+                    <button type="button" class="btn-login-outline" id="cancelAddSubBtn"
+                        style="color: #64748b; border-color: #cbd5e1;">Cancel</button>
+                    <button type="submit" class="btn-primary" id="saveSubBtn"
+                        style="background: #00E676; border-color: #00E676; color: #0a2540; font-weight: 700;">
+                        Save &amp; Activate Plan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: 30-Day Delivery History -->
+    <div id="subHistoryModal" class="staff-modal-overlay">
+        <div class="staff-modal-card" style="max-width: 650px;">
+            <span class="close-staff-modal" id="closeSubHistoryModalBtn">&times;</span>
+            <h3 style="margin-bottom: 5px;" id="histCustomerName">Customer Delivery History</h3>
+            <p style="color: #64748b; font-size: 0.9rem; margin-top: 0;" id="histPlanDetails">Plan Details</p>
+
+            <div style="display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap;">
+                <span class="status-pill pill-delivered" id="histDeliveredCount">Delivered: 0</span>
+                <span class="status-pill pill-skipped" id="histSkippedCount">Paused: 0</span>
+                <span class="status-pill pill-pending" id="histRemainingCount">Remaining: 30</span>
+            </div>
+
+            <p style="font-size: 0.85rem; color: #475569; margin-bottom: 10px;">
+                💡 <em>Click any day cell to manually toggle status (Delivered / Paused / Pending) for that day:</em>
+            </p>
+
+            <div class="days-grid-30" id="histDaysGrid">
+                <!-- 30 days grid injected via JS -->
+            </div>
+
+            <div style="margin-top: 25px; text-align: right;">
+                <button class="btn-primary" id="closeHistBottomBtn" style="padding: 10px 24px;">Close History</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Confirm Delivery with Custom Liters & Time -->
+    <div id="deliveryConfirmModal" class="staff-modal-overlay" style="z-index: 100001;">
+        <div class="staff-modal-card"
+            style="max-width: 480px; border-radius: 20px; box-shadow: 0 25px 60px rgba(0,0,0,0.35);">
+            <span class="close-staff-modal" id="closeDeliveryConfirmModalBtn">&times;</span>
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+                <span style="font-size: 1.8rem;">🥛</span>
+                <div>
+                    <h3 style="margin: 0; font-size: 1.35rem; color: #0F172A;">Confirm Milk Delivery</h3>
+                    <p style="margin: 2px 0 0; color: #64748B; font-size: 0.85rem;" id="delConfirmSubTitle">
+                        Record liters delivered and exact drop-off time
+                    </p>
+                </div>
+            </div>
+
+            <!-- Customer & Date Info Box -->
+            <div
+                style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; padding: 14px 16px; margin: 16px 0 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                    <span
+                        style="font-size: 0.82rem; color: #64748B; text-transform: uppercase; font-weight: 700;">Customer</span>
+                    <strong style="font-size: 1rem; color: #0F172A;" id="delModalCustomerName">Customer Name</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                    <span
+                        style="font-size: 0.82rem; color: #64748B; text-transform: uppercase; font-weight: 700;">Delivery
+                        Date</span>
+                    <span style="font-size: 0.92rem; color: #0066FF; font-weight: 800;"
+                        id="delModalDeliveryDate">2026-10-20</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span
+                        style="font-size: 0.82rem; color: #64748B; text-transform: uppercase; font-weight: 700;">Default
+                        Plan</span>
+                    <span style="font-size: 0.88rem; color: #475569; font-weight: 600;" id="delModalPlanName">Cow Milk
+                        (1L)</span>
+                </div>
+            </div>
+
+            <form id="deliveryConfirmForm">
+                <!-- Quantity Field with Chips -->
+                <div class="staff-form-group" style="margin-bottom: 20px;">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px;">
+                        <label style="font-weight: 700; color: #1E293B; font-size: 0.92rem; margin: 0;">
+                            Milk Quantity Delivered *
+                        </label>
+                        <span style="font-size: 0.78rem; color: #64748B;">Pre-filled from subscriber plan</span>
+                    </div>
+                    <input type="text" id="delModalQtyInput" required placeholder="e.g. 1L, 500ml, 1.5L"
+                        style="width: 100%; padding: 12px 14px; font-size: 1.1rem; font-weight: 700; border: 2px solid #3B82F6; border-radius: 10px; color: #0F172A; box-sizing: border-box; outline: none;">
+
+                    <!-- Quick Preset Quantity Chips -->
+                    <div style="display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap;">
+                        <span style="font-size: 0.78rem; color: #64748B; align-self: center; margin-right: 4px;">Quick
+                            select:</span>
+                        <button type="button" class="del-qty-chip" onclick="setDelModalQty('500ml')">500ml</button>
+                        <button type="button" class="del-qty-chip" onclick="setDelModalQty('1L')">1 Liter</button>
+                        <button type="button" class="del-qty-chip" onclick="setDelModalQty('1.5L')">1.5 Liter</button>
+                        <button type="button" class="del-qty-chip" onclick="setDelModalQty('2L')">2 Liters</button>
+                        <button type="button" class="del-qty-chip" onclick="setDelModalQty('3L')">3 Liters</button>
+                    </div>
+                </div>
+
+                <!-- Delivery Time Field -->
+                <div class="staff-form-group" style="margin-bottom: 24px;">
+                    <label
+                        style="font-weight: 700; color: #1E293B; font-size: 0.92rem; margin-bottom: 6px; display: block;">
+                        ⏰ Delivery Time (Drop-off timestamp)
+                    </label>
+                    <input type="text" id="delModalTimeInput" placeholder="e.g. 06:45 AM"
+                        style="width: 100%; padding: 10px 14px; font-size: 0.95rem; font-weight: 600; border: 1px solid #CBD5E1; border-radius: 10px; color: #0F172A; box-sizing: border-box;">
+                    <small style="color: #64748B; font-size: 0.78rem; display: block; margin-top: 4px;">
+                        Auto-detected current time. You can edit if needed.
+                    </small>
+                </div>
+
+                <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                    <button type="button" id="cancelDelConfirmBtn" class="btn-login-outline"
+                        style="padding: 10px 20px; font-size: 0.95rem;">
+                        Cancel
+                    </button>
+                    <button type="submit" id="submitDelConfirmBtn" class="btn-primary"
+                        style="padding: 10px 24px; font-size: 0.95rem; background: #00E676; border-color: #00E676; color: #0a2540; font-weight: 800; box-shadow: 0 4px 15px rgba(0, 230, 118, 0.3);">
+                        ✓ Confirm &amp; Mark Delivered
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const PIN = "52345234";
+        const API_HOST = (window.location.hostname && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1')
+            ? window.location.hostname
+            : 'localhost';
+        const API_BASE = window.location.origin.includes(':8080')
+            ? window.location.origin
+            : (window.location.protocol === 'file:' ? 'http://localhost:8080' : window.location.origin);
+
+        // --- Custom Popup Logic ---
+        window.customAlert = (title, message) => {
+            return new Promise((resolve) => {
+                const overlay = document.getElementById('customPopupOverlay');
+                document.getElementById('customPopupTitle').innerText = title || 'Alert';
+                document.getElementById('customPopupMessage').innerText = message || '';
+                document.getElementById('customPopupInput').style.display = 'none';
+                const buttonsEl = document.getElementById('customPopupButtons');
+                buttonsEl.innerHTML = `<button class="custom-popup-btn btn-confirm">OK</button>`;
+
+                overlay.classList.add('active');
+                buttonsEl.querySelector('.btn-confirm').onclick = () => {
+                    overlay.classList.remove('active');
+                    resolve(true);
+                };
+            });
+        };
+
+        window.customConfirm = (title, message) => {
+            return new Promise((resolve) => {
+                const overlay = document.getElementById('customPopupOverlay');
+                document.getElementById('customPopupTitle').innerText = title;
+                document.getElementById('customPopupMessage').innerText = message || '';
+                document.getElementById('customPopupInput').style.display = 'none';
+                const buttonsEl = document.getElementById('customPopupButtons');
+                buttonsEl.innerHTML = `
+                    <button class="custom-popup-btn btn-cancel">Cancel</button>
+                    <button class="custom-popup-btn btn-confirm">Confirm</button>
+                `;
+
+                overlay.classList.add('active');
+                buttonsEl.querySelector('.btn-cancel').onclick = () => {
+                    overlay.classList.remove('active');
+                    resolve(false);
+                };
+                buttonsEl.querySelector('.btn-confirm').onclick = () => {
+                    overlay.classList.remove('active');
+                    resolve(true);
+                };
+            });
+        };
+
+        window.customPrompt = (title, message, defaultValue = '', inputType = 'text') => {
+            return new Promise((resolve) => {
+                const overlay = document.getElementById('customPopupOverlay');
+                document.getElementById('customPopupTitle').innerText = title;
+                document.getElementById('customPopupMessage').innerText = message || '';
+                const inputEl = document.getElementById('customPopupInput');
+                inputEl.type = inputType;
+                inputEl.style.display = 'block';
+                inputEl.value = defaultValue;
+                const buttonsEl = document.getElementById('customPopupButtons');
+                buttonsEl.innerHTML = `
+                    <button class="custom-popup-btn btn-cancel">Cancel</button>
+                    <button class="custom-popup-btn btn-confirm">Submit</button>
+                `;
+
+                overlay.classList.add('active');
+                setTimeout(() => inputEl.focus(), 100);
+
+                buttonsEl.querySelector('.btn-cancel').onclick = () => {
+                    overlay.classList.remove('active');
+                    resolve(null);
+                };
+                buttonsEl.querySelector('.btn-confirm').onclick = () => {
+                    overlay.classList.remove('active');
+                    resolve(inputEl.value);
+                };
+            });
+        };
+
+        const loginScreen = document.getElementById('loginScreen');
+        const dashboardScreen = document.getElementById('dashboardScreen');
+        const staffPin = document.getElementById('staffPin');
+        const loginBtn = document.getElementById('loginBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        // Navigation
+        const navItems = document.querySelectorAll('.nav-item[data-target]');
+        const sections = document.querySelectorAll('.section');
+
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                navItems.forEach(n => n.classList.remove('active'));
+                sections.forEach(s => s.classList.remove('active'));
+
+                item.classList.add('active');
+                const targetId = item.getAttribute('data-target');
+                document.getElementById(targetId).classList.add('active');
+
+                if (targetId === 'manageSubscribers' && typeof loadStaffSubscribers === 'function') {
+                    loadStaffSubscribers();
+                    populateSubAreas();
+                }
+                if (targetId === 'manageBatches' && typeof loadStaffBatches === 'function') {
+                    loadStaffBatches();
+                }
+            });
+        });
+
+        // Login logic
+        loginBtn.addEventListener('click', async () => {
+            if (staffPin.value === PIN) {
+                loginScreen.style.display = 'none';
+                dashboardScreen.style.display = 'flex';
+                staffPin.value = '';
+                loadStaffOrders();
+                loadStaffUsers();
+                loadStaffAreas();
+                loadStaffProducts();
+                if (typeof loadStaffBatches === 'function') {
+                    loadStaffBatches();
+                }
+                if (typeof loadStaffSubscribers === 'function') {
+                    loadStaffSubscribers();
+                    populateSubAreas();
+                }
+            } else {
+                await customAlert("Access Denied", "Invalid PIN! Redirecting to Home...");
+                window.location.href = 'index.html';
+            }
+        });
+
+        staffPin.addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') loginBtn.click();
+        });
+
+        logoutBtn.addEventListener('click', () => {
+            dashboardScreen.style.display = 'none';
+            loginScreen.style.display = 'flex';
+        });
+
+        // Campaign Logic
+        document.getElementById('sendWaBtn').addEventListener('click', async () => {
+            const message = document.getElementById('waMessage').value;
+            if (!message) return await customAlert("Required", "Enter message!");
+
+            const btn = document.getElementById('sendWaBtn');
+            btn.innerText = "Sending...";
+            btn.disabled = true;
+
+            try {
+                const res = await fetch(API_BASE + '/api/custom/campaign/whatsapp', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message, password: PIN })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    await customAlert("Success", `Campaign sent to ${data.count} users!`);
+                    document.getElementById('waMessage').value = '';
+                } else {
+                    await customAlert("Error", 'Error: ' + data.error);
+                }
+            } catch (e) {
+                await customAlert("Error", 'Request failed');
+            } finally {
+                btn.innerText = "Send WhatsApp Broadcast";
+                btn.disabled = false;
+            }
+        });
+
+        document.getElementById('sendPushBtn').addEventListener('click', async () => {
+            const title = document.getElementById('pushTitle').value;
+            const body = document.getElementById('pushBody').value;
+            const imageUrl = document.getElementById('pushImage').value;
+            if (!title || !body) return await customAlert("Required", "Enter title and body!");
+
+            const btn = document.getElementById('sendPushBtn');
+            btn.innerText = "Sending...";
+            btn.disabled = true;
+
+            try {
+                const res = await fetch(API_BASE + '/api/custom/campaign/notification', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ title, body, imageUrl, password: PIN })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    await customAlert("Success", `Push notification sent to ${data.count} devices!`);
+                    document.getElementById('pushTitle').value = '';
+                    document.getElementById('pushBody').value = '';
+                    document.getElementById('pushImage').value = '';
+                } else {
+                    await customAlert("Error", 'Error: ' + data.error);
+                }
+            } catch (e) {
+                await customAlert("Error", 'Request failed');
+            } finally {
+                btn.innerText = "Send App Notification";
+                btn.disabled = false;
+            }
+        });
+
+        // Product Logic (UI only for now, can be hooked to API later)
+        document.getElementById('addProductBtn').addEventListener('click', async () => {
+            const name = document.getElementById('prodName').value;
+            const price = document.getElementById('prodPrice').value;
+            const unit = document.getElementById('prodUnit').value;
+            const stock = document.getElementById('prodStock').value;
+            const desc = document.getElementById('prodDesc').value;
+            const imgUrl = document.getElementById('prodImgUrl').value;
+            const imgFile = document.getElementById('prodImgFile').files[0];
+
+            if (!name || !price || !unit || !desc) {
+                return await customAlert("Required", "Please fill all product details (Name, Price, Unit, Description)");
+            }
+
+            if (!imgUrl && !imgFile) {
+                return await customAlert("Required", "Please either upload an image or provide an image URL");
+            }
+
+            let finalImage = imgUrl;
+
+            // If file is selected, we can convert it to base64 or upload to server
+            if (imgFile) {
+                const reader = new FileReader();
+                reader.onload = async function (e) {
+                    finalImage = e.target.result;
+                    await submitProduct(name, price, unit, desc, finalImage, stock);
+                };
+                reader.readAsDataURL(imgFile);
+                return;
+            }
+
+            submitProduct(name, price, unit, desc, finalImage, stock);
+
+            async function submitProduct(name, price, unit, desc, imageUrl, availableStock) {
+                const btn = document.getElementById('addProductBtn');
+                btn.innerText = 'Saving...';
+                btn.disabled = true;
+
+                const isEdit = !!window.editingProductId;
+                const url = isEdit ? API_BASE + '/api/products/' + window.editingProductId : API_BASE + '/api/products';
+                const method = isEdit ? 'PUT' : 'POST';
+
+                try {
+                    const res = await fetch(url, {
+                        method: method,
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            name,
+                            price: parseInt(price),
+                            quantity: unit,
+                            description: desc,
+                            imageUrl,
+                            available_stock: parseInt(availableStock || 100),
+                            password: PIN
+                        })
+                    });
+                    const data = await res.json();
+
+                    if (data.success) {
+                        await customAlert("Success", `Product '${name}' saved successfully to database!`);
+                        clearForm();
+                        loadStaffProducts(); // Auto reload products
+                    } else {
+                        await customAlert("Error", 'Error: ' + data.error);
+                    }
+                } catch (e) {
+                    await customAlert("Error", 'Request failed');
+                } finally {
+                    btn.innerText = 'Save Product';
+                    btn.disabled = false;
+                }
+            }
+
+            function clearForm() {
+                window.editingProductId = null;
+                document.getElementById('productFormTitle').innerText = 'Add New Product';
+                document.getElementById('addProductBtn').innerText = 'Save Product';
+                document.getElementById('prodName').value = '';
+                document.getElementById('prodPrice').value = '';
+                document.getElementById('prodUnit').value = '';
+                document.getElementById('prodStock').value = '100';
+                document.getElementById('prodDesc').value = '';
+                document.getElementById('prodImgUrl').value = '';
+                document.getElementById('prodImgFile').value = '';
+            }
+        });
+
+        // --- Products Management Logic ---
+        async function loadStaffProducts() {
+            const list = document.getElementById('productsList');
+            list.innerHTML = 'Loading...';
+            try {
+                const res = await fetch(API_BASE + '/api/products');
+                const data = await res.json();
+                if (data.success) {
+                    if (data.products.length === 0) {
+                        list.innerHTML = 'No products found.';
+                        return;
+                    }
+                    window.staffProductsList = data.products; // save for editing
+                    list.innerHTML = data.products.map(p => `
+                        <div class="card" style="display: flex; justify-content: space-between; align-items: center; padding: 15px;">
+                            <div style="display: flex; gap: 15px; align-items: center;">
+                                <img src="${p.image_url || p.image_base64}" alt="${p.name}" style="width: 60px; height: 60px; border-radius: 8px; object-fit: cover; border: 1px solid rgba(255,255,255,0.1);">
+                                <div>
+                                    <h4 style="margin: 0; color: var(--text-light);">${p.name}</h4>
+                                    <p style="margin: 5px 0 0 0; font-size: 0.9rem; color: var(--primary-color);">₹${p.price} ${p.quantity}</p>
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 15px;">
+                                <div style="text-align: right;">
+                                    <label style="font-size: 0.8rem; color: #888; display: block;">Stock</label>
+                                    <input type="number" id="stock_${p.id}" value="${p.available_stock !== null ? p.available_stock : 100}" style="width: 70px; padding: 5px; text-align: center; border-radius: 5px;">
+                                </div>
+                                <button onclick="updateProductStock('${p.id}')" class="btn-primary" style="padding: 8px 12px; font-size: 0.9rem;">Update Stock</button>
+                                <button onclick="editProductFull('${p.id}')" class="btn-login-outline" style="padding: 8px 12px; font-size: 0.9rem;">Edit</button>
+                                <button onclick="deleteProduct('${p.id}')" class="btn-login-outline" style="padding: 8px 12px; font-size: 0.9rem; color:#ff4757; border-color:#ff4757;">Delete</button>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            } catch (e) { list.innerHTML = '<span style="color:red">Failed to load products.</span>'; }
+        }
+
+        window.editProductFull = (id) => {
+            const p = window.staffProductsList.find(x => x.id === id);
+            if (!p) return;
+
+            window.editingProductId = p.id;
+            document.getElementById('productFormTitle').innerText = 'Edit Product: ' + p.name;
+            document.getElementById('addProductBtn').innerText = 'Update Product';
+
+            document.getElementById('prodName').value = p.name;
+            document.getElementById('prodPrice').value = p.price;
+            document.getElementById('prodUnit').value = p.quantity;
+            document.getElementById('prodStock').value = p.available_stock !== null ? p.available_stock : 100;
+            document.getElementById('prodDesc').value = p.description || '';
+            document.getElementById('prodImgUrl').value = p.image_url || p.image_base64 || '';
+
+            // Scroll to the form
+            document.getElementById('manageProducts').scrollTo({ top: 0, behavior: 'smooth' });
+            document.querySelector('.content-area').scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        window.updateProductStock = async (id) => {
+            const stock = document.getElementById('stock_' + id).value;
+            try {
+                await fetch(API_BASE + '/api/products/' + id + '/stock', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password: PIN, available_stock: parseInt(stock) })
+                });
+                await customAlert("Success", 'Stock updated!');
+            } catch (e) { await customAlert("Error", 'Failed to update stock'); }
+        };
+
+        window.deleteProduct = async (id) => {
+            const confirmDel = await customConfirm('Confirm Delete', 'Are you sure you want to delete this product?');
+            if (!confirmDel) return;
+
+            try {
+                await fetch(API_BASE + '/api/products/' + id, {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password: PIN })
+                });
+                loadStaffProducts();
+            } catch (e) { await customAlert("Error", 'Failed to delete product'); }
+        };
+
+        document.getElementById('refreshProductsBtn').addEventListener('click', loadStaffProducts);
+
+        // --- Orders Management Logic ---
+        async function loadStaffOrders() {
+            const feed = document.getElementById('ordersFeed');
+            feed.innerHTML = 'Loading...';
+            try {
+                const res = await fetch(API_BASE + '/api/orders/pending?password=' + PIN);
+                const data = await res.json();
+                if (data.success) {
+                    if (data.orders.length === 0) {
+                        feed.innerHTML = 'No active orders.';
+                        return;
+                    }
+                    feed.innerHTML = data.orders.map(o => {
+                        const orderDate = o.createdAt ? new Date(o.createdAt > 1e11 ? o.createdAt : o.createdAt * 1000) : new Date();
+                        const timeStr = orderDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+                        const dateStr = orderDate.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
+
+                        return `
+                        <div class="card" style="border-left: 5px solid var(--primary-color);">
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 8px;">
+                                <div>
+                                    <h3 style="margin: 0; font-size: 1.15rem;">Order #${o.id.slice(-6).toUpperCase()} - <span style="color:var(--primary-color)">${o.status}</span></h3>
+                                    <div style="margin-top: 4px; font-size: 0.88rem; color: #38bdf8; font-weight: 700; display: flex; align-items: center; gap: 5px;">
+                                        <span>⏰ Order Time:</span>
+                                        <span style="color: #fff;">${timeStr} (${dateStr})</span>
+                                    </div>
+                                </div>
+                                <div style="text-align: right;">
+                                    <strong style="font-size: 1.2rem; color: #00E676;">₹${o.totalAmount}</strong><br>
+                                    <small style="background: rgba(255,255,255,0.08); padding: 2px 8px; border-radius: 4px; font-size: 0.75rem;">${o.paymentMode || 'COD'}</small>
+                                </div>
+                            </div>
+                            <p style="margin: 8px 0 4px;"><strong>Customer:</strong> ${o.userName} (${o.phoneNumber || 'No phone'})</p>
+                            <p style="margin: 0 0 6px;"><strong>Address:</strong> ${o.houseNo || ''}${o.houseNo ? ', ' : ''}${o.landmark ? o.landmark + ', ' : ''}${o.deliveryArea || ''}</p>
+                            ${o.latitude ? `<p style="margin: 4px 0;">📍 <a href="https://www.google.com/maps/search/?api=1&query=${o.latitude},${o.longitude}" target="_blank" style="color:#00a8ff; text-decoration:underline; font-weight: 600;">View on Map</a></p>` : ''}
+                            
+                            <div style="background: rgba(0,0,0,0.2); padding: 10px; margin: 10px 0; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
+                                ${o.items.map(i => `<div style="font-weight: 600; color: #e2e8f0;">${i.quantity}x ${i.productName}</div>`).join('')}
+                            </div>
+                            
+                            <div style="display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap;">
+                                ${o.status === 'PENDING' ? `<button onclick="updateOrderStatus('${o.id}', 'ACCEPTED', true)" class="btn-primary" style="background:#2ecc71;">Accept Order</button>` : ''}
+                                ${o.status === 'ACCEPTED' ? `<button onclick="updateOrderStatus('${o.id}', 'OUT_FOR_DELIVERY', false)" class="btn-primary">Out for Delivery</button>` : ''}
+                                ${o.status === 'OUT_FOR_DELIVERY' ? `<button onclick="updateOrderStatus('${o.id}', 'DELIVERED', false)" class="btn-primary" style="background:#2ecc71;">Mark Delivered</button>` : ''}
+                                <button onclick="updateOrderStatus('${o.id}', 'CANCELLED', false)" class="btn-login-outline" style="color:#ff4757; border-color:#ff4757;">Reject/Cancel</button>
+                            </div>
+                        </div>
+                    `;
+                    }).join('');
+                }
+            } catch (e) { feed.innerHTML = 'Error fetching orders.'; }
+        }
+
+        window.updateOrderStatus = async (orderId, status, promptTime) => {
+            let estimatedDelivery = null;
+            if (promptTime) {
+                const datetimeStr = await customPrompt("Delivery Time", "Select estimated delivery date and time:", "", "datetime-local");
+                if (!datetimeStr) return;
+                estimatedDelivery = new Date(datetimeStr).getTime();
+            } else {
+                const confirmStatus = await customConfirm("Update Order", `Move order to ${status}?`);
+                if (!confirmStatus) return;
+            }
+
+            try {
+                await fetch(API_BASE + '/api/orders/update-status', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password: PIN, orderId, status, estimatedDelivery })
+                });
+                loadStaffOrders();
+            } catch (e) { await customAlert("Error", "Failed to update status"); }
+        };
+
+        // --- Users Management Logic ---
+        async function loadStaffUsers() {
+            const list = document.getElementById('usersList');
+            list.innerHTML = '<div style="padding: 20px;">Loading...</div>';
+            try {
+                const res = await fetch(API_BASE + '/api/users?password=' + PIN);
+                const data = await res.json();
+                if (data.success) {
+                    if (data.users.length === 0) {
+                        list.innerHTML = '<div style="padding: 20px;">No registered users yet.</div>';
+                        return;
+                    }
+                    list.innerHTML = data.users.map(u => `
+                        <div style="padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                            <div>
+                                <h4 style="margin: 0; color: var(--primary-color);">${u.name || 'Unnamed User'}</h4>
+                                <p style="margin: 5px 0 0 0; font-size: 0.9rem; color: #aaa;">📞 ${u.phoneNumber || 'No phone number'}</p>
+                            </div>
+                            <div style="text-align: right; font-size: 0.8rem; color: #888;">
+                                <p style="margin: 0;">Joined: ${new Date(u.createdAt * 1000).toLocaleDateString()}</p>
+                                ${u.lastLoginAt ? `<p style="margin: 5px 0 0 0; color: #2ecc71;">Active recently</p>` : ''}
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            } catch (e) { list.innerHTML = '<div style="padding: 20px; color: red;">Error fetching users.</div>'; }
+        }
+
+        document.getElementById('refreshUsersBtn').addEventListener('click', loadStaffUsers);
+        document.getElementById('refreshOrdersBtn').addEventListener('click', loadStaffOrders);
+
+        // --- Area Management Logic ---
+        async function loadStaffAreas() {
+            const list = document.getElementById('areasList');
+            list.innerHTML = 'Loading...';
+            try {
+                // Fetch ALL areas, for now our API only returns active. We should create a new API or just rely on backend change if we had one.
+                // Since our generic /api/areas returns only active=1, let's just make it return all by changing the API temporarily or adding a param.
+                // Wait, we need all areas for staff. I'll just fetch them via raw query or modify server.js later.
+                // Let's assume we fetch all from a new custom query or just show the active ones.
+                const res = await fetch(API_BASE + '/api/areas');
+                const data = await res.json();
+                if (data.success) {
+                    list.innerHTML = data.areas.map(a => `
+                        <div class="card" style="padding: 15px; margin-bottom:0; display:flex; justify-content:space-between; align-items:center;">
+                            <span>${a.name}</span>
+                            <button onclick="toggleArea('${a.id}', 0)" style="background:red; color:white; border:none; padding:5px 10px; border-radius:5px; cursor:pointer;">Deactivate</button>
+                        </div>
+                    `).join('');
+                }
+            } catch (e) { }
+        }
+
+        window.toggleArea = async (id, isActive) => {
+            try {
+                await fetch(API_BASE + '/api/areas/manage', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password: PIN, id, isActive })
+                });
+                loadStaffAreas();
+            } catch (e) { }
+        };
+
+        document.getElementById('addAreaBtn').addEventListener('click', async () => {
+            const name = document.getElementById('newAreaName').value.trim();
+            if (!name) return;
+            try {
+                await fetch(API_BASE + '/api/areas/manage', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password: PIN, name })
+                });
+                document.getElementById('newAreaName').value = '';
+                loadStaffAreas();
+            } catch (e) { }
+        });
+
+        // ==========================================
+        // --- Subscriptions & Daily Deliveries Logic ---
+        // ==========================================
+        const subDatePicker = document.getElementById('subDatePicker');
+        const subPlanFilter = document.getElementById('subPlanFilter');
+        const subSearchInput = document.getElementById('subSearchInput');
+        const refreshSubsBtn = document.getElementById('refreshSubsBtn');
+        const markAllDeliveredBtn = document.getElementById('markAllDeliveredBtn');
+        const subscribersListBody = document.getElementById('subscribersListBody');
+        const noSubsNotice = document.getElementById('noSubsNotice');
+
+        // Stats elements
+        const statTotalSubs = document.getElementById('statTotalSubs');
+        const statDeliveredToday = document.getElementById('statDeliveredToday');
+        const statSkippedToday = document.getElementById('statSkippedToday');
+        const statPendingToday = document.getElementById('statPendingToday');
+
+        // Modal Elements
+        const addSubModal = document.getElementById('addSubscriberModal');
+        const openAddSubModalBtn = document.getElementById('openAddSubModalBtn');
+        const closeAddSubModalBtn = document.getElementById('closeAddSubModalBtn');
+        const cancelAddSubBtn = document.getElementById('cancelAddSubBtn');
+        const addSubscriberForm = document.getElementById('addSubscriberForm');
+        const addSubArea = document.getElementById('addSubArea');
+        const addSubStartDate = document.getElementById('addSubStartDate');
+
+        // History Modal Elements
+        const subHistoryModal = document.getElementById('subHistoryModal');
+        const closeSubHistoryModalBtn = document.getElementById('closeSubHistoryModalBtn');
+        const closeHistBottomBtn = document.getElementById('closeHistBottomBtn');
+        const histDaysGrid = document.getElementById('histDaysGrid');
+        const histCustomerName = document.getElementById('histCustomerName');
+        const histPlanDetails = document.getElementById('histPlanDetails');
+        const histDeliveredCount = document.getElementById('histDeliveredCount');
+        const histSkippedCount = document.getElementById('histSkippedCount');
+        const histRemainingCount = document.getElementById('histRemainingCount');
+
+        let currentSubscribers = [];
+        let activeHistorySub = null;
+
+        // Set default date to today YYYY-MM-DD
+        const todayStr = new Date().toISOString().split('T')[0];
+        if (subDatePicker) subDatePicker.value = todayStr;
+        if (addSubStartDate) addSubStartDate.value = todayStr;
+
+        // Populate Area Dropdown
+        async function populateSubAreas() {
+            try {
+                const res = await fetch(API_BASE + '/api/areas');
+                const data = await res.json();
+                if (data.success && data.areas) {
+                    addSubArea.innerHTML = '<option value="">Select Service Area...</option>' +
+                        data.areas.map(a => `<option value="${a.name}">${a.name}</option>`).join('');
+                }
+            } catch (e) {
+                console.error("Error loading areas for subscriber form:", e);
+            }
+        }
+
+        // Load Subscribers for chosen date
+        async function loadStaffSubscribers() {
+            const date = subDatePicker.value || todayStr;
+            subscribersListBody.innerHTML = '<tr><td colspan="7" style="padding: 30px; text-align: center; color: var(--text-light);">Loading subscribers...</td></tr>';
+
+            try {
+                const res = await fetch(`${API_BASE}/api/staff/subscribers?password=${PIN}&date=${date}`);
+                const data = await res.json();
+                if (data.success) {
+                    currentSubscribers = data.subscribers || [];
+                    renderSubscribers();
+                } else {
+                    subscribersListBody.innerHTML = `<tr><td colspan="7" style="padding: 20px; text-align: center; color: #ff5252;">Failed to load: ${data.error || 'Server error'}</td></tr>`;
+                }
+            } catch (e) {
+                subscribersListBody.innerHTML = '<tr><td colspan="7" style="padding: 20px; text-align: center; color: #ff5252;">Network error connecting to backend</td></tr>';
+            }
+        }
+
+        // Filter and Render Subscribers
+        function renderSubscribers() {
+            const planFilter = subPlanFilter.value;
+            const searchVal = subSearchInput.value.trim().toLowerCase();
+            const selectedDate = subDatePicker.value || todayStr;
+
+            // Stats calculation across all active subscribers
+            let totalCount = currentSubscribers.length;
+            let deliveredCount = 0;
+            let skippedCount = 0;
+            let pendingCount = 0;
+
+            currentSubscribers.forEach(sub => {
+                const st = (sub.dateStatus || 'PENDING').toUpperCase();
+                if (st === 'DELIVERED') deliveredCount++;
+                else if (st === 'SKIPPED' || st === 'SKIPPED_BY_USER') skippedCount++;
+                else pendingCount++;
+            });
+
+            statTotalSubs.innerText = totalCount;
+            statDeliveredToday.innerText = deliveredCount;
+            statSkippedToday.innerText = skippedCount;
+            statPendingToday.innerText = pendingCount;
+
+            // Filter
+            const filtered = currentSubscribers.filter(sub => {
+                if (planFilter !== 'ALL' && sub.planId !== planFilter) return false;
+                if (searchVal) {
+                    const matchName = (sub.userName || '').toLowerCase().includes(searchVal);
+                    const matchPhone = (sub.phoneNumber || '').toLowerCase().includes(searchVal);
+                    const matchArea = (sub.deliveryArea || '').toLowerCase().includes(searchVal);
+                    if (!matchName && !matchPhone && !matchArea) return false;
+                }
+                return true;
+            });
+
+            if (filtered.length === 0) {
+                subscribersListBody.innerHTML = '';
+                noSubsNotice.style.display = 'block';
+                return;
+            }
+
+            noSubsNotice.style.display = 'none';
+
+            subscribersListBody.innerHTML = filtered.map(sub => {
+                const cleanPhone = (sub.phoneNumber || '').replace(/\D/g, '');
+                const waNumber = cleanPhone.startsWith('91') ? cleanPhone : ('91' + cleanPhone);
+                const st = (sub.dateStatus || 'PENDING').toUpperCase();
+
+                // Status pill
+                let statusBadge = '';
+                if (st === 'DELIVERED') {
+                    statusBadge = '<span class="status-pill pill-delivered">✓ Delivered</span>';
+                } else if (st === 'SKIPPED' || st === 'SKIPPED_BY_USER') {
+                    statusBadge = '<span class="status-pill pill-skipped">⏸ Paused / Skipped</span>';
+                } else {
+                    statusBadge = '<span class="status-pill pill-pending">⏳ Pending</span>';
+                }
+
+                // Payment pill
+                const isPrepaid = sub.paymentStatus === 'PREPAID';
+                const paymentBadge = isPrepaid
+                    ? `<span class="status-pill pill-paid">✓ Pre-Paid (₹${sub.totalAmount || 0})</span>`
+                    : `<span class="status-pill pill-doorstep">💵 Pay at Doorstep (₹${sub.totalAmount || 0})</span>`;
+
+                // Progress
+                const delivered = sub.deliveredDays || 0;
+                const total = sub.totalDays || 30;
+                const percent = Math.min(100, Math.round((delivered / total) * 100));
+
+                return `
+                    <tr style="border-bottom: 1px solid #E2E8F0; transition: background 0.15s ease;" onmouseover="this.style.background='#F8FAFC'" onmouseout="this.style.background='transparent'">
+                        <td style="padding: 14px 18px;">
+                            <div style="font-weight: 800; color: #0F172A; font-size: 1.05rem; letter-spacing: -0.2px;">
+                                👤 ${sub.userName || 'Subscriber'}
+                            </div>
+                            <div style="margin-top: 4px; display: flex; align-items: center; gap: 8px;">
+                                <span style="font-size: 0.88rem; color: #334155; font-weight: 600;">📞 ${sub.phoneNumber || 'N/A'}</span>
+                                <a href="https://wa.me/${waNumber}?text=Hello%20${encodeURIComponent(sub.userName || '')},%20Milkman%20Dairy%20se%20aapki%20milk%20delivery%20ke%20regarding%20update." 
+                                   target="_blank" style="text-decoration: none; font-size: 0.95rem;" title="Chat on WhatsApp">💬</a>
+                            </div>
+                        </td>
+                        <td style="padding: 14px 18px; font-size: 0.92rem;">
+                            <div style="color: #0F172A; font-weight: 700;">📍 ${sub.deliveryArea || 'Unassigned Area'}</div>
+                            ${sub.houseNo ? `<div style="color: #64748B; font-size: 0.82rem; margin-top: 2px;">${sub.houseNo}</div>` : ''}
+                        </td>
+                        <td style="padding: 14px 18px; font-size: 0.92rem;">
+                            <strong style="color: #0066FF; font-size: 0.95rem; font-weight: 700;">${sub.planName || 'Daily Milk'}</strong>
+                            <div style="font-size: 0.82rem; color: #64748B; margin-top: 2px;">
+                                Qty: <b style="color: #0F172A;">${sub.dailyQuantity || '1L'}</b> | Started: ${sub.startDate || 'N/A'}
+                            </div>
+                        </td>
+                        <td style="padding: 14px 18px;">
+                            <div style="display: flex; justify-content: space-between; font-size: 0.82rem; margin-bottom: 5px; color: #475569; font-weight: 600;">
+                                <span>${delivered} of ${total} days</span>
+                                <span style="font-weight: 800; color: #0066FF;">${percent}%</span>
+                            </div>
+                            <div style="width: 100%; height: 7px; background: #E2E8F0; border-radius: 4px; overflow: hidden;">
+                                <div style="width: ${percent}%; height: 100%; background: linear-gradient(90deg, #10B981, #00E676); border-radius: 4px;"></div>
+                            </div>
+                            <small style="color: #64748B; font-size: 0.78rem; display: block; margin-top: 4px; font-weight: 600;">
+                                ${sub.remainingDays} days left
+                            </small>
+                        </td>
+                        <td style="padding: 14px 18px;">
+                            ${paymentBadge}
+                        </td>
+                        <td style="padding: 14px 18px;">
+                            ${statusBadge}
+                        </td>
+                        <td style="padding: 14px 18px; text-align: right;">
+                            <div style="display: flex; gap: 6px; justify-content: flex-end; flex-wrap: wrap;">
+                                ${st !== 'DELIVERED' ? `
+                                    <button onclick="promptMarkDelivery('${sub.id}', '${sub.userId}', '${selectedDate}', '${(sub.userName || 'Subscriber').replace(/'/g, "\\'")}', '${sub.dailyQuantity || '1L'}', '${(sub.planName || '').replace(/'/g, "\\'")}')" 
+                                            class="btn-primary" 
+                                            style="padding: 6px 12px; font-size: 0.8rem; background: #00E676; border-color: #00E676; color: #0a2540; font-weight: 700;">
+                                        ✓ Mark Delivered
+                                    </button>
+                                ` : `
+                                    <button onclick="markDelivery('${sub.id}', '${sub.userId}', '${selectedDate}', 'PENDING')" 
+                                            class="btn-login-outline" 
+                                            style="padding: 5px 10px; font-size: 0.75rem; color: #64748B; border-color: #CBD5E1;">
+                                        ↺ Undo
+                                    </button>
+                                `}
+                                ${st !== 'SKIPPED' && st !== 'SKIPPED_BY_USER' ? `
+                                    <button onclick="markDelivery('${sub.id}', '${sub.userId}', '${selectedDate}', 'SKIPPED')" 
+                                            class="btn-login-outline" 
+                                            style="padding: 6px 10px; font-size: 0.8rem; color: #D97706; border-color: #F59E0B; background: #FFFBEB;">
+                                        ⏸ Skip
+                                    </button>
+                                ` : ''}
+                                <button onclick="openSubHistory('${sub.id}', '${(sub.userName || 'Subscriber').replace(/'/g, "\\'")}', '${(sub.planName || '').replace(/'/g, "\\'")}', '${sub.startDate || ''}', ${sub.totalDays || 30}, '${sub.dailyQuantity || '1L'}')" 
+                                        class="btn-login-outline" 
+                                        style="padding: 6px 10px; font-size: 0.8rem; color: #0066FF; border-color: #93C5FD; background: #EFF6FF;" title="View 30-Day Delivery Calendar">
+                                    📋 History
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Delivery Confirm Modal Handlers
+        let pendingDeliveryAction = null;
+        const deliveryConfirmModal = document.getElementById('deliveryConfirmModal');
+        const deliveryConfirmForm = document.getElementById('deliveryConfirmForm');
+        const delModalCustomerName = document.getElementById('delModalCustomerName');
+        const delModalDeliveryDate = document.getElementById('delModalDeliveryDate');
+        const delModalPlanName = document.getElementById('delModalPlanName');
+        const delModalQtyInput = document.getElementById('delModalQtyInput');
+        const delModalTimeInput = document.getElementById('delModalTimeInput');
+        const closeDeliveryConfirmModalBtn = document.getElementById('closeDeliveryConfirmModalBtn');
+        const cancelDelConfirmBtn = document.getElementById('cancelDelConfirmBtn');
+        const submitDelConfirmBtn = document.getElementById('submitDelConfirmBtn');
+
+        window.setDelModalQty = (qty) => {
+            if (delModalQtyInput) delModalQtyInput.value = qty;
+        };
+
+        const getCurrentFormattedTime = () => {
+            return new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+        };
+
+        window.openDeliveryConfirmModal = (action) => {
+            pendingDeliveryAction = action;
+            if (delModalCustomerName) delModalCustomerName.innerText = action.customerName || 'Subscriber';
+            if (delModalDeliveryDate) delModalDeliveryDate.innerText = action.deliveryDate;
+            if (delModalPlanName) delModalPlanName.innerText = action.planName || 'Daily Milk';
+            if (delModalQtyInput) delModalQtyInput.value = action.defaultQty || '1L';
+            if (delModalTimeInput) delModalTimeInput.value = getCurrentFormattedTime();
+
+            if (deliveryConfirmModal) deliveryConfirmModal.classList.add('active');
+        };
+
+        const closeDeliveryConfirmModal = () => {
+            if (deliveryConfirmModal) deliveryConfirmModal.classList.remove('active');
+            pendingDeliveryAction = null;
+        };
+
+        if (closeDeliveryConfirmModalBtn) closeDeliveryConfirmModalBtn.addEventListener('click', closeDeliveryConfirmModal);
+        if (cancelDelConfirmBtn) cancelDelConfirmBtn.addEventListener('click', closeDeliveryConfirmModal);
+
+        if (deliveryConfirmForm) {
+            deliveryConfirmForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                if (!pendingDeliveryAction) return;
+
+                const qty = delModalQtyInput ? delModalQtyInput.value.trim() : '1L';
+                const time = delModalTimeInput ? delModalTimeInput.value.trim() : getCurrentFormattedTime();
+
+                submitDelConfirmBtn.disabled = true;
+                submitDelConfirmBtn.innerText = "Saving...";
+
+                try {
+                    const res = await fetch(API_BASE + '/api/staff/delivery/mark', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            password: PIN,
+                            subscriptionId: pendingDeliveryAction.subscriptionId,
+                            userId: pendingDeliveryAction.userId,
+                            deliveryDate: pendingDeliveryAction.deliveryDate,
+                            status: 'DELIVERED',
+                            quantityDelivered: qty,
+                            deliveryTime: time
+                        })
+                    });
+
+                    const data = await res.json();
+                    if (data.success) {
+                        closeDeliveryConfirmModal();
+                        if (pendingDeliveryAction.onComplete) {
+                            pendingDeliveryAction.onComplete();
+                        } else {
+                            loadStaffSubscribers();
+                            if (activeHistorySub && activeHistorySub.id === pendingDeliveryAction.subscriptionId) {
+                                renderHistoryGrid(activeHistorySub);
+                            }
+                        }
+                    } else {
+                        await customAlert("Failed", data.error || "Could not mark delivery");
+                    }
+                } catch (err) {
+                    await customAlert("Error", "Network connection failed");
+                } finally {
+                    submitDelConfirmBtn.disabled = false;
+                    submitDelConfirmBtn.innerText = "✓ Confirm & Mark Delivered";
+                }
+            });
+        }
+
+        window.promptMarkDelivery = (subId, userId, dateStr, customerName, defaultQty, planName) => {
+            openDeliveryConfirmModal({
+                subscriptionId: subId,
+                userId: userId,
+                deliveryDate: dateStr,
+                customerName: customerName,
+                defaultQty: defaultQty || '1L',
+                planName: planName || 'Daily Milk',
+                onComplete: () => {
+                    loadStaffSubscribers();
+                    if (activeHistorySub && activeHistorySub.id === subId) {
+                        renderHistoryGrid(activeHistorySub);
+                    }
+                }
+            });
+        };
+
+        // Mark delivery status for a specific date (Undo, Skip, etc.)
+        window.markDelivery = async (subscriptionId, userId, deliveryDate, status, qty, time) => {
+            try {
+                const res = await fetch(API_BASE + '/api/staff/delivery/mark', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        password: PIN,
+                        subscriptionId,
+                        userId,
+                        deliveryDate,
+                        status,
+                        quantityDelivered: qty,
+                        deliveryTime: time
+                    })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    loadStaffSubscribers();
+                    if (activeHistorySub && activeHistorySub.id === subscriptionId) {
+                        renderHistoryGrid(activeHistorySub);
+                    }
+                } else {
+                    await customAlert("Error", data.error || "Failed to update delivery");
+                }
+            } catch (e) {
+                await customAlert("Error", "Network request failed");
+            }
+        };
+
+        // Mark All Pending for today as Delivered
+        async function markAllTodayPending() {
+            const selectedDate = subDatePicker.value || todayStr;
+            const pendingList = currentSubscribers.filter(s => (s.dateStatus || 'PENDING') === 'PENDING');
+            if (pendingList.length === 0) {
+                return await customAlert("Nothing Pending", `Sabhi active subscribers ki delivery ${selectedDate} ke liye already mark ho chuki hai!`);
+            }
+
+            const confirmAll = await customConfirm(
+                "Mark All Delivered?",
+                `Are you sure you want to mark all ${pendingList.length} pending subscribers as DELIVERED for date ${selectedDate}?`
+            );
+            if (!confirmAll) return;
+
+            markAllDeliveredBtn.disabled = true;
+            markAllDeliveredBtn.innerText = "Marking...";
+
+            try {
+                const nowTime = getCurrentFormattedTime();
+                for (const sub of pendingList) {
+                    await fetch(API_BASE + '/api/staff/delivery/mark', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            password: PIN,
+                            subscriptionId: sub.id,
+                            userId: sub.userId,
+                            deliveryDate: selectedDate,
+                            status: 'DELIVERED',
+                            quantityDelivered: sub.dailyQuantity || '1L',
+                            deliveryTime: nowTime
+                        })
+                    });
+                }
+                await customAlert("Success!", `${pendingList.length} deliveries marked as DELIVERED for ${selectedDate}.`);
+                loadStaffSubscribers();
+            } catch (e) {
+                await customAlert("Error", "An error occurred while updating bulk deliveries.");
+            } finally {
+                markAllDeliveredBtn.disabled = false;
+                markAllDeliveredBtn.innerText = "✓ Mark All Pending as Delivered";
+            }
+        }
+
+        // Open 30-Day Delivery History Modal
+        window.openSubHistory = async (subId, userName, planName, startDate, totalDays, dailyQty) => {
+            activeHistorySub = { id: subId, userName, planName, startDate, totalDays, dailyQuantity: dailyQty || '1L' };
+            histCustomerName.innerText = `👤 ${userName}`;
+            histPlanDetails.innerText = `Plan: ${planName} | Started: ${startDate || 'N/A'}`;
+            subHistoryModal.classList.add('active');
+            await renderHistoryGrid(activeHistorySub);
+        };
+
+        async function renderHistoryGrid(sub) {
+            histDaysGrid.innerHTML = '<div style="grid-column: 1 / -1; padding: 20px; text-align: center; color: #64748b;">Loading 30-day records...</div>';
+            try {
+                const res = await fetch(`${API_BASE}/api/staff/delivery/history?password=${PIN}&subscriptionId=${sub.id}`);
+                const data = await res.json();
+                if (!data.success) {
+                    histDaysGrid.innerHTML = '<div style="grid-column: 1 / -1; color: red;">Failed to load history</div>';
+                    return;
+                }
+
+                const deliveries = data.deliveries || [];
+                const delMap = {};
+                deliveries.forEach(d => { delMap[d.deliveryDate] = d; });
+
+                const deliveredCount = deliveries.filter(d => d.status === 'DELIVERED').length;
+                const skippedCount = deliveries.filter(d => d.status === 'SKIPPED' || d.status === 'SKIPPED_BY_USER').length;
+                const remaining = Math.max(0, (sub.totalDays || 30) - deliveredCount);
+
+                histDeliveredCount.innerText = `Delivered: ${deliveredCount}`;
+                histSkippedCount.innerText = `Paused: ${skippedCount}`;
+                histRemainingCount.innerText = `Remaining: ${remaining}`;
+
+                // Calculate current date in YYYY-MM-DD
+                const today = new Date();
+                const currentTodayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+
+                // Generate 30 sequential dates from startDate
+                const baseDate = sub.startDate ? new Date(sub.startDate) : new Date();
+                let html = '';
+
+                for (let i = 0; i < (sub.totalDays || 30); i++) {
+                    const d = new Date(baseDate.getTime() + i * 24 * 60 * 60 * 1000);
+                    const y = d.getFullYear();
+                    const m = String(d.getMonth() + 1).padStart(2, '0');
+                    const dayVal = String(d.getDate()).padStart(2, '0');
+                    const dStr = `${y}-${m}-${dayVal}`;
+
+                    const dayNum = i + 1;
+                    const dayName = d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+
+                    const record = delMap[dStr];
+                    const status = record ? record.status : 'PENDING';
+                    const qty = record && record.quantityDelivered ? record.quantityDelivered : (sub.dailyQuantity || '1L');
+                    const time = record && record.deliveryTime ? record.deliveryTime : '';
+
+                    const isPast = dStr < currentTodayStr;
+                    const isToday = dStr === currentTodayStr;
+                    const isFuture = dStr > currentTodayStr;
+
+                    let cellClass = 'pending';
+                    let statusIcon = '⏳';
+                    let statusLabel = 'Pending';
+
+                    if (status === 'DELIVERED') {
+                        cellClass = 'delivered';
+                        statusIcon = '✓';
+                        statusLabel = `${qty} Delivered`;
+                    } else if (status === 'SKIPPED' || status === 'SKIPPED_BY_USER') {
+                        cellClass = 'skipped';
+                        statusIcon = '⏸';
+                        statusLabel = 'Paused';
+                    } else {
+                        if (isPast) {
+                            cellClass = 'past-unmarked';
+                            statusIcon = '⏳';
+                            statusLabel = 'Past Unmarked';
+                        } else if (isToday) {
+                            cellClass = 'today-pending';
+                            statusIcon = '🚚';
+                            statusLabel = 'Today Pending';
+                        } else {
+                            cellClass = 'upcoming';
+                            statusIcon = '📅';
+                            statusLabel = 'Upcoming';
+                        }
+                    }
+
+                    if (isToday) {
+                        cellClass += ' is-today-cell';
+                    }
+
+                    html += `
+                        <div class="day-cell ${cellClass}" onclick="toggleHistoryDayStatus('${sub.id}', '${dStr}', '${status}', '${(sub.userName || 'Subscriber').replace(/'/g, "\\'")}', '${sub.dailyQuantity || '1L'}', '${(sub.planName || '').replace(/'/g, "\\'")}')" title="${isToday ? 'TODAY - Click to change' : `Click to change status for ${dStr}`}">
+                            <div style="font-weight: 700; font-size: 0.88rem;">
+                                Day ${dayNum} ${isToday ? '<span style="background: #3B82F6; color: white; font-size: 0.6rem; padding: 1px 4px; border-radius: 4px; vertical-align: middle;">TODAY</span>' : ''}
+                            </div>
+                            <div style="font-size: 0.7rem; opacity: 0.85; margin: 2px 0;">${dayName}</div>
+                            <div style="font-size: 0.72rem; margin-top: 3px; font-weight: 600;">${statusIcon} ${statusLabel}</div>
+                            ${status === 'DELIVERED' && time ? `<div style="font-size: 0.65rem; opacity: 0.8; margin-top: 2px;">⏰ ${time}</div>` : ''}
+                        </div>
+                    `;
+                }
+
+                histDaysGrid.innerHTML = html;
+            } catch (e) {
+                histDaysGrid.innerHTML = '<div style="grid-column: 1 / -1; color: red;">Network error loading history</div>';
+            }
+        }
+
+        // Toggle history day status
+        window.toggleHistoryDayStatus = async (subId, dateStr, currentStatus, customerName, defaultQty, planName) => {
+            if (currentStatus !== 'DELIVERED') {
+                // Prompt to mark delivered with liters and time
+                promptMarkDelivery(subId, '', dateStr, customerName, defaultQty, planName);
+            } else {
+                // If already delivered, allow pausing or undoing
+                const confirmChange = await customConfirm(
+                    "Update Delivery Status",
+                    `Delivery for ${dateStr} is currently DELIVERED. Would you like to change it to PAUSED / SKIPPED? (Click Cancel to keep Delivered)`
+                );
+                if (confirmChange) {
+                    await markDelivery(subId, '', dateStr, 'SKIPPED');
+                }
+            }
+        };
+
+        // Form Submit: Add New Subscriber
+        addSubscriberForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('addSubName').value.trim();
+            const phone = document.getElementById('addSubPhone').value.trim();
+            const area = document.getElementById('addSubArea').value;
+            const houseNo = document.getElementById('addSubHouseNo').value.trim();
+            const planSelect = document.getElementById('addSubPlan');
+            const planId = planSelect.value;
+            const selectedOpt = planSelect.options[planSelect.selectedIndex];
+            const planPrice = parseInt(selectedOpt.getAttribute('data-price')) || 1699;
+            const planRate = parseInt(selectedOpt.getAttribute('data-rate')) || 56;
+            const planQty = selectedOpt.getAttribute('data-qty') || '1 Liter';
+            const planName = selectedOpt.innerText.split('—')[0].trim();
+            const startDate = document.getElementById('addSubStartDate').value;
+            const paymentStatus = document.getElementById('addSubPayment').value;
+
+            if (!name || !phone || !area || !startDate) {
+                return await customAlert("Missing Fields", "Please complete all required fields (*).");
+            }
+
+            const saveBtn = document.getElementById('saveSubBtn');
+            saveBtn.disabled = true;
+            saveBtn.innerText = "Saving...";
+
+            try {
+                const res = await fetch(API_BASE + '/api/staff/subscribers/add', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        password: PIN,
+                        name,
+                        phoneNumber: phone,
+                        deliveryArea: area,
+                        houseNo,
+                        planId,
+                        planName,
+                        dailyQuantity: planQty,
+                        ratePerUnit: planRate,
+                        totalAmount: planPrice,
+                        startDate,
+                        paymentStatus
+                    })
+                });
+
+                const data = await res.json();
+                if (data.success) {
+                    await customAlert("Success!", `Subscriber ${name} has been enrolled in ${planName} (30 days)!`);
+                    addSubModal.classList.remove('active');
+                    addSubscriberForm.reset();
+                    addSubStartDate.value = todayStr;
+                    loadStaffSubscribers();
+                } else {
+                    await customAlert("Failed", data.error || "Could not register subscriber");
+                }
+            } catch (e) {
+                await customAlert("Error", "Network request failed");
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.innerText = "Save & Activate Plan";
+            }
+        });
+
+        // Event Listeners for Subscribers Tab
+        openAddSubModalBtn.addEventListener('click', () => {
+            populateSubAreas();
+            addSubStartDate.value = todayStr;
+            addSubModal.classList.add('active');
+        });
+        closeAddSubModalBtn.addEventListener('click', () => addSubModal.classList.remove('active'));
+        cancelAddSubBtn.addEventListener('click', () => addSubModal.classList.remove('active'));
+
+        closeSubHistoryModalBtn.addEventListener('click', () => {
+            subHistoryModal.classList.remove('active');
+            activeHistorySub = null;
+        });
+        closeHistBottomBtn.addEventListener('click', () => {
+            subHistoryModal.classList.remove('active');
+            activeHistorySub = null;
+        });
+
+        subDatePicker.addEventListener('change', loadStaffSubscribers);
+        subPlanFilter.addEventListener('change', renderSubscribers);
+        subSearchInput.addEventListener('input', renderSubscribers);
+        refreshSubsBtn.addEventListener('click', loadStaffSubscribers);
+        markAllDeliveredBtn.addEventListener('click', markAllTodayPending);
+
+        // ==========================================
+        // BATCH VIDEOS & TRACEABILITY LOGIC
+        // ==========================================
+        let allStaffBatches = [];
+
+        function extractYouTubeId(url) {
+            if (!url) return '';
+            const regExp = /(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|shorts\/))([\w-]{11})/;
+            const match = url.match(regExp);
+            return match ? match[1] : '';
+        }
+
+        function updateThumbPreview() {
+            const thumbUrlInput = document.getElementById('batchThumbUrlInput');
+            const videoUrlInput = document.getElementById('batchVideoUrlInput');
+            const previewBox = document.getElementById('batchThumbPreviewBox');
+            const previewImg = document.getElementById('batchThumbPreviewImg');
+
+            let url = thumbUrlInput.value.trim();
+            if (!url && videoUrlInput.value.trim()) {
+                const yId = extractYouTubeId(videoUrlInput.value.trim());
+                if (yId) {
+                    url = `https://img.youtube.com/vi/${yId}/hqdefault.jpg`;
+                }
+            }
+
+            if (url) {
+                previewImg.src = url;
+                previewBox.style.display = 'block';
+            } else {
+                previewBox.style.display = 'none';
+            }
+        }
+
+        // Live preview listeners
+        document.getElementById('batchVideoUrlInput')?.addEventListener('input', () => {
+            const thumbInput = document.getElementById('batchThumbUrlInput');
+            if (!thumbInput.value.trim()) {
+                const yId = extractYouTubeId(document.getElementById('batchVideoUrlInput').value.trim());
+                if (yId) {
+                    thumbInput.value = `https://img.youtube.com/vi/${yId}/hqdefault.jpg`;
+                }
+            }
+            updateThumbPreview();
+        });
+
+        document.getElementById('batchThumbUrlInput')?.addEventListener('input', updateThumbPreview);
+
+        document.getElementById('btnFetchThumb')?.addEventListener('click', () => {
+            const videoUrl = document.getElementById('batchVideoUrlInput').value.trim();
+            const yId = extractYouTubeId(videoUrl);
+            if (yId) {
+                document.getElementById('batchThumbUrlInput').value = `https://img.youtube.com/vi/${yId}/hqdefault.jpg`;
+                updateThumbPreview();
+            } else {
+                customAlert("YouTube Link Needed", "Please enter a valid YouTube link first!");
+            }
+        });
+
+        document.getElementById('btnGenBatchNo')?.addEventListener('click', () => {
+            const today = new Date();
+            const y = today.getFullYear();
+            const m = String(today.getMonth() + 1).padStart(2, '0');
+            const d = String(today.getDate()).padStart(2, '0');
+            const prod = document.getElementById('batchProductSelect').value;
+            let code = 'COW';
+            if (prod.includes('Buffalo')) code = 'BUF';
+            else if (prod.includes('Ghee')) code = 'GHEE';
+            else if (prod.includes('Paneer')) code = 'PAN';
+            else if (prod.includes('Dahi')) code = 'DAHI';
+
+            const randomNum = Math.floor(100 + Math.random() * 900);
+            document.getElementById('batchNoInput').value = `BATCH-${y}${m}${d}-${code}-${randomNum}`;
+        });
+
+        // Save Batch Button
+        document.getElementById('saveBatchBtn')?.addEventListener('click', async () => {
+            const batchNo = document.getElementById('batchNoInput').value.trim().toUpperCase();
+            const productName = document.getElementById('batchProductSelect').value;
+            const title = document.getElementById('batchTitleInput').value.trim();
+            const videoUrl = document.getElementById('batchVideoUrlInput').value.trim();
+            let thumbUrl = document.getElementById('batchThumbUrlInput').value.trim();
+            const prepDate = document.getElementById('batchDateInput').value.trim() || new Date().toLocaleString();
+            const fat = document.getElementById('batchFatInput').value.trim() || '4.8%';
+            const snf = document.getElementById('batchSnfInput').value.trim() || '8.9%';
+            const farm = document.getElementById('batchFarmInput').value.trim() || 'Vedic Gir Cow Farm, Shed #1';
+            const notes = document.getElementById('batchNotesInput').value.trim() || '100% Raw, untouched by hand, zero preservatives.';
+
+            if (!batchNo) return customAlert("Required", "Please enter or generate a Batch Number!");
+            if (!title) return customAlert("Required", "Please enter a Video Title!");
+            if (!videoUrl) return customAlert("Required", "Please enter the YouTube Video Link!");
+
+            if (!thumbUrl) {
+                const yId = extractYouTubeId(videoUrl);
+                if (yId) thumbUrl = `https://img.youtube.com/vi/${yId}/hqdefault.jpg`;
+            }
+
+            const btn = document.getElementById('saveBatchBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<span>⏳</span> Saving to Database...';
+
+            try {
+                const res = await fetch(API_BASE + '/api/batches', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        password: PIN,
+                        batch_no: batchNo,
+                        title,
+                        product_name: productName,
+                        video_url: videoUrl,
+                        thumbnail_url: thumbUrl,
+                        preparation_date: prepDate,
+                        fat_percentage: fat,
+                        snf_percentage: snf,
+                        farm_location: farm,
+                        notes
+                    })
+                });
+
+                const data = await res.json();
+                if (data.success) {
+                    await customAlert("Success!", `Batch ${batchNo} and preparation video uploaded! Customers can now trace it.`);
+                    // Reset form
+                    document.getElementById('batchNoInput').value = '';
+                    document.getElementById('batchTitleInput').value = '';
+                    document.getElementById('batchVideoUrlInput').value = '';
+                    document.getElementById('batchThumbUrlInput').value = '';
+                    document.getElementById('batchThumbPreviewBox').style.display = 'none';
+                    loadStaffBatches();
+                } else {
+                    await customAlert("Failed", data.error || "Could not save batch video.");
+                }
+            } catch (e) {
+                await customAlert("Error", "Network request failed. Is the backend running?");
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<span>🚀</span> Upload &amp; Save Batch Video';
+            }
+        });
+
+        // Load Batches
+        async function loadStaffBatches() {
+            const feed = document.getElementById('batchesListFeed');
+            if (!feed) return;
+            feed.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--text-light);">Loading batch videos...</div>';
+
+            try {
+                const res = await fetch(API_BASE + '/api/batches');
+                const data = await res.json();
+                if (data.success) {
+                    allStaffBatches = data.batches || [];
+                    document.getElementById('batchCountBadge').innerText = allStaffBatches.length;
+                    renderStaffBatches(allStaffBatches);
+                } else {
+                    feed.innerHTML = '<div style="padding: 20px; text-align: center; color: #ff4757;">Failed to load batches</div>';
+                }
+            } catch (e) {
+                feed.innerHTML = '<div style="padding: 20px; text-align: center; color: #ff4757;">Backend offline or network error</div>';
+            }
+        }
+
+        function renderStaffBatches(batches) {
+            const feed = document.getElementById('batchesListFeed');
+            if (!feed) return;
+
+            if (batches.length === 0) {
+                feed.innerHTML = `
+                    <div class="card" style="padding: 35px; text-align: center; color: var(--text-light);">
+                        <p style="font-size: 1.1rem; margin-bottom: 8px;">No batch videos found.</p>
+                        <p style="font-size: 0.9rem;">Fill out the form on the left to upload your first batch preparation video.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            feed.innerHTML = batches.map(b => `
+                <div class="card" style="padding: 16px; border-radius: 14px; display: flex; gap: 16px; flex-direction: column; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.1);">
+                    <div style="display: flex; gap: 16px; align-items: flex-start;">
+                        <!-- Thumbnail with YouTube Overlay (Clicking opens YouTube) -->
+                        <a href="${b.video_url}" target="_blank" rel="noopener noreferrer" style="position: relative; flex-shrink: 0; width: 140px; height: 95px; border-radius: 10px; overflow: hidden; display: block; border: 1px solid rgba(255,255,255,0.15); box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                            <img src="${b.thumbnail_url || 'assets/cow_milk_plan.jpg'}" alt="${b.title}" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;">
+                            <div style="position: absolute; inset: 0; background: rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center;">
+                                <div style="background: #ff0000; color: white; width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; box-shadow: 0 2px 8px rgba(0,0,0,0.4);">
+                                    ▶
+                                </div>
+                            </div>
+                            <span style="position: absolute; bottom: 4px; right: 4px; background: rgba(0,0,0,0.8); color: #fff; font-size: 0.65rem; padding: 2px 5px; border-radius: 4px; font-weight: 700;">YouTube</span>
+                        </a>
+
+                        <!-- Details -->
+                        <div style="flex-grow: 1;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; flex-wrap: wrap; gap: 8px;">
+                                <span style="background: rgba(0, 102, 255, 0.18); color: #2979FF; border: 1px solid rgba(0, 102, 255, 0.4); padding: 3px 10px; border-radius: 20px; font-weight: 800; font-size: 0.78rem; letter-spacing: 0.5px;">
+                                    🏷️ ${b.batch_no}
+                                </span>
+                                <span style="color: var(--text-light); font-size: 0.8rem;">
+                                    📅 ${b.preparation_date || 'Fresh Morning'}
+                                </span>
+                            </div>
+
+                            <h4 style="margin: 0 0 4px; font-size: 1rem; color: var(--text-dark); line-height: 1.3;">
+                                ${b.title}
+                            </h4>
+                            <p style="margin: 0 0 8px; font-size: 0.85rem; color: #00E676; font-weight: 600;">
+                                🥛 ${b.product_name}
+                            </p>
+
+                            <!-- Purity Stats Pills -->
+                            <div style="display: flex; gap: 8px; flex-wrap: wrap; font-size: 0.75rem;">
+                                <span style="background: rgba(255,255,255,0.06); padding: 3px 8px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1);">
+                                    🧈 Fat: <strong>${b.fat_percentage || '4.8%'}</strong>
+                                </span>
+                                <span style="background: rgba(255,255,255,0.06); padding: 3px 8px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1);">
+                                    🧪 SNF: <strong>${b.snf_percentage || '8.9%'}</strong>
+                                </span>
+                                <span style="background: rgba(255,255,255,0.06); padding: 3px 8px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1);">
+                                    🏡 ${b.farm_location || 'Vedic Farm'}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Actions Bar -->
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 12px; margin-top: 2px;">
+                        <div style="display: flex; gap: 8px;">
+                            <a href="${b.video_url}" target="_blank" rel="noopener noreferrer" class="btn-primary" style="padding: 6px 14px; font-size: 0.82rem; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; background: #ff0000; border-color: #ff0000;">
+                                <span>▶</span> Watch on YouTube ↗
+                            </a>
+                            <a href="trace.html?batch=${encodeURIComponent(b.batch_no)}" target="_blank" class="btn-login-outline" style="padding: 6px 12px; font-size: 0.82rem; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
+                                <span>🔍</span> View in Trace Page ↗
+                            </a>
+                        </div>
+                        <button onclick="deleteStaffBatch('${b.id}', '${b.batch_no}')" style="background: none; border: 1px solid rgba(255, 71, 87, 0.4); color: #ff4757; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.82rem; font-weight: 600;">
+                            🗑️ Delete
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        window.deleteStaffBatch = async (id, batchNo) => {
+            const confirm = await customPrompt(`Type 'DELETE' to confirm removing batch ${batchNo}:`);
+            if (confirm !== 'DELETE') return;
+
+            try {
+                const res = await fetch(`${API_BASE}/api/batches/${id}?password=${encodeURIComponent(PIN)}`, {
+                    method: 'DELETE'
+                });
+                const data = await res.json();
+                if (data.success) {
+                    await customAlert("Deleted", `Batch ${batchNo} removed.`);
+                    loadStaffBatches();
+                } else {
+                    await customAlert("Error", data.error || "Failed to delete");
+                }
+            } catch (e) {
+                await customAlert("Error", "Network request failed");
+            }
+        };
+
+        // Live search filter in staff batches list
+        document.getElementById('searchStaffBatchesInput')?.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase().trim();
+            if (!query) {
+                renderStaffBatches(allStaffBatches);
+                return;
+            }
+            const filtered = allStaffBatches.filter(b =>
+                (b.batch_no && b.batch_no.toLowerCase().includes(query)) ||
+                (b.title && b.title.toLowerCase().includes(query)) ||
+                (b.product_name && b.product_name.toLowerCase().includes(query))
+            );
+            renderStaffBatches(filtered);
+        });
+
+        document.getElementById('refreshBatchesBtn')?.addEventListener('click', loadStaffBatches);
+
+    </script>
+</body>
+
+</html>

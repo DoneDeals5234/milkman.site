@@ -1,0 +1,1497 @@
+<!DOCTYPE html>
+<html class="h-full bg-slate-50" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>My Orders | Milkman - Fresh Dairy Delivered</title>
+  <meta name="description" content="Manage, reorder, track shipments, and review batch harvest test reports for your Milkman dairy orders."/>
+  
+  <!-- Tailwind CSS CDN with plugins -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  
+  <!-- Tailwind Configuration -->
+  <script data-purpose="tailwind-config">
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Outfit', 'Inter', 'system-ui', '-apple-system', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#ecfdf5',
+              100: '#d1fae5',
+              500: '#10b981',
+              600: '#059669',
+              700: '#047857',
+              800: '#065f46',
+              900: '#064e3b',
+            },
+            milkblue: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              800: '#1e40af',
+              900: '#1e3a8a',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts: Outfit & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+
+  <!-- Milkman Animated Loader Component -->
+  <script src="js/loader.js"></script>
+
+  <!-- Custom Styles -->
+  <style data-purpose="custom-styling">
+    body {
+      font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    }
+    details summary::-webkit-details-marker {
+      display: none;
+    }
+    /* Hide scrollbar for tabs navigation */
+    .scrollbar-none::-webkit-scrollbar {
+      display: none;
+    }
+    .scrollbar-none {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      #invoiceModalContent, #invoiceModalContent * {
+        visibility: visible;
+      }
+      #invoiceModalContent {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        margin: 0;
+        padding: 20px;
+        box-shadow: none !important;
+        border: none !important;
+      }
+      .no-print {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body class="min-h-full flex flex-col font-sans text-slate-800 antialiased selection:bg-emerald-100 selection:text-emerald-900 bg-slate-50">
+
+  <!-- BEGIN: MainHeader -->
+  <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20">
+        <!-- Brand & Navigation Links -->
+        <div class="flex items-center gap-8">
+          <!-- Milkman Logo -->
+          <a class="flex items-center gap-2.5 group" data-purpose="brand-logo" href="index.html">
+            <div class="w-11 h-11 rounded-xl bg-white flex items-center justify-center p-1 border border-slate-200 shadow-sm shadow-emerald-500/10 group-hover:scale-105 transition-transform">
+              <img src="assets/logo.png" alt="Milkman Logo" class="w-9 h-9 object-contain" onerror="this.src='assets/logo.jpg'">
+            </div>
+            <div class="flex flex-col">
+              <span class="text-xl font-extrabold tracking-tight text-slate-900">Milkman</span>
+              <span class="text-[10px] font-semibold uppercase tracking-widest text-emerald-600 -mt-1">Fresh Dairy Delivered</span>
+            </div>
+          </a>
+
+          <!-- Navigation Menu -->
+          <nav class="hidden lg:flex items-center gap-6 text-sm font-medium text-slate-600" data-purpose="primary-navigation">
+            <a class="hover:text-emerald-600 transition-colors" href="index.html#home">Home</a>
+            <a class="hover:text-emerald-600 transition-colors" href="index.html#plans">Plans</a>
+            <a class="hover:text-emerald-600 transition-colors" href="index.html#products">Products</a>
+            <!-- Benefits link with animated NEW badge -->
+            <a class="flex items-center gap-1.5 hover:text-emerald-600 transition-colors group" href="benefits.html">
+              <span class="text-amber-500 text-base">⚡</span>
+              <span>Benefits</span>
+              <span class="bg-amber-400 text-amber-950 text-[10px] font-extrabold px-1.5 py-0.5 rounded-full uppercase tracking-wider scale-95 shadow-xs">NEW</span>
+            </a>
+            <!-- Trace Batch link with VIDEO badge -->
+            <a class="flex items-center gap-1.5 hover:text-emerald-600 transition-colors" href="trace.html">
+              <span class="text-indigo-500">🔍</span>
+              <span>Trace Batch</span>
+              <span class="bg-emerald-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider">VIDEO</span>
+            </a>
+            <a class="hover:text-emerald-600 transition-colors flex items-center gap-1" href="subscription.html">
+              <span>🥛</span>
+              <span>My Subscription</span>
+            </a>
+          </nav>
+        </div>
+
+        <!-- Right Side: Search, Cart, Active Orders & Profile -->
+        <div class="flex items-center gap-4">
+          <!-- Quick Search -->
+          <div class="relative hidden md:block">
+            <input id="navQuickSearch" class="w-60 pl-9 pr-4 py-2 text-xs rounded-full border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all" placeholder="Search products or orders..." type="text"/>
+            <svg class="w-4 h-4 text-slate-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+              <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+            </svg>
+          </div>
+
+          <!-- Cart Button -->
+          <a class="relative p-2 text-slate-700 hover:text-emerald-600 rounded-lg hover:bg-slate-100 transition-colors" href="index.html#cart" title="Shopping Cart">
+            <div class="flex items-center gap-1.5 font-medium text-sm">
+              <svg class="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+                <path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+              </svg>
+              <span>Cart</span>
+              <span id="cartCountBadge" class="inline-flex items-center justify-center px-2 py-0.5 text-xs font-bold bg-blue-600 text-white rounded-full">0</span>
+            </div>
+          </a>
+
+          <!-- Active Link: My Orders (Desktop only) -->
+          <a class="hidden lg:inline-flex px-3.5 py-1.5 rounded-lg text-sm font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200/60 shadow-xs" href="orders.html">
+            My Orders
+          </a>
+
+          <!-- User Profile or Login (Desktop only) -->
+          <div id="userProfileArea" class="hidden lg:flex items-center gap-2 pl-2 border-l border-slate-200 relative">
+            <div id="userAvatar" class="w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center text-xs font-bold ring-2 ring-emerald-500/30 cursor-pointer">
+              RK
+            </div>
+            <div class="hidden xl:block text-left text-xs cursor-pointer" id="userInfoText">
+              <div class="text-slate-400 font-medium leading-none">Welcome</div>
+              <div id="userNameDisplay" class="text-slate-800 font-semibold mt-0.5">Hi, Rahul</div>
+            </div>
+            <!-- Logout dropdown -->
+            <button id="logoutBtn" onclick="handleLogout()" title="Logout" class="hidden text-xs text-rose-500 hover:text-rose-700 p-1 font-medium ml-1">
+              Logout
+            </button>
+            <a id="loginLinkBtn" href="index.html#login" class="hidden px-3 py-1.5 text-xs font-bold text-white bg-emerald-600 rounded-lg hover:bg-emerald-700 shadow-sm">
+              Login
+            </a>
+          </div>
+
+          <!-- Mobile Hamburger -->
+          <button id="mobileMenuToggle" class="lg:hidden p-2 text-slate-600 hover:text-slate-900 rounded-lg" aria-label="Toggle menu">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Nav Drawer -->
+    <div id="mobileNavMenu" class="hidden lg:hidden border-t border-slate-200 bg-white px-4 py-4 space-y-3">
+      <!-- Drawer Account Box -->
+      <div id="mobileDrawerAccount" class="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
+        <!-- Injected via checkUserSession() -->
+      </div>
+      <a class="block py-2 text-sm font-medium text-slate-700 hover:text-emerald-600" href="index.html#home">Home</a>
+      <a class="block py-2 text-sm font-medium text-slate-700 hover:text-emerald-600" href="index.html#plans">Plans</a>
+      <a class="block py-2 text-sm font-medium text-slate-700 hover:text-emerald-600" href="index.html#products">Products</a>
+      <a class="block py-2 text-sm font-medium text-slate-700 hover:text-emerald-600" href="benefits.html">⚡ Benefits (NEW)</a>
+      <a class="block py-2 text-sm font-medium text-slate-700 hover:text-emerald-600" href="trace.html">🔍 Trace Batch (VIDEO)</a>
+      <a class="block py-2 text-sm font-medium text-slate-700 hover:text-emerald-600" href="subscription.html">🥛 My Subscription</a>
+      <a class="block py-2 text-sm font-semibold text-emerald-600" href="orders.html">My Orders</a>
+    </div>
+  </header>
+  <!-- END: MainHeader -->
+
+  <!-- BEGIN: MainContent -->
+  <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
+
+    <!-- Demo Banner if offline/unauthenticated -->
+    <div id="accountStatusNotice" class="hidden mb-6 p-4 rounded-xl bg-blue-50 border border-blue-200/80 text-blue-900 text-xs flex items-center justify-between">
+      <div class="flex items-center gap-2.5">
+        <span class="text-base">ℹ️</span>
+        <span id="accountStatusMsg">Showing your order records. Sign in to view live synchronized orders.</span>
+      </div>
+      <a href="index.html#login" class="font-bold underline hover:text-blue-700">Sign In &rarr;</a>
+    </div>
+
+    <!-- BEGIN: PageHeader & Filters -->
+    <section class="mb-8" data-purpose="orders-header-and-filters">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-slate-200">
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900">Order History</h1>
+          <p class="text-slate-500 text-sm mt-1">Manage, reorder, track shipments, and review batch harvest test reports.</p>
+        </div>
+
+        <!-- Search Order by ID & Filter Button -->
+        <div class="flex items-center gap-3">
+          <div class="relative w-full sm:w-64">
+            <input id="orderSearchInput" class="w-full text-xs rounded-xl border-slate-200 bg-white py-2.5 pl-9 pr-3 shadow-sm focus:border-emerald-500 focus:ring-emerald-500" placeholder="Search by Order ID..." type="text"/>
+            <svg class="w-4 h-4 text-slate-400 absolute left-3 top-3" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+              <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+            </svg>
+          </div>
+
+          <div class="relative">
+            <button id="filterBtn" onclick="toggleSortMenu()" class="px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-medium text-slate-700 hover:bg-slate-50 shadow-sm flex items-center gap-1.5 transition-colors">
+              <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+                <path d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+              </svg>
+              Filter
+            </button>
+            <!-- Sort / Filter Dropdown Menu -->
+            <div id="sortMenu" class="hidden absolute right-0 mt-2 w-48 bg-white border border-slate-200 rounded-xl shadow-lg z-20 py-2 text-xs">
+              <div class="px-3 py-1 font-bold text-slate-400 uppercase tracking-wider text-[10px]">Sort By</div>
+              <button onclick="applySort('newest')" class="w-full text-left px-4 py-2 hover:bg-emerald-50 hover:text-emerald-700 flex items-center justify-between">
+                <span>Newest First</span>
+                <span id="sortNewestCheck" class="text-emerald-600">✓</span>
+              </button>
+              <button onclick="applySort('oldest')" class="w-full text-left px-4 py-2 hover:bg-emerald-50 hover:text-emerald-700 flex items-center justify-between">
+                <span>Oldest First</span>
+                <span id="sortOldestCheck" class="hidden text-emerald-600">✓</span>
+              </button>
+              <button onclick="applySort('highest')" class="w-full text-left px-4 py-2 hover:bg-emerald-50 hover:text-emerald-700 flex items-center justify-between">
+                <span>Highest Amount</span>
+                <span id="sortHighestCheck" class="hidden text-emerald-600">✓</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Status Filter Tabs: Active Orders First by Default -->
+      <div class="flex items-center gap-2 mt-4 overflow-x-auto pb-2 scrollbar-none" data-purpose="status-tabs" id="statusTabsContainer">
+        <button data-filter="active" class="px-4 py-2 rounded-full text-xs font-semibold bg-slate-900 text-white shadow-sm whitespace-nowrap transition-all flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          Active Orders (<span id="countActive">0</span>)
+        </button>
+        <button data-filter="delivered" class="px-4 py-2 rounded-full text-xs font-medium text-slate-600 bg-white border border-slate-200 hover:bg-slate-50 transition-colors whitespace-nowrap flex items-center gap-1">
+          Delivered (<span id="countDelivered">0</span>)
+        </button>
+        <button data-filter="cancelled" class="px-4 py-2 rounded-full text-xs font-medium text-slate-600 bg-white border border-slate-200 hover:bg-slate-50 transition-colors whitespace-nowrap flex items-center gap-1">
+          Cancelled (<span id="countCancelled">0</span>)
+        </button>
+        <button data-filter="all" class="px-4 py-2 rounded-full text-xs font-medium text-slate-600 bg-white border border-slate-200 hover:bg-slate-50 transition-colors whitespace-nowrap">
+          All Orders (<span id="countAll">0</span>)
+        </button>
+      </div>
+    </section>
+    <!-- END: PageHeader & Filters -->
+
+    <!-- Orders Stack Container -->
+    <div class="space-y-6" data-purpose="orders-stack" id="ordersStack">
+      <!-- Loading Skeleton Placeholder -->
+      <div id="ordersLoadingSkeleton" class="flex flex-col items-center justify-center p-10 bg-white rounded-2xl border border-slate-200/80 shadow-xs max-w-lg mx-auto text-center">
+        <div class="w-12 h-12 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center text-2xl mb-3 animate-pulse">
+          🥛
+        </div>
+        <p class="text-xs font-semibold text-slate-700">Loading your farm fresh orders...</p>
+      </div>
+    </div>
+    <!-- END: OrderCardList -->
+
+    <!-- BEGIN: SupportBanner -->
+    <div class="mt-12 p-6 rounded-2xl bg-gradient-to-r from-emerald-900 to-teal-900 text-white flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl" data-purpose="support-banner">
+      <div class="flex items-center gap-4">
+        <div class="w-12 h-12 rounded-xl bg-emerald-700/50 flex items-center justify-center text-2xl border border-emerald-500/30 flex-shrink-0">
+          💬
+        </div>
+        <div>
+          <h3 class="text-base font-bold">Have an issue with your delivery or cancellation?</h3>
+          <p class="text-emerald-200 text-xs mt-0.5">Our 24/7 dedicated farm support is here to resolve your questions immediately.</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-3 w-full md:w-auto flex-shrink-0">
+        <a class="w-full md:w-auto text-center px-5 py-2.5 rounded-xl bg-white text-emerald-900 font-bold text-xs hover:bg-emerald-50 transition-colors shadow-sm" 
+           href="https://wa.me/917508990616?text=Hi%20Milkman%20Support,%20I%20have%20an%20inquiry%20regarding%20my%20order." target="_blank" rel="noopener">
+          Chat with Support
+        </a>
+        <button onclick="openFaqModal()" class="w-full md:w-auto text-center px-5 py-2.5 rounded-xl bg-emerald-800/80 hover:bg-emerald-800 text-white font-medium text-xs border border-emerald-600/40 transition-colors">
+          FAQs &amp; Refunds
+        </button>
+      </div>
+    </div>
+    <!-- END: SupportBanner -->
+
+  </main>
+  <!-- END: MainContent -->
+
+  <!-- BEGIN: MainFooter -->
+  <footer class="bg-white border-t border-slate-200 mt-12 py-8 text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <span class="font-bold text-slate-800">Milkman</span>
+        <span>•</span>
+        <span>Ethically sourced direct from verified partner farmers.</span>
+      </div>
+      <div class="flex items-center gap-6">
+        <a class="hover:text-slate-900 transition-colors" href="index.html#plans">Terms of Service</a>
+        <a class="hover:text-slate-900 transition-colors" href="index.html#home">Privacy Policy</a>
+        <a class="hover:text-slate-900 transition-colors" href="trace.html">Traceability Standards</a>
+        <a class="hover:text-slate-900 transition-colors" href="staff.html">Staff Portal</a>
+      </div>
+    </div>
+  </footer>
+  <!-- END: MainFooter -->
+
+  <!-- Invoice Modal -->
+  <div id="invoiceModal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div id="invoiceModalContent" class="bg-white rounded-2xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border border-slate-200 relative">
+      <div class="flex items-start justify-between border-b border-slate-200 pb-5 no-print">
+        <div class="flex items-center gap-3">
+          <img src="assets/logo.png" alt="Milkman" class="w-10 h-10 object-contain">
+          <div>
+            <h3 class="text-lg font-bold text-slate-900">Tax Invoice</h3>
+            <p class="text-xs text-slate-500">Milkman Dairy Private Limited • GSTIN: 07AABCM8891P1ZX</p>
+          </div>
+        </div>
+        <button onclick="closeInvoiceModal()" class="text-slate-400 hover:text-slate-700 p-1.5 rounded-lg text-lg leading-none">&times;</button>
+      </div>
+
+      <div id="invoiceDetailsArea" class="py-6 space-y-6 text-xs text-slate-700">
+        <!-- Injected via JavaScript -->
+      </div>
+
+      <div class="border-t border-slate-200 pt-5 flex items-center justify-end gap-3 no-print">
+        <button onclick="closeInvoiceModal()" class="px-4 py-2 border border-slate-200 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-50">
+          Close
+        </button>
+        <button onclick="window.print()" class="px-5 py-2 bg-emerald-600 text-white rounded-lg text-xs font-bold hover:bg-emerald-700 flex items-center gap-1.5 shadow-sm">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+          Print / Save PDF
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAQs & Refund Policy Modal -->
+  <div id="faqModal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-xl w-full p-6 sm:p-8 shadow-2xl border border-slate-200 relative">
+      <div class="flex items-center justify-between border-b border-slate-200 pb-4">
+        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+          <span>📦</span> FAQs &amp; Refund Policy
+        </h3>
+        <button onclick="closeFaqModal()" class="text-slate-400 hover:text-slate-700 p-1 text-xl leading-none">&times;</button>
+      </div>
+      <div class="py-5 space-y-4 text-xs text-slate-600">
+        <div>
+          <h4 class="font-bold text-slate-900 text-sm mb-1">When will my morning milk order arrive?</h4>
+          <p>Orders placed before 10:00 PM are freshly bottled and dispatched by 5:00 AM for doorstep delivery before 7:00 AM every morning.</p>
+        </div>
+        <div>
+          <h4 class="font-bold text-slate-900 text-sm mb-1">How do cancellations and refunds work?</h4>
+          <p>You can cancel any <strong>PENDING</strong> order directly from this page with 1 click. Instant 100% refund will be processed back to your original payment UPI or bank source within 2-4 hours.</p>
+        </div>
+        <div>
+          <h4 class="font-bold text-slate-900 text-sm mb-1">What if the delivery packet is damaged?</h4>
+          <p>Our milk pouches are tested under rigorous food-grade conditions. If any seal is compromised, click "Chat with Support" or message our helpline at +91 75089 90616 for an instant free replacement.</p>
+        </div>
+      </div>
+      <div class="border-t border-slate-200 pt-4 flex justify-end">
+        <button onclick="closeFaqModal()" class="px-4 py-2 bg-slate-900 text-white rounded-lg text-xs font-semibold hover:bg-slate-800">
+          Got It
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toastNotification" class="fixed bottom-6 right-6 z-50 hidden max-w-sm px-4 py-3 rounded-xl shadow-lg border text-xs font-medium transition-all transform duration-300">
+    <span id="toastMessage">Action completed</span>
+  </div>
+
+  <!-- JavaScript Application Logic -->
+  <script data-purpose="orders-app-logic">
+    const API_HOST = (window.location.hostname && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') 
+      ? window.location.hostname 
+      : 'localhost';
+    const API_BASE = window.location.origin.includes(':8080')
+      ? window.location.origin
+      : (window.location.protocol === 'file:' ? 'http://localhost:8080' : window.location.origin);
+
+    // State
+    let allOrders = [];
+    let currentFilter = 'active'; // Default to active orders on main view
+    let currentSort = 'newest';
+    let searchQuery = '';
+
+    // Sample fallback orders matching mockup perfectly
+    const fallbackMockOrders = [
+      {
+        id: "V7V9JD",
+        status: "DELIVERED",
+        createdAt: "2026-10-09T02:09:22.000Z",
+        fulfilledAt: "2026-10-09T12:10:22.000Z",
+        deliveryHoursText: "Delivered within 10 hours",
+        totalAmount: 45,
+        paymentMethod: "Paid online via UPI",
+        items: [
+          {
+            productName: "Farm Fresh A2 Cow Milk (Glass Bottle)",
+            quantity: 1,
+            unit: "500ml pouch",
+            batch: "Batch #FP-8891",
+            priceAtPurchase: 45,
+            imageUrl: "assets/cow_milk_plan.jpg",
+            traceAvailable: true
+          }
+        ]
+      },
+      {
+        id: "0HWZ9N",
+        status: "CANCELLED",
+        createdAt: "2026-10-09T03:20:53.000Z",
+        estimatedDelivery: "2026-10-10T09:00:00.000Z",
+        cancellationReason: "Cancelled by customer",
+        refundStatus: "₹65 refunded to original source",
+        totalAmount: 65,
+        paymentMethod: "Refund Completed",
+        items: [
+          {
+            productName: "Artisan Whole Wheat Sourdough Loaf",
+            quantity: 1,
+            unit: "unit (400g)",
+            batch: "Batch #BK-3301",
+            priceAtPurchase: 65,
+            iconEmoji: "🍞",
+            traceAvailable: false
+          }
+        ]
+      },
+      {
+        id: "1L293Y",
+        status: "CANCELLED",
+        createdAt: "2026-10-11T13:40:54.000Z",
+        estimatedDelivery: "2026-10-12T13:40:54.000Z",
+        subscriptionTitle: "Monthly Organic Dairy & Cold-Pressed Oil Basket",
+        totalAmount: 6414,
+        paymentMethod: "Pending Refund Verification",
+        items: [
+          {
+            productName: "Bilona Cultured Desi Cow Ghee",
+            quantity: 2,
+            unit: "1000ml Jars",
+            priceAtPurchase: 1900,
+            iconEmoji: "🧈",
+            traceAvailable: true
+          },
+          {
+            productName: "Raw Wild Forest Organic Honey",
+            quantity: 2,
+            unit: "500g Bottles",
+            priceAtPurchase: 725,
+            iconEmoji: "🍯",
+            traceAvailable: true
+          },
+          {
+            productName: "Cold Pressed Groundnut Cooking Oil",
+            quantity: 1,
+            unit: "5 Litre Canister",
+            priceAtPurchase: 1164,
+            iconEmoji: "🌾",
+            traceAvailable: false
+          }
+        ]
+      }
+    ];
+
+    // Helper: Toast
+    function showToast(msg, isError = false) {
+      if (window.showToast) {
+        window.showToast(msg, isError);
+      }
+    }
+
+    // Helper: Product Thumbnail
+    function resolveThumbnail(item) {
+      if (item.imageUrl && !item.imageUrl.includes('shobha_banner')) {
+        return `<img src="${item.imageUrl}" alt="${item.productName}" class="w-14 h-14 rounded-xl object-cover border border-slate-100" onerror="this.onerror=null; this.src='assets/logo.png'">`;
+      }
+      const lower = (item.productName || '').toLowerCase();
+      if (lower.includes('toilet cleaner') || item.productId === 'promo_shobha') {
+        return `<img src="assets/shobha_toilet_cleaner.png" alt="${item.productName}" class="w-14 h-14 rounded-xl object-contain border border-emerald-100 bg-emerald-50/50 p-1">`;
+      }
+      if (lower.includes('cow') || item.productId === 'plan_cow' || item.productId === 'plan_cow_half') {
+        return `<img src="assets/cow_milk_plan.jpg" alt="${item.productName}" class="w-14 h-14 rounded-xl object-cover border border-emerald-100">`;
+      }
+      if (lower.includes('buffalo') || item.productId === 'plan_buffalo' || item.productId === 'plan_buffalo_half') {
+        return `<img src="assets/buffalo_milk_plan.png" alt="${item.productName}" class="w-14 h-14 rounded-xl object-cover border border-emerald-100">`;
+      }
+      if (item.iconEmoji) {
+        return `<div class="w-14 h-14 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center text-2xl">${item.iconEmoji}</div>`;
+      }
+      if (lower.includes('ghee')) {
+        return `<div class="w-14 h-14 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-2xl">🧈</div>`;
+      }
+      if (lower.includes('honey')) {
+        return `<div class="w-14 h-14 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center text-2xl">🍯</div>`;
+      }
+      if (lower.includes('oil')) {
+        return `<div class="w-14 h-14 rounded-xl bg-orange-50 border border-orange-100 flex items-center justify-center text-2xl">🌾</div>`;
+      }
+      if (lower.includes('bread') || lower.includes('loaf')) {
+        return `<div class="w-14 h-14 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center text-2xl">🍞</div>`;
+      }
+      return `<div class="w-14 h-14 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-2xl">🥛</div>`;
+    }
+
+    // Helper: Cart count badge
+    function updateCartBadge() {
+      const cart = JSON.parse(localStorage.getItem('milkmanCart') || '[]');
+      const count = cart.reduce((acc, item) => acc + (item.quantity || 1), 0);
+      const badge = document.getElementById('cartCountBadge');
+      if (badge) badge.innerText = count;
+    }
+
+    // Check & Render user session
+    function checkUserSession() {
+      const userSession = localStorage.getItem('milkmanUser');
+      const userAvatar = document.getElementById('userAvatar');
+      const userNameDisplay = document.getElementById('userNameDisplay');
+      const logoutBtn = document.getElementById('logoutBtn');
+      const loginLinkBtn = document.getElementById('loginLinkBtn');
+      const notice = document.getElementById('accountStatusNotice');
+
+      const drawerAccount = document.getElementById('mobileDrawerAccount');
+
+      if (userSession) {
+        try {
+          const user = JSON.parse(userSession);
+          const name = user.name || 'Valued Customer';
+          if (userNameDisplay) userNameDisplay.innerText = `Hi, ${name.split(' ')[0]}`;
+          
+          // Initials
+          const parts = name.trim().split(' ');
+          const initials = parts.length > 1 
+            ? (parts[0][0] + parts[1][0]).toUpperCase() 
+            : name.slice(0, 2).toUpperCase();
+          if (userAvatar) userAvatar.innerText = initials || 'MK';
+
+          if (logoutBtn) logoutBtn.classList.remove('hidden');
+          if (loginLinkBtn) loginLinkBtn.classList.add('hidden');
+          if (notice) notice.classList.add('hidden');
+
+          if (drawerAccount) {
+            const phone = user.phone ? `+91 ${user.phone.replace(/\D/g, '').slice(-10)}` : 'Milkman Member';
+            drawerAccount.innerHTML = `
+              <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-xs">
+                  ${initials || 'MK'}
+                </div>
+                <div class="text-left">
+                  <div class="text-xs font-bold text-slate-800">Hi, ${name.split(' ')[0]}</div>
+                  <div class="text-[11px] text-slate-500">${phone}</div>
+                </div>
+              </div>
+              <button onclick="handleLogout()" class="px-3 py-1.5 text-xs font-semibold text-rose-600 bg-rose-50 hover:bg-rose-100 border border-rose-200 rounded-lg transition-colors">
+                Logout
+              </button>
+            `;
+          }
+        } catch(e) {
+          console.error(e);
+        }
+      } else {
+        if (userAvatar) userAvatar.innerText = 'G';
+        if (userNameDisplay) userNameDisplay.innerText = 'Guest User';
+        if (logoutBtn) logoutBtn.classList.add('hidden');
+        if (loginLinkBtn) loginLinkBtn.classList.remove('hidden');
+        if (notice) notice.classList.remove('hidden');
+
+        if (drawerAccount) {
+          drawerAccount.innerHTML = `
+            <div class="flex items-center gap-2">
+              <div class="w-8 h-8 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center font-bold text-xs">G</div>
+              <span class="text-xs font-semibold text-slate-700">Guest User</span>
+            </div>
+            <a href="index.html#login" class="px-3 py-1.5 text-xs font-bold text-white bg-emerald-600 rounded-lg hover:bg-emerald-700 shadow-sm">
+              Login
+            </a>
+          `;
+        }
+      }
+    }
+
+    // Logout
+    function handleLogout() {
+      localStorage.removeItem('milkmanUser');
+      showToast("Logged out successfully");
+      checkUserSession();
+      loadOrders();
+    }
+
+    // Load Orders from Server with Fallback
+    async function loadOrders() {
+      const stack = document.getElementById('ordersStack');
+      const userSession = localStorage.getItem('milkmanUser');
+
+      let fetchedOrders = [];
+
+      if (userSession) {
+        try {
+          const u = JSON.parse(userSession);
+          const email = u.email || `${(u.phone || '').replace(/\D/g, '')}@milkman.local`;
+          
+          const res = await fetch(`${API_BASE}/api/orders/history?email=${encodeURIComponent(email)}`);
+          if (res.ok) {
+            const data = await res.json();
+            if (data.success && Array.isArray(data.orders) && data.orders.length > 0) {
+              fetchedOrders = data.orders;
+            }
+          }
+        } catch (err) {
+          console.warn("Backend orders fetch error, showing mock template:", err);
+        }
+      }
+
+      // If no backend orders found for this user, use the complete high-fidelity mockup orders
+      if (fetchedOrders.length === 0) {
+        allOrders = fallbackMockOrders;
+      } else {
+        allOrders = fetchedOrders;
+      }
+
+      updateStatusCounts();
+      renderFilteredOrders();
+    }
+
+    // Update Counts in Filter Tabs
+    function updateStatusCounts() {
+      const countAll = allOrders.length;
+      const countActive = allOrders.filter(o => ['PENDING', 'ACCEPTED', 'CONFIRMED', 'PREPARING', 'OUT_FOR_DELIVERY'].includes((o.status || '').toUpperCase())).length;
+      const countDelivered = allOrders.filter(o => (o.status || '').toUpperCase() === 'DELIVERED').length;
+      const countCancelled = allOrders.filter(o => (o.status || '').toUpperCase() === 'CANCELLED').length;
+
+      document.getElementById('countAll').innerText = countAll;
+      document.getElementById('countActive').innerText = countActive;
+      document.getElementById('countDelivered').innerText = countDelivered;
+      document.getElementById('countCancelled').innerText = countCancelled;
+    }
+
+    // Format Date Helper
+    function formatOrderDate(dateInput) {
+      if (!dateInput) return 'Recent';
+      try {
+        const d = new Date(dateInput);
+        if (isNaN(d.getTime())) return dateInput;
+        const pad = (n) => String(n).padStart(2, '0');
+        return `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()}, ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+      } catch(e) {
+        return dateInput;
+      }
+    }
+
+    // Calculate estimated delivery: approx 24 hours after order, constrained to 9 AM - 9 PM window
+    function calculateEstimatedDeliveryDate(createdAt) {
+      const orderDate = new Date(createdAt || Date.now());
+      // Base: 24 hours later (next day)
+      const est = new Date(orderDate.getTime() + 24 * 60 * 60 * 1000);
+      const hour = orderDate.getHours();
+      const minutes = orderDate.getMinutes();
+
+      if (hour < 9) {
+        // Before 9:00 AM (e.g. 2:00 AM, 7:00 AM) -> opens at 9:00 AM next day
+        est.setHours(9, 0, 0, 0);
+      } else if (hour >= 21) {
+        // 9:00 PM or later (e.g. 10:00 PM) -> clamped to last working hour 9:00 PM next day
+        est.setHours(21, 0, 0, 0);
+      } else {
+        // Between 9:00 AM and 9:00 PM (e.g. 7:00 PM) -> exact same time 24 hours later (7:00 PM next day)
+        est.setHours(hour, minutes, 0, 0);
+      }
+      return est;
+    }
+
+    // Format 12-hour time with AM/PM (e.g. "7:00 PM", "9:00 PM", "9:00 AM")
+    function formatTime12Hour(dateObj) {
+      let hours = dateObj.getHours();
+      const minutes = dateObj.getMinutes();
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      hours = hours % 12;
+      hours = hours ? hours : 12;
+      const strMinutes = minutes < 10 ? '0' + minutes : minutes;
+      return `${hours}:${strMinutes} ${ampm}`;
+    }
+
+    // Format Estimated Delivery Display String
+    function formatEstimatedDeliveryDisplay(createdAt, existingEstDelivery, isPastOrCancelled = false) {
+      let targetDate;
+      if (existingEstDelivery && !isNaN(new Date(existingEstDelivery).getTime())) {
+        targetDate = new Date(existingEstDelivery);
+      } else {
+        targetDate = calculateEstimatedDeliveryDate(createdAt);
+      }
+
+      const timeStr = formatTime12Hour(targetDate);
+      const pad = (n) => String(n).padStart(2, '0');
+
+      if (!isPastOrCancelled) {
+        const now = new Date();
+        const orderDate = new Date(createdAt || Date.now());
+        
+        // If order was placed today, delivery is tomorrow
+        const isOrderToday = orderDate.toDateString() === now.toDateString();
+        const tomorrowDate = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+        const isTargetTomorrow = targetDate.toDateString() === tomorrowDate.toDateString();
+
+        if (isOrderToday || isTargetTomorrow) {
+          return `tomorrow ${timeStr}`;
+        }
+
+        if (targetDate.toDateString() === now.toDateString()) {
+          return `today ${timeStr}`;
+        }
+      }
+
+      return `${pad(targetDate.getDate())}/${pad(targetDate.getMonth() + 1)}/${targetDate.getFullYear()}, ${timeStr}`;
+    }
+
+    // Render Filtered and Sorted Cards
+    function renderFilteredOrders() {
+      const stack = document.getElementById('ordersStack');
+      if (!stack) return;
+
+      let filtered = [...allOrders];
+
+      // Tab filter
+      if (currentFilter === 'active') {
+        filtered = filtered.filter(o => ['PENDING', 'ACCEPTED', 'CONFIRMED', 'PREPARING', 'OUT_FOR_DELIVERY'].includes((o.status || '').toUpperCase()));
+      } else if (currentFilter === 'delivered') {
+        filtered = filtered.filter(o => (o.status || '').toUpperCase() === 'DELIVERED');
+      } else if (currentFilter === 'cancelled') {
+        filtered = filtered.filter(o => (o.status || '').toUpperCase() === 'CANCELLED');
+      }
+
+      // Search filter
+      if (searchQuery.trim()) {
+        const q = searchQuery.toLowerCase().trim();
+        filtered = filtered.filter(o => {
+          const id = (o.id || '').toLowerCase();
+          const itemsMatch = (o.items || []).some(i => (i.productName || '').toLowerCase().includes(q));
+          return id.includes(q) || itemsMatch;
+        });
+      }
+
+      // Sorting
+      if (currentSort === 'newest') {
+        filtered.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+      } else if (currentSort === 'oldest') {
+        filtered.sort((a, b) => new Date(a.createdAt || 0) - new Date(b.createdAt || 0));
+      } else if (currentSort === 'highest') {
+        filtered.sort((a, b) => (b.totalAmount || 0) - (a.totalAmount || 0));
+      }
+
+      if (filtered.length === 0) {
+        if (currentFilter === 'active') {
+          const deliveredCount = allOrders.filter(o => (o.status || '').toUpperCase() === 'DELIVERED').length;
+          stack.innerHTML = `
+            <div class="bg-white rounded-2xl border border-slate-200 p-10 text-center max-w-md mx-auto shadow-xs">
+              <div class="w-16 h-16 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center text-3xl mx-auto mb-3">
+                🛵
+              </div>
+              <h3 class="text-base font-bold text-slate-800">No Active Orders</h3>
+              <p class="text-xs text-slate-500 mt-1 max-w-xs mx-auto leading-relaxed">
+                You currently have no orders in progress. Completed orders are saved in your Delivered category.
+              </p>
+              <div class="flex items-center justify-center gap-2.5 mt-5">
+                ${deliveredCount > 0 ? `
+                  <button onclick="window.switchTab('delivered')" class="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg transition-colors">
+                    View Delivered (${deliveredCount})
+                  </button>
+                ` : ''}
+                <a href="index.html#products" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-lg shadow-sm transition-colors">
+                  Order Fresh Dairy
+                </a>
+              </div>
+            </div>
+          `;
+          return;
+        }
+
+        stack.innerHTML = `
+          <div class="bg-white rounded-2xl border border-slate-200 p-12 text-center">
+            <div class="text-4xl mb-3">🔍</div>
+            <h3 class="text-base font-bold text-slate-800">No matching orders found</h3>
+            <p class="text-xs text-slate-500 mt-1">Try switching categories or adjusting your search keyword.</p>
+            <button onclick="resetFilters()" class="mt-4 px-4 py-2 bg-emerald-600 text-white text-xs font-semibold rounded-lg hover:bg-emerald-700">
+              Back to Active Orders
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      stack.innerHTML = filtered.map(order => renderOrderCardHtml(order)).join('');
+    }
+
+    // Reset filters back to Active view
+    function resetFilters() {
+      currentFilter = 'active';
+      searchQuery = '';
+      const input = document.getElementById('orderSearchInput');
+      if (input) input.value = '';
+      updateTabStyles('active');
+      renderFilteredOrders();
+    }
+
+    // Switch tab helper
+    window.switchTab = (filterName) => {
+      currentFilter = filterName;
+      updateTabStyles(filterName);
+      renderFilteredOrders();
+    };
+
+    // Generate Card HTML
+    function renderOrderCardHtml(order) {
+      const orderId = (order.id || '').slice(-6).toUpperCase();
+      const status = (order.status || 'PENDING').toUpperCase();
+      const placedDate = formatOrderDate(order.createdAt);
+      const items = order.items || [];
+      const isDelivered = status === 'DELIVERED';
+      const isCancelled = status === 'CANCELLED';
+      const isPending = status === 'PENDING';
+      const isActive = ['PENDING', 'ACCEPTED', 'CONFIRMED', 'PREPARING', 'OUT_FOR_DELIVERY'].includes(status);
+
+      // Icon & Color Scheme
+      let iconHtml = '';
+      let badgeHtml = '';
+      let actionButtonsHtml = '';
+
+      if (isDelivered) {
+        iconHtml = `
+          <div class="p-2.5 rounded-xl bg-emerald-100 text-emerald-800">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+              <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+            </svg>
+          </div>
+        `;
+        badgeHtml = `
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-blue-600 text-white tracking-wide shadow-xs">
+            <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+            DELIVERED
+          </span>
+        `;
+        actionButtonsHtml = `
+          <button onclick="openInvoice('${order.id}')" class="px-3.5 py-2 text-xs font-semibold text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors shadow-2xs">
+            Invoice
+          </button>
+          <button onclick="reorderItems('${order.id}')" class="px-4 py-2 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg transition-colors shadow-sm shadow-emerald-600/20">
+            Reorder
+          </button>
+        `;
+      } else if (isCancelled) {
+        iconHtml = `
+          <div class="p-2.5 rounded-xl bg-slate-100 text-slate-500">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+              <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+            </svg>
+          </div>
+        `;
+        badgeHtml = `
+          <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-blue-600 text-white tracking-wide shadow-xs">
+            CANCELLED
+          </span>
+        `;
+        if (order.totalAmount > 1000) {
+          actionButtonsHtml = `
+            <button onclick="openHelpForOrder('${order.id}')" class="px-3.5 py-2 text-xs font-semibold text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors shadow-2xs">
+              Need Help?
+            </button>
+            <button onclick="reorderItems('${order.id}')" class="px-4 py-2 text-xs font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 rounded-lg transition-colors">
+              Retry Order
+            </button>
+          `;
+        } else {
+          actionButtonsHtml = `
+            <button onclick="reorderItems('${order.id}')" class="px-4 py-2 text-xs font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 rounded-lg transition-colors">
+              Order Again
+            </button>
+          `;
+        }
+      } else {
+        // Active / Pending
+        iconHtml = `
+          <div class="p-2.5 rounded-xl bg-blue-100 text-blue-800">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+              <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+            </svg>
+          </div>
+        `;
+        badgeHtml = `
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-500 text-white tracking-wide shadow-xs">
+            <span class="w-1.5 h-1.5 rounded-full bg-white animate-ping"></span>
+            ${status.replace(/_/g, ' ')}
+          </span>
+        `;
+        actionButtonsHtml = `
+          <button onclick="openInvoice('${order.id}')" class="px-3.5 py-2 text-xs font-semibold text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors shadow-2xs">
+            Invoice
+          </button>
+          ${isPending ? `
+            <button onclick="cancelPendingOrder('${order.id}')" class="px-3.5 py-2 text-xs font-semibold text-rose-600 bg-rose-50 hover:bg-rose-100 border border-rose-200 rounded-lg transition-colors">
+              Cancel Order
+            </button>
+          ` : ''}
+        `;
+      }
+
+      // Stepper Section
+      let stepperHtml = '';
+      if (isDelivered) {
+        const fulfilledDate = order.fulfilledAt ? formatOrderDate(order.fulfilledAt) : placedDate;
+        const delivNote = order.deliveryHoursText || 'Delivered within 10 hours';
+        stepperHtml = `
+          <div class="p-5 sm:p-6 bg-white border-b border-slate-100" data-purpose="order-tracking-progress">
+            <div class="flex items-center justify-between text-xs font-semibold text-slate-700 mb-2">
+              <span>Fulfilled &amp; Delivered on ${fulfilledDate}</span>
+              <span class="text-emerald-600 font-bold flex items-center gap-1">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+                ${delivNote}
+              </span>
+            </div>
+            <!-- Visual Progress Bar -->
+            <div class="relative mt-4">
+              <div class="h-2 w-full bg-blue-600 rounded-full"></div>
+              <div class="flex justify-between -mt-3.5 px-0 text-[11px] font-medium text-slate-600">
+                <div class="flex flex-col items-center">
+                  <span class="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px] ring-4 ring-white">✓</span>
+                  <span class="mt-2 text-blue-900 font-semibold">Pending</span>
+                </div>
+                <div class="flex flex-col items-center">
+                  <span class="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px] ring-4 ring-white">✓</span>
+                  <span class="mt-2 text-blue-900 font-semibold">Confirmed</span>
+                </div>
+                <div class="flex flex-col items-center">
+                  <span class="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px] ring-4 ring-white">✓</span>
+                  <span class="mt-2 text-blue-900 font-semibold">Out for Delivery</span>
+                </div>
+                <div class="flex flex-col items-center">
+                  <span class="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px] ring-4 ring-white">✓</span>
+                  <span class="mt-2 text-blue-900 font-semibold">Delivered</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      } else if (isCancelled) {
+        const estDate = formatEstimatedDeliveryDisplay(order.createdAt, order.estimatedDelivery, true);
+        const refundNote = order.refundStatus || `₹${order.totalAmount} refunded to original source`;
+        const subTitle = order.subscriptionTitle ? `<span class="text-slate-500">Subscription Plan: <span class="font-semibold text-slate-800">${order.subscriptionTitle}</span></span>` : `<span class="text-slate-500">Refund status: <span class="font-semibold text-slate-800">${refundNote}</span></span>`;
+        stepperHtml = `
+          <div class="p-5 sm:p-6 bg-white border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+            <div class="flex items-center gap-2 text-slate-600">
+              <span class="font-semibold text-slate-800">Original Est. Delivery:</span>
+              <span class="line-through text-slate-400">${estDate}</span>
+              <span class="ml-2 text-rose-600 font-medium bg-rose-50 px-2 py-0.5 rounded">Cancelled by customer</span>
+            </div>
+            ${subTitle}
+          </div>
+        `;
+      } else {
+        // Active Progress
+        const stages = ['PENDING', 'ACCEPTED', 'OUT_FOR_DELIVERY', 'DELIVERED'];
+        let curIdx = stages.indexOf(status);
+        if (curIdx < 0) curIdx = 0;
+        const progressPct = ((curIdx + 0.5) / stages.length) * 100;
+        const estDeliveryText = formatEstimatedDeliveryDisplay(order.createdAt, order.estimatedDelivery, false);
+        stepperHtml = `
+          <div class="p-5 sm:p-6 bg-white border-b border-slate-100" data-purpose="order-tracking-progress">
+            <div class="flex items-center justify-between text-xs font-semibold text-slate-700 mb-2">
+              <span>Order in progress • Est. Delivery ${estDeliveryText}</span>
+              <span class="text-blue-600 font-bold flex items-center gap-1">
+                Live Tracking Active
+              </span>
+            </div>
+            <div class="relative mt-4">
+              <div class="h-2 w-full bg-slate-200 rounded-full overflow-hidden">
+                <div class="h-full bg-blue-600 transition-all duration-500" style="width: ${progressPct}%"></div>
+              </div>
+              <div class="flex justify-between -mt-3.5 px-0 text-[11px] font-medium text-slate-600">
+                <div class="flex flex-col items-center">
+                  <span class="w-5 h-5 rounded-full ${curIdx >= 0 ? 'bg-blue-600 text-white' : 'bg-slate-300 text-slate-700'} flex items-center justify-center text-[10px] ring-4 ring-white">✓</span>
+                  <span class="mt-2 text-blue-900 font-semibold">Pending</span>
+                </div>
+                <div class="flex flex-col items-center">
+                  <span class="w-5 h-5 rounded-full ${curIdx >= 1 ? 'bg-blue-600 text-white' : 'bg-slate-300 text-slate-700'} flex items-center justify-center text-[10px] ring-4 ring-white">✓</span>
+                  <span class="mt-2 text-slate-700">Confirmed</span>
+                </div>
+                <div class="flex flex-col items-center">
+                  <span class="w-5 h-5 rounded-full ${curIdx >= 2 ? 'bg-blue-600 text-white' : 'bg-slate-300 text-slate-700'} flex items-center justify-center text-[10px] ring-4 ring-white">✓</span>
+                  <span class="mt-2 text-slate-700">Out for Delivery</span>
+                </div>
+                <div class="flex flex-col items-center">
+                  <span class="w-5 h-5 rounded-full ${curIdx >= 3 ? 'bg-blue-600 text-white' : 'bg-slate-300 text-slate-700'} flex items-center justify-center text-[10px] ring-4 ring-white">✓</span>
+                  <span class="mt-2 text-slate-700">Delivered</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      // Ordered Items Accordion
+      const itemsCountLabel = items.length === 1 ? '1 item' : `${items.length} items`;
+      const bundleLabel = order.subscriptionTitle ? `${items.length} items in subscription bundle` : itemsCountLabel;
+
+      const itemsHtml = items.map(item => {
+        const itemQty = item.quantity || 1;
+        const itemPrice = (item.priceAtPurchase || item.price || 0) * itemQty;
+        const unitText = item.unit || '1 Litre';
+        const batchText = item.batch ? ` | ${item.batch}` : '';
+        const thumb = resolveThumbnail(item);
+        const traceBadge = item.traceAvailable 
+          ? `<a href="trace.html" class="inline-block mt-1 text-[11px] font-medium text-emerald-600 bg-emerald-50 hover:bg-emerald-100 px-2 py-0.5 rounded transition-colors">Trace Video Available</a>` 
+          : '';
+
+        return `
+          <div class="flex items-center justify-between py-3">
+            <div class="flex items-center gap-4">
+              ${thumb}
+              <div>
+                <h4 class="text-sm font-bold text-slate-900">${item.productName || 'Fresh Farm Milk'}</h4>
+                <p class="text-xs text-slate-500 mt-0.5">Quantity: ${itemQty} × ${unitText}${batchText}</p>
+                ${traceBadge}
+              </div>
+            </div>
+            <div class="text-right">
+              <div class="text-sm font-bold text-slate-900">₹${itemPrice}</div>
+              <div class="text-[11px] text-slate-400">${order.paymentMethod || 'Paid online via UPI'}</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      return `
+        <article class="bg-white rounded-2xl border border-slate-200/90 shadow-sm hover:shadow-md transition-shadow overflow-hidden" data-purpose="order-card" id="card-${order.id}">
+          <!-- Top Bar -->
+          <div class="p-5 sm:p-6 bg-slate-50/70 border-b border-slate-200/80 flex flex-wrap items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+              ${iconHtml}
+              <div>
+                <div class="flex items-center gap-2">
+                  <h2 class="text-base font-bold text-slate-900">Order #${orderId}</h2>
+                  ${badgeHtml}
+                </div>
+                <p class="text-xs text-slate-500 mt-0.5">Placed on: <span class="font-medium text-slate-700">${placedDate}</span></p>
+              </div>
+            </div>
+
+            <!-- Total Amount & Quick Actions -->
+            <div class="flex items-center gap-6">
+              <div class="text-right">
+                <div class="text-xs font-medium text-slate-500 uppercase tracking-wider">Total Amount</div>
+                <div class="text-xl font-extrabold text-slate-900">₹${order.totalAmount}</div>
+              </div>
+              <div class="flex items-center gap-2">
+                ${actionButtonsHtml}
+              </div>
+            </div>
+          </div>
+
+          <!-- Stepper / Delivery Note -->
+          ${stepperHtml}
+
+          <!-- Expandable Items Preview Accordion -->
+          <details class="group/items" data-purpose="order-items-collapse" ${isDelivered ? 'open' : ''}>
+            <summary class="px-6 py-3.5 bg-slate-50/50 hover:bg-slate-100/60 cursor-pointer flex items-center justify-between text-xs font-semibold text-slate-700 select-none transition-colors">
+              <span class="flex items-center gap-2">
+                <svg class="w-4 h-4 text-slate-400 group-open/items:rotate-90 transition-transform" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+                  <path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                </svg>
+                Ordered Items (${bundleLabel})
+              </span>
+              <span class="text-emerald-700 text-xs font-semibold group-hover/items:underline group-open/items:hidden">Click to expand</span>
+              <span class="text-emerald-700 text-xs font-semibold group-hover/items:underline hidden group-open/items:inline">Hide Item Details</span>
+            </summary>
+            <div class="p-6 divide-y divide-slate-100 bg-white">
+              ${itemsHtml}
+            </div>
+          </details>
+        </article>
+      `;
+    }
+
+    // Tab switching event listeners
+    function setupTabs() {
+      const buttons = document.querySelectorAll('#statusTabsContainer button');
+      buttons.forEach(button => {
+        button.addEventListener('click', () => {
+          const filter = button.getAttribute('data-filter');
+          currentFilter = filter;
+          updateTabStyles(filter);
+          renderFilteredOrders();
+        });
+      });
+    }
+
+    function updateTabStyles(activeFilter) {
+      const buttons = document.querySelectorAll('#statusTabsContainer button');
+      buttons.forEach(b => {
+        if (b.getAttribute('data-filter') === activeFilter) {
+          b.className = "px-4 py-2 rounded-full text-xs font-semibold bg-slate-900 text-white shadow-sm whitespace-nowrap transition-all flex items-center gap-1.5";
+        } else {
+          b.className = "px-4 py-2 rounded-full text-xs font-medium text-slate-600 bg-white border border-slate-200 hover:bg-slate-50 transition-colors whitespace-nowrap flex items-center gap-1.5";
+        }
+      });
+    }
+
+    // Search bar listener
+    const searchInput = document.getElementById('orderSearchInput');
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        searchQuery = e.target.value;
+        renderFilteredOrders();
+      });
+    }
+
+    // Top quick search listener
+    const navQuickSearch = document.getElementById('navQuickSearch');
+    if (navQuickSearch) {
+      navQuickSearch.addEventListener('input', (e) => {
+        searchQuery = e.target.value;
+        if (searchInput) searchInput.value = searchQuery;
+        renderFilteredOrders();
+      });
+    }
+
+    // Sorting Menu
+    function toggleSortMenu() {
+      const menu = document.getElementById('sortMenu');
+      if (menu) menu.classList.toggle('hidden');
+    }
+
+    function applySort(type) {
+      currentSort = type;
+      document.getElementById('sortNewestCheck').classList.toggle('hidden', type !== 'newest');
+      document.getElementById('sortOldestCheck').classList.toggle('hidden', type !== 'oldest');
+      document.getElementById('sortHighestCheck').classList.toggle('hidden', type !== 'highest');
+      toggleSortMenu();
+      renderFilteredOrders();
+    }
+
+    // Close sort menu on click outside
+    document.addEventListener('click', (e) => {
+      const btn = document.getElementById('filterBtn');
+      const menu = document.getElementById('sortMenu');
+      if (menu && !menu.classList.contains('hidden') && btn && !btn.contains(e.target) && !menu.contains(e.target)) {
+        menu.classList.add('hidden');
+      }
+    });
+
+    // Reorder Action
+    window.reorderItems = (orderId) => {
+      const order = allOrders.find(o => o.id === orderId);
+      if (!order || !order.items || order.items.length === 0) {
+        showToast("No items found to reorder", true);
+        return;
+      }
+
+      let cart = JSON.parse(localStorage.getItem('milkmanCart') || '[]');
+      order.items.forEach(item => {
+        const existingIdx = cart.findIndex(c => c.productName === item.productName);
+        if (existingIdx >= 0) {
+          cart[existingIdx].quantity += (item.quantity || 1);
+        } else {
+          cart.push({
+            productId: item.productId || 'item_' + Math.random().toString(36).substr(2, 6),
+            productName: item.productName,
+            price: item.priceAtPurchase || item.price || 45,
+            quantity: item.quantity || 1,
+            unit: item.unit || '1 Litre',
+            imageUrl: item.imageUrl || 'assets/logo.png'
+          });
+        }
+      });
+
+      localStorage.setItem('milkmanCart', JSON.stringify(cart));
+      updateCartBadge();
+      showToast("Items added to cart! Redirecting...", false);
+
+      if (window.showMilkmanLoader) {
+        window.showMilkmanLoader("PREPARING REORDER...", "Adding fresh farm dairy back to your cart");
+      }
+
+      setTimeout(() => {
+        window.location.href = 'index.html#cart';
+      }, 900);
+    };
+
+    // Custom In-App Confirmation Modal for Order Cancellation
+    window.showCancelConfirmModal = (orderId, amount) => {
+      return new Promise((resolve) => {
+        let modal = document.getElementById('milkmanCancelModal');
+        if (!modal) {
+          modal = document.createElement('div');
+          modal.id = 'milkmanCancelModal';
+          modal.style.cssText = 'position: fixed; inset: 0; z-index: 99998; background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); display: flex; align-items: center; justify-content: center; padding: 18px; opacity: 0; pointer-events: none; transition: opacity 0.25s ease;';
+          document.body.appendChild(modal);
+        }
+
+        const shortId = orderId ? (orderId.length > 6 ? orderId.slice(-6).toUpperCase() : orderId) : '';
+        const amtStr = (amount !== undefined && amount !== null && amount > 0) ? `₹${amount}` : '';
+
+        modal.innerHTML = `
+          <div id="milkmanCancelCard" style="background: #ffffff; border-radius: 28px; padding: 26px 22px; max-width: 380px; width: 100%; box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3); border: 1px solid rgba(0,0,0,0.08); text-align: center; transform: scale(0.92) translateY(12px); transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);">
+            <div style="width: 60px; height: 60px; border-radius: 50%; background: #FEF2F2; color: #DC2626; display: flex; align-items: center; justify-content: center; font-size: 26px; margin: 0 auto 14px; box-shadow: 0 8px 20px rgba(220, 38, 38, 0.15);">
+              ⚠️
+            </div>
+            <h3 style="font-size: 1.30rem; font-weight: 800; color: #0F172A; margin: 0 0 6px 0; letter-spacing: -0.3px;">Cancel this order?</h3>
+            ${shortId ? `<div style="display: inline-flex; align-items: center; gap: 8px; background: #F1F5F9; padding: 4px 14px; border-radius: 20px; font-size: 0.82rem; font-weight: 700; color: #334155; margin-bottom: 14px;"><span>Order #${shortId}</span>${amtStr ? ` • <span style="color:#059669;">${amtStr}</span>` : ''}</div>` : ''}
+            
+            <div style="background: #F0FDF4; border: 1.5px solid #BBF7D0; border-radius: 16px; padding: 12px 14px; margin-bottom: 20px; font-size: 0.82rem; color: #065F46; line-height: 1.45; text-align: left;">
+              <strong style="display: flex; align-items: center; gap: 6px; font-size: 0.86rem; margin-bottom: 3px;">
+                <span>⚡</span> Instant 100% Refund
+              </strong>
+              <span>Full amount ${amtStr ? `(${amtStr}) ` : ''}will be refunded directly back to your original source immediately.</span>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 9px;">
+              <button id="btnKeepOrder" style="width: 100%; padding: 13px 20px; border-radius: 16px; font-weight: 700; font-size: 0.95rem; background: #059669; color: #ffffff; border: none; cursor: pointer; box-shadow: 0 6px 18px rgba(5, 150, 105, 0.28); transition: transform 0.15s ease;">
+                No, Keep Order
+              </button>
+              <button id="btnConfirmCancel" style="width: 100%; padding: 12px 20px; border-radius: 16px; font-weight: 700; font-size: 0.88rem; background: #FFF1F2; color: #E11D48; border: 1.5px solid #FECDD3; cursor: pointer;">
+                Yes, Cancel Order
+              </button>
+            </div>
+          </div>
+        `;
+
+        const card = modal.querySelector('#milkmanCancelCard');
+        modal.style.pointerEvents = 'auto';
+        modal.style.opacity = '1';
+        requestAnimationFrame(() => {
+          if (card) card.style.transform = 'scale(1) translateY(0)';
+        });
+
+        const close = (result) => {
+          if (card) card.style.transform = 'scale(0.92) translateY(12px)';
+          modal.style.opacity = '0';
+          modal.style.pointerEvents = 'none';
+          setTimeout(() => {
+            resolve(result);
+          }, 240);
+        };
+
+        modal.querySelector('#btnKeepOrder').onclick = () => close(false);
+        modal.querySelector('#btnConfirmCancel').onclick = () => close(true);
+        modal.onclick = (e) => {
+          if (e.target === modal) close(false);
+        };
+      });
+    };
+
+    // Cancel Pending Order
+    window.cancelPendingOrder = async (orderId) => {
+      const order = allOrders.find(o => o.id === orderId);
+      const confirmed = await window.showCancelConfirmModal(orderId, order ? order.totalAmount : null);
+      if (!confirmed) {
+        return;
+      }
+
+      const userSession = localStorage.getItem('milkmanUser');
+      if (!userSession) {
+        showToast("Please log in to cancel live orders.", true);
+        return;
+      }
+
+      if (window.showMilkmanLoader) {
+        window.showMilkmanLoader("CANCELLING ORDER...", "Processing instant refund back to source");
+      }
+
+      try {
+        const u = JSON.parse(userSession);
+        const email = u.email || `${(u.phone || '').replace(/\D/g, '')}@milkman.local`;
+
+        const res = await fetch(`${API_BASE}/api/orders/user-cancel`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, orderId })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast("Order cancelled successfully.");
+          loadOrders();
+        } else {
+          showToast(data.error || "Failed to cancel order.", true);
+        }
+      } catch (e) {
+        showToast("Error communicating with server.", true);
+      } finally {
+        if (window.hideMilkmanLoader) {
+          window.hideMilkmanLoader(500);
+        }
+      }
+    };
+
+    // Invoice Modal
+    window.openInvoice = (orderId) => {
+      const order = allOrders.find(o => o.id === orderId);
+      if (!order) return;
+
+      const modal = document.getElementById('invoiceModal');
+      const details = document.getElementById('invoiceDetailsArea');
+      if (!modal || !details) return;
+
+      const items = order.items || [];
+      const user = JSON.parse(localStorage.getItem('milkmanUser') || '{}');
+      const placed = formatOrderDate(order.createdAt);
+
+      const itemsRows = items.map((i, idx) => {
+        const qty = i.quantity || 1;
+        const rate = i.priceAtPurchase || i.price || 45;
+        const sub = rate * qty;
+        return `
+          <tr class="border-b border-slate-100">
+            <td class="py-2.5">${idx + 1}</td>
+            <td class="py-2.5 font-medium text-slate-900">${i.productName} <span class="text-slate-400">(${i.unit || 'unit'})</span></td>
+            <td class="py-2.5 text-center">${qty}</td>
+            <td class="py-2.5 text-right">₹${rate}</td>
+            <td class="py-2.5 text-right font-semibold">₹${sub}</td>
+          </tr>
+        `;
+      }).join('');
+
+      details.innerHTML = `
+        <div class="grid grid-cols-2 gap-4 pb-4 border-b border-slate-200">
+          <div>
+            <span class="text-slate-400 font-medium">Billed To:</span>
+            <div class="font-bold text-slate-800 text-sm mt-0.5">${user.name || 'Valued Customer'}</div>
+            <div>${user.phone || 'Verified Customer'}</div>
+            <div class="text-slate-500">${order.deliveryArea || 'Doorstep Delivery Route 04'}</div>
+          </div>
+          <div class="text-right">
+            <span class="text-slate-400 font-medium">Invoice Details:</span>
+            <div class="font-bold text-slate-800 text-sm mt-0.5">INV-${order.id.slice(-6).toUpperCase()}</div>
+            <div>Date: ${placed}</div>
+            <div>Est. Delivery: ${formatEstimatedDeliveryDisplay(order.createdAt, order.estimatedDelivery, true)}</div>
+            <div class="text-emerald-600 font-bold">Status: ${order.status}</div>
+          </div>
+        </div>
+
+        <table class="w-full text-left mt-4">
+          <thead>
+            <tr class="border-b border-slate-200 text-slate-500 font-semibold text-[11px] uppercase tracking-wider">
+              <th class="py-2">#</th>
+              <th class="py-2">Description</th>
+              <th class="py-2 text-center">Qty</th>
+              <th class="py-2 text-right">Rate</th>
+              <th class="py-2 text-right">Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${itemsRows}
+          </tbody>
+        </table>
+
+        <div class="border-t border-slate-200 pt-3 flex flex-col items-end gap-1 text-xs">
+          <div class="flex justify-between w-48">
+            <span class="text-slate-500">Subtotal:</span>
+            <span class="font-semibold text-slate-800">₹${order.totalAmount}</span>
+          </div>
+          <div class="flex justify-between w-48">
+            <span class="text-slate-500">Delivery Fee:</span>
+            <span class="font-semibold text-emerald-600">FREE</span>
+          </div>
+          <div class="flex justify-between w-48 border-t border-slate-200 pt-2 text-sm font-bold text-slate-900">
+            <span>Total Paid:</span>
+            <span>₹${order.totalAmount}</span>
+          </div>
+        </div>
+
+        <div class="bg-slate-50 rounded-xl p-3 text-[11px] text-slate-500 flex items-center justify-between">
+          <span>Thank you for choosing pure ethical farm dairy.</span>
+          <span class="font-semibold text-slate-700">Payment: ${order.paymentMethod || 'UPI / Online'}</span>
+        </div>
+      `;
+
+      modal.classList.remove('hidden');
+    };
+
+    window.closeInvoiceModal = () => {
+      const modal = document.getElementById('invoiceModal');
+      if (modal) modal.classList.add('hidden');
+    };
+
+    // FAQ Modal
+    window.openFaqModal = () => {
+      const modal = document.getElementById('faqModal');
+      if (modal) modal.classList.remove('hidden');
+    };
+
+    window.closeFaqModal = () => {
+      const modal = document.getElementById('faqModal');
+      if (modal) modal.classList.add('hidden');
+    };
+
+    // Need Help Modal
+    window.openHelpForOrder = (orderId) => {
+      window.open(`https://wa.me/917508990616?text=Hi%20Milkman%20Support,%20I%20need%20assistance%20with%20Order%20%23${orderId.slice(-6).toUpperCase()}`, '_blank');
+    };
+
+    // Mobile nav toggle
+    const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+    const mobileNavMenu = document.getElementById('mobileNavMenu');
+    if (mobileMenuToggle && mobileNavMenu) {
+      mobileMenuToggle.addEventListener('click', () => {
+        mobileNavMenu.classList.toggle('hidden');
+      });
+    }
+
+    window.showToast = (msg, isError = false) => {
+      let toast = document.getElementById('milkmanTopToast');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'milkmanTopToast';
+        toast.style.cssText = 'position: fixed; top: 18px; left: 50%; transform: translateX(-50%) translateY(-140px); background: rgba(24, 24, 27, 0.95); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); color: #ffffff; padding: 12px 22px; border-radius: 9999px; font-weight: 700; font-size: 0.90rem; box-shadow: 0 16px 38px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.12); z-index: 100000; display: flex; align-items: center; gap: 10px; transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease; opacity: 0; pointer-events: none; max-width: min(92vw, 420px); text-align: left;';
+        document.body.appendChild(toast);
+      }
+
+      const iconHtml = isError
+        ? '<span style="display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px; border-radius:50%; background:#EF4444; color:#fff; font-size:12px; font-weight:900; flex-shrink:0;">✕</span>'
+        : '<span style="display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px; border-radius:50%; background:#10B981; color:#fff; font-size:12px; font-weight:900; flex-shrink:0;">✓</span>';
+
+      toast.innerHTML = `${iconHtml}<span style="line-height:1.35; letter-spacing:-0.2px;">${msg}</span>`;
+      toast.style.borderColor = isError ? 'rgba(239, 68, 68, 0.5)' : 'rgba(16, 185, 129, 0.5)';
+      toast.style.pointerEvents = 'auto';
+      toast.style.opacity = '1';
+      toast.style.transform = 'translateX(-50%) translateY(0)';
+
+      clearTimeout(window._toastTimer);
+      window._toastTimer = setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(-50%) translateY(-140px)';
+        toast.style.pointerEvents = 'none';
+      }, 2800);
+    };
+
+    // Init on load
+    document.addEventListener('DOMContentLoaded', () => {
+      checkUserSession();
+      updateCartBadge();
+      setupTabs();
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const tabParam = urlParams.get('tab') || urlParams.get('filter');
+      if (tabParam && ['active', 'delivered', 'cancelled', 'all'].includes(tabParam.toLowerCase())) {
+        currentFilter = tabParam.toLowerCase();
+      } else {
+        currentFilter = 'active'; // Always default to Active Orders on main page
+      }
+      updateTabStyles(currentFilter);
+
+      loadOrders();
+
+      const placedId = urlParams.get('placed');
+      if (placedId) {
+        const shortId = placedId.length > 6 ? placedId.slice(-6).toUpperCase() : placedId;
+        setTimeout(() => {
+          showToast(`🎉 Order #${shortId} Placed Successfully!`);
+        }, 400);
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+    });
+  </script>
+
+</body>
+</html>
