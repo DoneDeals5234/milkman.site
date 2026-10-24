@@ -1,10 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const API_HOST = (window.location.hostname && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') 
-        ? window.location.hostname 
-        : 'localhost';
-    const API_BASE = window.location.origin.includes(':8080')
-        ? window.location.origin
-        : (window.location.hostname ? `http://${window.location.hostname}:8080` : 'http://localhost:8080');
+    const API_HOST = window.location.hostname || 'localhost';
+    const API_BASE = (window.location.protocol === 'file:')
+        ? 'http://localhost:8080'
+        : window.location.origin;
     window.API_BASE = API_BASE;
 
     // --- Custom Popup Logic Override ---
